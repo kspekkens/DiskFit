@@ -54,19 +54,19 @@ c reopen the input data file as readonly
       call ftopen( unitD, datfile, readwrite, blocksize, status )
 c determine the type of data
       call ftgidt( unitD, bitpix, status )
-      if( bitpix .eq. -32 )then
         allocate ( datline( nsizex ) )
         allocate ( outline( nsizex ) )
-      else if( bitpix .eq. -64 )then
+      if( bitpix .eq. -64 )then
         allocate ( datlin2( nsizex ) )
         allocate ( outlin2( nsizex ) )
       else if( bitpix .eq. 16 )then
         allocate ( datl16( nsizex ) )
         allocate ( outl16( nsizex ) )
-      else
-        print *, 'Unrecognized value of BITPIX:', bitpix
-        call crash( 'writemod' )
       end if
+c      else
+c        print *, 'Unrecognized value of BITPIX:', bitpix
+c        call crash( 'writemod' )
+c      end if
 c start a big loop over output files
       kout = 2
       if( lphot )kout = 5

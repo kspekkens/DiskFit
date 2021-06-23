@@ -380,13 +380,13 @@ c set the rhs vector
           end if
         end do
 c add smoothing penalty
-        call smoothp( wa, mtot )
+        call smoothp( wa, ntot )
 c solve the linear system
 CCCC LAPACK:
 c      info = 0
-c      call f07adf( rank, rank, wa, mtot, ipiv, info )
+c      call f07adf( rank, rank, wa, ntot, ipiv, info )
 c      if( info .eq. 0 )then
-c        call f07aef( 'N', rank, 1, wa, mtot, ipiv, rhs, mtot, info )
+c        call f07aef( 'N', rank, 1, wa, ntot, ipiv, rhs, ntot, info )
 c        if( info .ne. 0 )print *, 'f07aef failed with info =', info
 c      else
 c        print *, 'the factor U is singular'
