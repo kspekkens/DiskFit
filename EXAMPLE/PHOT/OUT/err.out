@@ -1,0 +1,83 @@
+Minimization output, phot
+-------------------------
+Input files: 
+EXAMPLE/PHOT/phot_err.inp                                                      
+EXAMPLE/PHOT/phot.fits  pixscale  0.50 arcsec/pix
+sky:  800.00  skysig:   14.14    gain:    4.00
+
+FITS region:       x-low:      1   y-low:      1 x-range:    256 y-range:    256
+FITS sampling:    regrad:  10.00   regpa:  35.00  regeps:   0.40 istpout:      2
+
+Output model and (data-model) residuals files:
+EXAMPLE/PHOT/OUT/err.mod
+EXAMPLE/PHOT/OUT/err.res
+
+Disk toggles:         PA: T     eps: T  center: T non-axi: T    phib: T
+phot toggles:     lbulge: T    lr_e: T  lsersn: T blg eps: T bar eps: T
+
+Input values 
+--------------
+disk PA, phi_d^prime (deg):           35.00
+disk eps:                              0.40
+x,y center (data units):             130.00  130.00
+Bar PA (deg):                          5.00
+Bar eps:                               0.50
+Bulge r_e (pixels):                   10.00
+Sersic n:                              2.00
+Bulge eps:                             0.20
+
+
+
+
+Seeing correction applied. FWHM (data units):      2.00
+No model component smoothing applied
+Uncertainties estimated via bootstrap:  seed:      -50  nunc:        5  junc:   -1.00
+Non-axisymmetries fixed to 0 outside range:    5.00   40.00
+
+
+Best fitting values
+---------------------
+disk PA, phi_d^prime (deg):           40.35 +/-  0.58
+disk eps:                              0.29 +/-  0.00
+disk incl (deg):                      44.77 +/-  0.32
+x,y center (data units):             129.97 +/-  0.01,  130.00 +/-  0.01
+Non-axisymm phib (sky plane, deg):    10.01 +/-  0.24, -129.51
+Bar eps:                               0.59 +/-  0.00
+Bulge r_e (pixels):                    7.03 +/-  1.01
+Bulge I_0 (ADU):                     400.31 +/- 33.56
+Sersic n:                              1.73 +/-  0.06
+Bulge eps:                             0.17 +/-  0.02
+
+Disk light fraction (%):              81.85 +/-  1.77
+Bar light fraction (%):               10.09 +/-  0.37
+Bulge light fraction (%):              8.07 +/-  1.59
+
+Minimization Details 
+---------------------
+# points Dn used in fit:               7495
+# iterations in minimization:             8
+Minimum chi^2 found:               1.088346
+Degrees of freedom in fit:             7458
+
+Fitted intensities                                                                                                     (radii in pixels, intensities in ADU):
+       r        npts       Idisk      eIdisk        Ibar       eIbar     Ibulge      eIbulge
+---------------------------------------------------------------------------------------------
+      5.00    125.98      720.62       97.16      225.15       27.52      701.14      160.92
+     10.00     99.87      697.53       45.45      187.36       12.37      197.44       65.07
+     15.00     83.78      557.09       27.55      205.51       10.29       71.66       29.49
+     20.00    112.31      459.86       18.36      214.91        6.21       29.80       14.41
+     25.00    139.52      375.32        7.08      173.73       11.63       13.55        7.43
+     30.00    169.20      301.15        7.82      263.90        3.68        6.57        4.00
+     35.00    196.28      253.02        3.09       63.81        9.01        3.35        2.23
+     40.00    223.08      202.25        2.16        0.00        1.97        1.77        1.28
+     45.00    250.82      166.77        3.06        0.00        0.00        0.97        0.75
+     50.00    278.28      134.61        1.81        0.00        0.00        0.55        0.45
+     55.00    307.48      111.78        1.62        0.00        0.00        0.32        0.27
+     60.00    334.96       89.09        1.49        0.00        0.00        0.19        0.17
+     65.00    362.86       74.53        2.70        0.00        0.00        0.11        0.11
+     70.00    390.34       59.64        2.45        0.00        0.00        0.07        0.07
+     75.00    415.78       49.63        2.07        0.00        0.00        0.04        0.04
+     80.00    684.25       38.33        1.47        0.00        0.00        0.03        0.03
+     90.00   1003.41       29.23        1.34        0.00        0.00        0.01        0.01
+    100.00   1102.43        7.46        1.07        0.00        0.00        0.00        0.01
+    110.00   1214.36        0.72        0.70        0.00        0.00        0.00        0.00

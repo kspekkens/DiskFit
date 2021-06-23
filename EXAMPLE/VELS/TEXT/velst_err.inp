@@ -1,0 +1,41 @@
+KINEMATICS EXAMPLE, TEXT FILE
+vels                               # 2 vels/phot switch
+F  F                               # 3 VELS: I/O toggles: FITS I/O, vels in m/s
+'EXAMPLE/VELS/TEXT/vels.txt'       # 4 file name with input data
+no_data                            # 5 VELS + FITS:file name for velocity uncerts
+no_data                            # 6 FITS region to fit: (xlow,ylow) & (xrange,yrange)
+no_data                            # 7 FITS sampling: regrad, regpa, regeps, istepout, pixscale
+'EXAMPLE/VELS/TEXT/OUT/err.out'    # 8 file name for output parameters
+T T T                              #9 Disk toggles: fit for PA, eps & cen
+80.00  0.5                         #10 initial guess for disk PA and eps=(1-b/a)
+0.0 0.0                            #11 initial guess for disk center
+T T 45.00 2                        #12 VELS: non-circ. flow + flow PA fit toggle, initial flow PA, order m  
+T F                                #13 VELS: inner interpolation + radial flows fit toggles
+T 500.00 2.0 25.0                  #14 VELS: toggle to fit Vsys, initial guess Vsys, delta_ISM, & vely errtol
+F T T T 90 0 0                     #15 VELS: warp toggles - warp, fit radius, ellip & pa, initial rw, welm & wphim
+0                                  #16 Seeing/beam smearing: If non-zero, seeing/beam FWHM for correction.
+-0.01 -0.01                        #17 Model component smoothing lambda_1 & lambda_2
+T -50 5 1.0                        #18 Uncertainties: toggle, seed, nunc, junc
+F                                  #19 Verbose toggle
+0.0 50.00                          #20 Min, max radii for bar/noncirc flow fit
+2.5 				   #21 Ring radii
+5.0
+7.5
+10.0
+12.5
+15.0
+17.5
+20.0
+22.5
+25.0
+27.5
+30.0
+32.5
+35.0
+37.5
+40.0
+42.5
+45.0
+47.5
+50.0
+

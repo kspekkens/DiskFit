@@ -1,0 +1,39 @@
+#PHOTOMETRY EXAMPLE, DISKFIT
+phot                           # 2 vels/phot switch
+no_data                        # 3 PHOT: line ignored
+'EXAMPLE/PHOT/phot.fits'       # 4 file name with input data
+800.0 14.14 4.0                # 5 PHOT: image params: sky, sky sig, gain
+1 1 256 256                    # 6 FITS region to fit: (xlow,ylow) & (xrange,yrange)
+10.0  35.00  0.4  2 0.5        # 7 FITS sampling: regrad, regpa, regeps, istepout, pixscale
+'EXAMPLE/PHOT/OUT/disk.out'    # 8 file name for output parameters
+T T T                          # 9 Disk toggles: fit for PA, fit for eps, fit for cen
+35 0.4                         #10 initial guess for disk PA and eps=(1-b/a)
+130 130                        #11 initial guess for disk center
+F T T 5.00 0.5                 #12 PHOT: bar, bar PA & bar eps fit toggles, initial bar PA & eps
+junk                           #13 PHOT: line ignored
+F T 10                         #14 PHOT: bulge, r_e fit toggle, initial r_e
+F T 2 0.2                      #15 PHOT: fit for Sersic n & bulge eps, initial n & eps
+0.                             #16 Seeing/beam smearing FWHM for correction - 0 to skip
+-0.01 -0.01                    #17 Model component smoothing lambda_1 + lambda_2
+F -50 50 -1.0                  #18 Uncertainties: toggle, seed, nunc, junc
+F                              #19 Verbose toggle
+0. 40.                         #20 Min, max radii for bar/noncirc flow fit
+5.0                            #21 ring radii
+10.0
+15.0
+20.0
+25.0
+30.0
+35.0
+40.0
+45.0
+50.0
+55.0
+60.0
+65.0
+70.0
+75.0
+80.0
+90.0
+100.0
+110.0

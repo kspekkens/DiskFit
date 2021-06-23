@@ -1,0 +1,89 @@
+Minimization output, vels
+-------------------------
+Input files: 
+EXAMPLE/VELS/FITS/velsf_rad.inp                                                
+EXAMPLE/VELS/FITS/vels.fits                           pixscale  1.00 arcsec/pix
+
+
+FITS region:       x-low:      1   y-low:      1 x-range:    255 y-range:    255
+FITS sampling:    regrad:  12.00   regpa:  45.00  regeps:   0.45 istpout:      6
+
+Output model and (data-model) residuals files:
+EXAMPLE/VELS/FITS/OUT/rad.mod
+EXAMPLE/VELS/FITS/OUT/rad.res
+
+Disk toggles:         PA: T     eps: T  center: T non-axi: F    phib: F
+vels toggles:    interp0: T  radial: T    Vsys: T    warp: F      rw: F    welm: F   wphim: F
+
+Input values 
+--------------
+disk PA, phi_d^prime (deg):           45.00
+disk eps:                              0.45
+x,y center (data units):             130.50  126.50
+
+
+Vsys (km/s):                         110.00
+Delta_ISM (km/s):                      1.00
+
+
+
+
+
+No seeing correction applied
+No model component smoothing applied
+No uncertainties estimated
+Non-axisymmetries fixed to 0 outside range:    3.00  111.00
+
+
+Best fitting values
+---------------------
+disk PA, phi_d^prime (deg):           40.00 +/-  0.00
+disk eps:                              0.50 +/-  0.00
+disk incl (deg):                      60.03 +/-  0.00
+x,y center (data units):             128.50 +/-  0.00,  128.55 +/-  0.00
+
+Vsys (km/s):                         100.04 +/-  0.00
+
+
+
+
+
+
+
+
+
+Minimization Details 
+---------------------
+# points Dn used in fit:               1224
+# iterations in minimization:             5
+Minimum chi^2 found:               8.851554
+Degrees of freedom in fit:             1175
+
+Fitted velocity components                  (radii in data units, velocities in km/s):
+       r        npts          Vt         eVt          Vr         eVr        Vm,t       eVm,t        Vm,r       eVm,r
+--------------------------------------------------------------------------------------------------------------------
+      3.00     15.56       63.22        0.00       -4.81        0.00        0.00        0.00        0.00        0.00
+      9.00     25.09      116.05        0.00      -12.79        0.00        0.00        0.00        0.00        0.00
+     15.00      3.06      131.27        0.00      -18.99        0.00        0.00        0.00        0.00        0.00
+     21.00      3.05      139.84        0.00      -22.21        0.00        0.00        0.00        0.00        0.00
+     27.00      4.16      143.97        0.00      -20.82        0.00        0.00        0.00        0.00        0.00
+     33.00      4.64      145.69        0.00      -27.29        0.00        0.00        0.00        0.00        0.00
+     39.00      5.51      150.94        0.00      -28.11        0.00        0.00        0.00        0.00        0.00
+     45.00      6.35      150.17        0.00      -25.23        0.00        0.00        0.00        0.00        0.00
+     51.00      7.62      154.15        0.00      -26.72        0.00        0.00        0.00        0.00        0.00
+     57.00      8.22      159.65        0.00      -24.19        0.00        0.00        0.00        0.00        0.00
+     63.00      9.08      167.52        0.00      -16.75        0.00        0.00        0.00        0.00        0.00
+     69.00      9.84      175.28        0.00      -12.40        0.00        0.00        0.00        0.00        0.00
+     75.00     10.88      180.94        0.00       -5.78        0.00        0.00        0.00        0.00        0.00
+     81.00     11.76      185.64        0.00       -2.95        0.00        0.00        0.00        0.00        0.00
+     87.00     12.23      189.85        0.00       -3.46        0.00        0.00        0.00        0.00        0.00
+     93.00     13.43      190.58        0.00       -2.33        0.00        0.00        0.00        0.00        0.00
+     99.00     15.03      190.75        0.00        0.60        0.00        0.00        0.00        0.00        0.00
+    105.00     14.75      192.30        0.00       -0.89        0.00        0.00        0.00        0.00        0.00
+    111.00     15.64      192.27        0.00       -0.02        0.00        0.00        0.00        0.00        0.00
+    117.00     16.72      192.62        0.00        0.00        0.00        0.00        0.00        0.00        0.00
+    123.00     18.26      192.70        0.00        0.00        0.00        0.00        0.00        0.00        0.00
+    129.00     18.70      193.67        0.00        0.00        0.00        0.00        0.00        0.00        0.00
+    135.00     19.22      193.05        0.00        0.00        0.00        0.00        0.00        0.00        0.00
+    141.00     22.76      194.68        0.00        0.00        0.00        0.00        0.00        0.00        0.00
+    147.00     23.04      194.62        0.00        0.00        0.00        0.00        0.00        0.00        0.00

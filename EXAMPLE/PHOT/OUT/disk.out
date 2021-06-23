@@ -1,0 +1,83 @@
+Minimization output, phot
+-------------------------
+Input files: 
+EXAMPLE/PHOT/phot_disk.inp                                                     
+EXAMPLE/PHOT/phot.fits  pixscale  0.50 arcsec/pix
+sky:  800.00  skysig:   14.14    gain:    4.00
+
+FITS region:       x-low:      1   y-low:      1 x-range:    256 y-range:    256
+FITS sampling:    regrad:  10.00   regpa:  35.00  regeps:   0.40 istpout:      2
+
+Output model and (data-model) residuals files:
+EXAMPLE/PHOT/OUT/disk.mod
+EXAMPLE/PHOT/OUT/disk.res
+
+Disk toggles:         PA: T     eps: T  center: T non-axi: F    phib: F
+phot toggles:     lbulge: F    lr_e: F  lsersn: F blg eps: F bar eps: F
+
+Input values 
+--------------
+disk PA, phi_d^prime (deg):           35.00
+disk eps:                              0.40
+x,y center (data units):             130.00  130.00
+
+
+
+
+
+
+
+
+
+No seeing correction applied
+No model component smoothing applied
+No uncertainties estimated
+
+
+
+Best fitting values
+---------------------
+disk PA, phi_d^prime (deg):           30.72 +/-  0.00
+disk eps:                              0.30 +/-  0.00
+disk incl (deg):                      45.51 +/-  0.00
+x,y center (data units):             130.00 +/-  0.00,  130.00 +/-  0.00
+
+
+
+
+
+
+
+
+
+
+
+Minimization Details 
+---------------------
+# points Dn used in fit:               7495
+# iterations in minimization:             3
+Minimum chi^2 found:               4.194632
+Degrees of freedom in fit:             7472
+
+Fitted intensities                                         (radii in pixels, intensities in ADU):
+       r        npts       Idisk      eIdisk        Ibar       eIbar     Ibulge      eIbulge
+---------------------------------------------------------------------------------------------
+      5.00    125.05     1868.71        0.00        0.00        0.00        0.00        0.00
+     10.00     99.31      935.44        0.00        0.00        0.00        0.00        0.00
+     15.00     82.23      894.20        0.00        0.00        0.00        0.00        0.00
+     20.00    110.07      650.74        0.00        0.00        0.00        0.00        0.00
+     25.00    137.83      475.97        0.00        0.00        0.00        0.00        0.00
+     30.00    165.10      372.59        0.00        0.00        0.00        0.00        0.00
+     35.00    192.24      280.60        0.00        0.00        0.00        0.00        0.00
+     40.00    220.52      207.08        0.00        0.00        0.00        0.00        0.00
+     45.00    247.80      171.09        0.00        0.00        0.00        0.00        0.00
+     50.00    274.34      137.52        0.00        0.00        0.00        0.00        0.00
+     55.00    303.92      112.57        0.00        0.00        0.00        0.00        0.00
+     60.00    329.44       90.93        0.00        0.00        0.00        0.00        0.00
+     65.00    357.72       76.10        0.00        0.00        0.00        0.00        0.00
+     70.00    385.49       61.04        0.00        0.00        0.00        0.00        0.00
+     75.00    413.04       49.97        0.00        0.00        0.00        0.00        0.00
+     80.00    673.76       39.66        0.00        0.00        0.00        0.00        0.00
+     90.00    990.68       28.83        0.00        0.00        0.00        0.00        0.00
+    100.00   1101.06       10.01        0.00        0.00        0.00        0.00        0.00
+    110.00   1285.39        1.97        0.00        0.00        0.00        0.00        0.00

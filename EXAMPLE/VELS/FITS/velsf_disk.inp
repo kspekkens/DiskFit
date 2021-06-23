@@ -1,0 +1,46 @@
+KINEMATICS EXAMPLE, DISKFIT # beamsize = 6.00'' # pixscale-> 1.00''/pix # ringstep = 3.0pix
+vels                               # 2 vels/phot switch
+T  T                               # 3 VELS: I/O toggles: FITS I/O, vels in m/s
+'EXAMPLE/VELS/FITS/vels.fits'      # 4 file name with input data
+no_data                            # 5 VELS + FITS:file name for velocity uncerts
+1  1  255 255                      # 6 FITS region to fit: (xlow,ylow) & (xrange,yrange)
+12.0  45.00  0.45  6 1.0           # 7 FITS sampling: regrad, regpa, regeps, istepout, pixscale
+'EXAMPLE/VELS/FITS/OUT/disk.out'   # 8 file name for output parameters
+T T T                              # 9 Disk toggles: fit for PA, eps & cen
+45.00  0.45                        #10 initial guess for disk PA and eps=(1-b/a)
+130.50  126.50                     #11 initial guess for disk center
+F T 45.00 2                        #12 VELS: non-circ. flow + flow PA fit toggle, initial flow PA, order m  
+T F                                #13 VELS: inner interpolation + radial flows fit toggles
+T 110.00 1.0 25.0                  #14 VELS: toggle to fit Vsys, initial guess Vsys, delta_ISM, & vely errtol
+F T T T 90 0 0                     #15 VELS: warp toggles - warp, fit radius, ellip & pa, initial rw, welm & wphim
+0.                                 #16 Seeing/beam smearing: If non-zero, seeing/beam FWHM for correction.
+-0.01 -0.01                        #17 Model component smoothing lambda_1 & lambda_2
+F -50 5 -1.0                       #18 Uncertainties: toggle, seed, nunc, junc
+F                                  #19 Verbose toggle
+3.00 110.00                        #20 Min, max radii for bar/noncirc flow fit
+3.0                                #21 ring radii                            
+9.0
+15.0
+21.0
+27.0
+33.0
+39.0
+45.0
+51.0
+57.0
+63.0
+69.0
+75.0
+81.0
+87.0
+93.0
+99.0
+105.0
+111.0
+117.0
+123.0
+129.0
+135.0
+141.0
+147.0
+
