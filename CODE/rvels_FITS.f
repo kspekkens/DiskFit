@@ -1,24 +1,27 @@
       subroutine rvels_FITS
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c reads velocity map, and possibly velocity error map, as FITS files
 c
 c   Created by RZS March 2009
 c   Polished by JAS October 2009
 c   Revised by JAS March 2011
 c   Allow for 64-bit reals JAS April 2013
+c   Updated to f90 - JAS Jan 2015
 c
       include 'commons.h'
 c
 c local FITS variables, from FITS cookbook
-      integer bitpix, blocksize, firstpix, group, nbuffer, nfound
+      integer bitpix, blocksize, firstpix, group, nfound
       integer readwrite, status, unit, unit2
       integer naxes( 2 ), naxes2( 2 )
       logical anynull
       real evelnow, eveltmp, nullval
-      real buffer( mpx ), buffer2( mpx )
-      real*8 buf( mpx )
+      real, allocatable :: buffer( : ), buffer2( : )
+      real*8, allocatable :: buf( : )
 c
 c local variables
-      integer i, istepin, j, nline
+      integer i, istepin, j, lnblnk, nline
       real cospa, mpsfac, r, sinpa, u, v, velmax, velmin, x, y
 c      real nanum
       parameter ( istepin = 1 )
@@ -47,31 +50,24 @@ c get unused logical unit numbers for the FITS file
       call ftgiou( unit2, status )
 c
       readwrite = 0
-      call ftopen( unit, invfile, readwrite, blocksize, status )
+      call ftopen( unit, datfile, readwrite, blocksize, status )
 c this is fatal - could not open the file named as the velocity map
       if( status .ne. 0 )then
-        print *, 'failed to open FITS velocity map'
+        i = lnblnk( datfile )
+        print *,
+     +        'failed to open FITS velocity map file ' // datfile( 1:i )
         call crash( 'rvels_FITS' )
       end if
-c attempt to read error file. If it doesn't exist then set all errors to 0
-c   and rely on turbulence term to set a contant error for all input values
-      call ftopen( unit2, inevfile, readwrite, blocksize, status )
-      if( status .eq. 0 )then
-c file was opened - OK to proceed
-        evelfile = .true.
-      else if( status .eq. 104 )then
-c file doesn't exist, so will assume constant 0 error
-        evelfile = .false.
-        call ftfiou( unit2, status )
-c        print *, 'Adopting error ', evelnow, ', eISM ', eISM, 'km/s'
-        status = 0
-      else
-c there was some other error opening the file - warn and carry on
-        evelfile = .false.
-        call ftfiou( unit2, status )
-c        print *, 'No error file found.'
-c        print *, 'Adopting error ', evelnow, ', eISM ', eISM, 'km/s'
-        status = 0
+c attempt to read error file - if one is expected
+      if( lerrfile )then
+        call ftopen( unit2, errfile, readwrite, blocksize, status )
+        if( status .ne. 0 )then
+c named file was not found
+          i = lnblnk( errfile )
+          print *,
+     +        'Unable to open the uncertainties file ' // errfile( 1:i )
+          call crash( 'rvels_FITS' )
+        end if
       end if
 c
 c determine the size of the image
@@ -84,7 +80,7 @@ c check that it found both NAXIS1 and NAXIS2 keywords
 c determine the type of data
       call ftgidt( unit, bitpix, status )
 c
-      if( evelfile )then
+      if( lerrfile )then
         call ftgknj( unit2, 'NAXIS', 1, 2, naxes2, nfound, status )
 c check that it found both NAXIS1 and NAXIS2 keywords
         if( nfound .ne. 2 )then
@@ -109,20 +105,19 @@ c check the type of data
 c
       nsizex = naxes( 1 )
       nsizey = naxes( 2 )
-      if( ( nsizex .gt. mpx ) .or. ( nsizey .gt. mpy ) )then
-        print *, 'Too many pixels needed', nsizex, nsizey
-        call crash( 'rvels_FITS' )
-      end if
       group = 1
       firstpix = 1
       nullval = 0 ! no checks for undefined pixels - done elsewhere
-c
-      nbuffer = min( naxes( 1 ), MPX )
-      if( naxes( 1 ) .gt. MPX )then
-        print *, '****'
-        print *, 'Your image is too large. Increase MPX'
-        print *, 'Reading only box ', nbuffer, ' x', nbuffer
-      end if
+c input buffers
+      allocate ( buffer( nsizex ) )
+      if( lerrfile )allocate ( buffer2( nsizex ) )
+      if( bitpix .eq. -64 )allocate ( buf( nsizex ) )
+c raw data arrays
+      allocate ( ldat( nsizex, nsizey ) )
+      allocate ( ldate( nsizex, nsizey ) )
+      allocate ( lgpix( nsizex, nsizey ) )
+      allocate ( xval( nsizex ) )
+      allocate ( yval( nsizey ) )
 c
       cospa = cos( regpa )
       sinpa = sin( regpa )
@@ -130,14 +125,14 @@ c
       j = 0
 c loop though array twice - first get pixels within regrad
       nline = 1
-      do while ( nline .le. naxes( 2 ) )
+      do while ( nline .le. nsizey )
         if( bitpix .eq. -32 )then
-          call ftgpve( unit, group, firstpix, nbuffer, nullval,
+          call ftgpve( unit, group, firstpix, nsizex, nullval,
      +                 buffer, anynull, status )
         else if( bitpix .eq. -64 )then
-          call ftgpvd( unit, group, firstpix, nbuffer, nullval,
+          call ftgpvd( unit, group, firstpix, nsizex, nullval,
      +                 buf, anynull, status )
-          do i = 1, nbuffer
+          do i = 1, nsizex
             buffer( i ) = buf( i )
           end do
         else
@@ -145,14 +140,14 @@ c loop though array twice - first get pixels within regrad
           call crash( 'rvels_FITS' )
         end if
 c read uncertainties only if the file exists
-        if( evelfile )then
+        if( lerrfile )then
           if( bitpix .eq. -32 )then
-            call ftgpve( unit2, group, firstpix, nbuffer, nullval,
+            call ftgpve( unit2, group, firstpix, nsizex, nullval,
      +                   buffer2, anynull, status )
           else if( bitpix .eq. -64 )then
-            call ftgpvd( unit2, group, firstpix, nbuffer, nullval,
+            call ftgpvd( unit2, group, firstpix, nsizex, nullval,
      +                   buf, anynull, status )
-            do i = 1, nbuffer
+            do i = 1, nsizex
               buffer2( i ) = buf( i )
             end do
           end if
@@ -160,14 +155,14 @@ c read uncertainties only if the file exists
         yval( nline ) = nline
 c place data in array
         i = 1
-        do while ( i .le. nbuffer )
+        do while ( i .le. nsizex )
           xval( i ) = i
           x = real( i ) - xcen
           y = real( nline ) - ycen
           u = x * cospa + y * sinpa
           v = -x * sinpa + y * cospa
           r = sqrt( u**2 + ( v / b_over_a )**2 )
-          if( evelfile )then
+          if( lerrfile )then
             evelnow = buffer2( i ) / mpsfac
             eveltmp = evelnow  ! take the error seriously
           end if
@@ -190,30 +185,47 @@ c use pixel only if value is valid
           i = i + istepin
         end do
 c increment pointers and loop back to read the next group of pixels
-        firstpix = firstpix + naxes( 1 ) * istepin
+        firstpix = firstpix + nsizex * istepin
         nline = nline + istepin
       end do
 c
 c now get pixels outside regrad
       firstpix = 1
       nline = 1
-      do while ( nline .le. naxes( 2 ) )
-        call ftgpve( unit, group, firstpix, nbuffer, nullval,
-     +               buffer, anynull, status )
-        if( evelfile )then
-          call ftgpve( unit2, group, firstpix, nbuffer, nullval,
-     +                 buffer2, anynull, status )
+      do while ( nline .le. nsizey )
+        if( bitpix .eq. -32 )then
+          call ftgpve( unit, group, firstpix, nsizex, nullval,
+     +                 buffer, anynull, status )
+        else if( bitpix .eq. -64 )then
+          call ftgpvd( unit, group, firstpix, nsizex, nullval,
+     +                 buf, anynull, status )
+          do i = 1, nsizex
+            buffer( i ) = buf( i )
+          end do
+        end if
+c read uncertainties only if the file exists
+        if( lerrfile )then
+          if( bitpix .eq. -32 )then
+            call ftgpve( unit2, group, firstpix, nsizex, nullval,
+     +                   buffer2, anynull, status )
+          else if( bitpix .eq. -64 )then
+            call ftgpvd( unit2, group, firstpix, nsizex, nullval,
+     +                   buf, anynull, status )
+            do i = 1, nsizex
+              buffer2( i ) = buf( i )
+            end do
+          end if
         end if
 c
 c place data in array
         i = 1
-        do while ( i .le. nbuffer )
+        do while ( i .le. nsizex )
           x = real( i ) - xcen
           y = real( nline ) - ycen
           u = x * cospa + y * sinpa
           v = -x * sinpa + y * cospa
           r = sqrt( u**2 + ( v / b_over_a )**2 )
-          if( evelfile )then
+          if( lerrfile )then
             evelnow = buffer2( i ) / mpsfac
             eveltmp = evelnow   ! take error seriously
           end if
@@ -232,7 +244,7 @@ c use pixel only if value is valid
           i = i + istepout
         end do
 c increment pointers and loop back to read the next group of pixels
-        firstpix = firstpix + naxes( 1 ) * istepout
+        firstpix = firstpix + nsizex * istepout
         nline = nline + istepout
       end do
 c total number of points read
@@ -241,7 +253,7 @@ c the FITS files must always be closed before exiting the program
 c   any unit numbers allocated with FTGIOU are freed with FTFIOU
       call ftclos( unit, status )
       call ftfiou( unit, status )
-      if( evelfile )then
+      if( lerrfile )then
         call ftclos( unit2, status )
         call ftfiou( unit2, status )
       end if

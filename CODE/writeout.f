@@ -1,4 +1,6 @@
       subroutine writeout
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c Write out optimal parameters and velocity field if ltext
 c Details of minimization performed at end of disk parameter file.
 c
@@ -7,6 +9,8 @@ c   Adapted by JAS March 2011 for photometric option
 c   Revised by JAS July 2011 for warp analysis
 c   Revised by KS  Oct 2011 to integrate vels, phot options
 c   Polished by KS Mar 2012
+c   Updated to f90 - JAS Jan 2015
+c   Eliminated most trailing white space - JAS Aug 2015
 c
       include 'commons.h'
 c
@@ -51,12 +55,12 @@ c create "output model file" only if maps are in text format
           end do
         else
           do i = 1, inp_pts
-            if( lgpix1( i ) )then
+            if( lgpix( i, 1 ) )then
               write( 3, '( 3f12.2, 2f11.2, 7f13.2 )' )
-     +          xval( i ), yval( i ), a * sdat1( i ),
-     +          a * sdate1( i ), a * sigma1( i ), a * model1( i ),
-     +          a * res1( i ), x2res1( i ), a * rotvels1( i ),
-     +          a * radvels1( i ), a * bivtan1( i ), a * bivrad1( i )
+     +          xval( i ), yval( i ), a * sdat( i, 1 ),
+     +          a * sdate( i, 1 ), a * sigma( i, 1 ), a * model( i, 1 ),
+     +          a * res( i, 1 ), x2res( i, 1 ), a * rotvels( i, 1 ),
+     +       a * radvels( i, 1 ), a * bivtan( i, 1 ), a * bivrad( i, 1 )
             end if
           end do
         end if
@@ -70,27 +74,31 @@ c create output parameter file
         fittype = 'phot'
       end if
       write( 4, '( a, a4 )' )'Minimization output, ', fittype
-      write( 4, '( a, a4 )' )'-------------------------'
+      write( 4, '( a )' )'-------------------------'
 c write out input files
-      write( 4, '( a )' )'Input files: '
-      write( 4, '( a )' )infile( 1:79 )
+      write( 4, '( a )' )'Input files:'
+      j = lnblnk( infile )
+      write( 4, '( a )' )infile( 1:j )
       if( lvels )then
         if( lFITS )then
-          write( 4, '( a, f5.2, a )' )invfile( 1:53 )//' pixscale ',
+          j = lnblnk( datfile )
+          write( 4, '( a, f5.2, a )' )datfile( 1:j )//'   pixscale ',
      +                                           pixscale, ' arcsec/pix'
-          if( evelfile )then
-            write( 4, '( a )' )inevfile( 1:53 )
+          if( lerrfile )then
+            j = lnblnk( errfile )
+            write( 4, '( a )' )errfile( 1:j )
           else
             write( 4, * )
           end if
         else
-          write( 4, '( a )' )invfile( 1:53 )
+          j = lnblnk( datfile )
+          write( 4, '( a )' )datfile( 1:j )
           write( 4, * )
         end if
       end if
       if( lphot )then
-        j = lnblnk( inpfile )
-        write( 4, '( a, f5.2, a )' )inpfile( 1:j )//'  pixscale ',
+        j = lnblnk( datfile )
+        write( 4, '( a, f5.2, a )' )datfile( 1:j )//'  pixscale ',
      +                                           pixscale, ' arcsec/pix'
         write( 4, '( a4, f8.2, 2( a9, f8.2 ) )')
      +        'sky:',  sky, '  skysig:', skysig, '    gain:', gain
@@ -142,8 +150,8 @@ c toggles:
       end if
       write( 4, *  )
 c input values
-      write( 4, '( a )' )'Input values '
-      write( 4, '( a )' )'--------------'
+      write( 4, '( a )' )'Input values'
+      write( 4, '( a )' )'------------'
       a = ( pa * 180. / pi )
 c KS CHANGED THIS:
 c      if( lvels )a = a - 90.
@@ -171,7 +179,7 @@ c Inputs specific to velocities:
       if( lvels )then
         write( 4, '( a, 23x, f8.2 )' )'Vsys (km/s):', vsys
         write( 4, '( a, 18x, f8.2 )' )'Delta_ISM (km/s):', eISM
-        if( evelfile )then
+        if( lerrfile )then
           write( 4, '( a, 16x, f8.2 )' )'Delta_D^max (km/s):', errtol
         else
           write( 4, * )
@@ -206,7 +214,7 @@ c write out seeing, smoothing, bootstrap details
       write( 4, * )
       if( lseeing )then
         write( 4, '( a, 2x, f8.2 )' )
-     +             'Seeing correction applied. FWHM (data units):', rsee
+     +             'Seeing correction applied. FWHM (data units):', dsee
       else
         write( 4, '( a )' )'No seeing correction applied'
       end if
@@ -236,7 +244,7 @@ c write out seeing, smoothing, bootstrap details
       write( 4, * )
 c output best fitting values of the parameters
       write( 4, '( a )' )'Best fitting values'
-      write( 4, '( 21a )' )( dash, i = 1, 21 )
+      write( 4, '( 19a )' )( dash, i = 1, 19 )
       if( ldisk )then
         if( lpa )then
           astpa = newpa * 180. / pi - 90.
@@ -296,13 +304,13 @@ c output parameters for velocities
           end if
           if( lwepsm )then
             write( 4, '( a, 21x, f8.2, a5, f5.2 )' ) 'Warp eps welm:',
-     +                 ( 180. * newpm / pi ), pm, ( 180. * enewpm / pi )
+     +                 ( 180. * newem / pi ), pm, ( 180. * enewem / pi )
           else
             write( 4, * )
           end if
           if( lwpm )then
-            write( 4, '( a, 21x, f8.2, a5, f5.2 )' )
-     +                               'Warp PA wphim:', newem, pm, enewem
+            write( 4, '( a, 21x, f8.2, a5, f5.2 )' )'Warp PA wphim:', 
+     +                 ( 180. * newpm / pi ), pm, ( 180. * enewpm / pi )
           else
             write( 4, * )
           end if
@@ -351,7 +359,7 @@ c output params, photometry
             write( 4, * )
           end if
           if( lI_0 )then
-            write( 4, '( a, 19x, f8.2, a5, f5.2 )' )
+            write( 4, '( a, 19x, f8.2, a5, f8.2 )' )
      +            'Bulge I_0 (ADU):', ibulge( 1 ), pm, eibulge( 1 )
           else
             write( 4, * )
@@ -398,7 +406,7 @@ c output params, photometry
       end if
 c output minimization details
       write( 4, * )
-      write( 4, '( a )' )'Minimization Details '
+      write( 4, '( a )' )'Minimization Details'
       write( 4, '( 21a )' )( dash, i = 1, 21 )
       write( 4, '( a, 12x, i7 )' )'# points Dn used in fit:', pixct
       write( 4, '( a, 7x, i7 )' )
@@ -422,7 +430,7 @@ c output fitted velocities
         end do
       end if
       if( lphot )then
-c output fitted velocities
+c output fitted intensities
         write( 4, '( a )' )'Fitted intensities
      +               (radii in pixels, intensities in ADU):'
         write( 4, '( a )' )'       r        npts       Idisk' //

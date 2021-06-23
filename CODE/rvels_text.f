@@ -1,21 +1,40 @@
       subroutine rvels_text
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c Reads in a dataset to xval, yval, sdat, sdate from a simple text file
 c
 c   Created by KS
 c   Polished by JAS October 2009
 c   Convert data to pixel map by JAS March 2011
 c   Conversion made a user option JAS July 2012
+c   Updated to f90 - JAS Jan 2015
+c   Fixed bug in rasterization - JAS Aug 2015
+c
       include 'commons.h'
-      real temp( 4, mpx )
-      equivalence ( temp( 1, 1 ), ldat( 1, 1 ) )
-
+      real, allocatable :: temp( :, : )
+c
+c external
+      integer lnblnk
+c
 c local variables
       character*1 yn
-      integer i, j, k, lnblnk
-      real d, spacing, xmax, xmin, ymax, ymin
+      integer i, j, k
+      real d, dmin, spacing, xmax, xmin, ymax, ymin
 c
-      open( 4, file = invfile, status = 'old' )
+      open( 4, file = datfile, status = 'old' )
 c skip header lines
+      do i = 1, 4
+        read( 4, * )
+      end do
+c count lines of data
+      i = 0
+      inp_pts = -1
+      do while ( i .eq. 0 )
+        read( 4, *, iostat = i )d
+        inp_pts = inp_pts + 1
+      end do
+c rewind and skip header lines
+      rewind 4
       do i = 1, 4
         read( 4, * )
       end do
@@ -23,9 +42,10 @@ c skip header lines
       xmax = -xmin
       ymin = 1.e6
       ymax = -ymin
+      allocate ( temp( 4, inp_pts ) )
 c read in file
-      do i = 1, mpx * mpy / 4
-        read( 4, *, end = 99 )( temp( j, i ), j = 1, 4 )
+      do i = 1, inp_pts
+        read( 4, * )( temp( j, i ), j = 1, 4 )
         xmin = min( xmin, temp( 1, i ) )
         xmax = max( xmax, temp( 1, i ) )
         ymin = min( ymin, temp( 2, i ) )
@@ -35,32 +55,22 @@ c read in file
           temp( 4, i ) = 1.e-3 * temp( 4, i )
         end if
       end do
-c no end of file encountered
-      print *
-      print *, '( ''WARNING: maximum number '', i8, ' //
-     +           ' ''of input velocities read'' )', mapx, mapy
-      j = lnblnk( invfile )
-      print *, '( ''It is possible that some lines of '', a, ' //
-     +                     ' '' have not been read.'' )', invfile( 1:j )
-      print *, 'Check outputs carefully!'
-      print *
-c normal end
-   99 close( 4 )
-      inp_pts = i - 1
-      i = lnblnk( invfile )
+      close( 4 )
+      i = lnblnk( datfile )
       print *, inp_pts,
-     +                ' velocity points read from file ', invfile( 1:i )
+     +                ' velocity points read from file ', datfile( 1:i )
 c
-c convert to a rectangular pixel map
+c test whether conversion to a rectangular pixel map is possible
 c
 c find smallest non-zero x & y differences in input values
       spacing = 1.e6
+      dmin = .0005 * min( xmax - xmin, ymax - ymin )
       do i = 1, inp_pts - 1
         do j = i + 1, inp_pts
           d = abs( temp( 1, i ) - temp( 1, j )  )
-          if( d .gt. 0.1 )spacing = min( spacing, d )
+          if( d .gt. dmin )spacing = min( spacing, d )
           d = abs( temp( 2, i ) - temp( 2, j )  )
-          if( d .gt. 0.1 )spacing = min( spacing, d )
+          if( d .gt. dmin )spacing = min( spacing, d )
         end do
       end do
 c check image size
@@ -69,8 +79,9 @@ c check image size
       xrange = int( ( xmax - xmin ) / spacing ) + 1
       yrange = int( ( ymax - ymin ) / spacing ) + 1
       l2D = .false.
+c value of 1024 here is arbitrary
+      if( ( xrange .le. 1024 ) .and. ( yrange .le. 1024 ) )then
 c 2D raster option possible if the user wishes
-      if( ( xrange .le. mapx ) .and. ( yrange .le. mapy ) )then
         yn = 'x'
         do while ( ( yn .ne. 'y' ) .and. ( yn .ne. 'n' ) )
           print *, 'Your input data points are spaced regularly' //
@@ -88,15 +99,24 @@ c ensure lowercase
         end do
         l2D = yn .eq. 'y'
       end if
-c set (x,y) positions of pixels
       if( l2D )then
+c revise xrange, yrange to ensure all pixels are covered
         j = nint( xmin * spacing )
         xmin = real( j ) / spacing
+        xrange = int( ( xmax - xmin ) / spacing ) + 2
+        j = nint( ymin * spacing )
+        ymin = real( j ) / spacing
+        yrange = int( ( ymax - ymin ) / spacing ) + 2
+c dimension arrays
+        allocate ( xval( xrange ) )
+        allocate ( yval( yrange ) )
+        allocate ( sdat( xrange, yrange ) )
+        allocate ( sdate( xrange, yrange ) )
+        allocate ( lgpix( xrange, yrange ) )
+c set (x,y) positions of pixels
         do i = 1, xrange
           xval( i ) = real( i - 1 ) * spacing + xmin
         end do
-        j = nint( ymin * spacing )
-        ymin = real( j ) / spacing
         do i = 1, yrange
           yval( i ) = real( i - 1 ) * spacing + ymin
         end do
@@ -118,17 +138,16 @@ c insert input values into pixel map
 c parameter needed for plotting
         istepout = max( nint( spacing ), 1 )
       else
-c check space
-        if( inp_pts .gt. mval * min( mpx, mpy ) )then
-          print *, 'xval and yval arrays too small - increase mval'
-          print *, 'contact code administrator'
-          call crash( 'rvels_text' )
-        end if
+c allocate space as a 1D array
+        allocate ( xval( inp_pts ) )
+        allocate ( yval( inp_pts ) )
+        allocate ( sdat( inp_pts, 1 ) )
+        allocate ( sdate( inp_pts, 1 ) )
         do i = 1, inp_pts
           xval( i ) = temp( 1, i )
           yval( i ) = temp( 2, i )
-          sdat1( i ) = temp( 3, i )
-          sdate1( i ) = temp( 4, i )
+          sdat( i, 1 ) = temp( 3, i )
+          sdate( i, 1 ) = temp( 4, i )
         end do
 c force program crash if not l2D and either seeing
 c     correction, or junc<0 for bootstrap selected
@@ -143,5 +162,6 @@ c     correction, or junc<0 for bootstrap selected
           call crash( 'rvels_text' )
         end if
       end if
+      deallocate ( temp )
       return
       end

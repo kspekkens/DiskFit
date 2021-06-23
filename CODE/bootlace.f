@@ -1,3 +1,5 @@
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c Program to post-process output files from bootstrap iterations
 c
 c Created by JAS - June 2012
@@ -18,8 +20,17 @@ c local variables
       real*8 a, adev, ave, b, curt, sdev, skew, var
       character*100 bootfile, line
 c
-c read input values
+      print *, 'DiskFit (v1.2)  Copyright (C) 2015,' //
+     +         ' Jerry Sellwood and Kristine Spekkens'
       print *
+      print *, 'This program comes with ABSOLUTELY NO WARRANTY.' //
+     +         '  It is free software'
+      print *, 'and you are welcome to' //
+     +         ' redistribute it under certain conditions.'
+      print *, 'See <http://www.gnu.org/licenses/> for details.'
+      print *
+c
+c read input values
       print *,'Enter input parameter file name'
       read( *, * )infile
       call readinp
@@ -115,3 +126,4 @@ c process data
 c revise errors in optimal output file
       call revisout
       end
+

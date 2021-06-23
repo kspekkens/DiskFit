@@ -1,4 +1,6 @@
       subroutine prepvels( gtdst )
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c puts raw data in more convenient format
 c
 c   Originally written by KS
@@ -8,11 +10,9 @@ c   Renamed to prepvels by JAS March 2011
 c   Calling argument added, select subsection of vely map, and set typcl
 c     for smoothing - JAS Sep 2011
 c   Implement preset mask - JAS March 2012
+c   Updated to f90 - JAS Jan 2015
 c
       include 'commons.h'
-c use x2res array, which has not been used at this stage, as a work array
-      real val( mapx * mapy )
-      equivalence ( val( 1 ), x2res( 1, 1 ) )
 c
 c calling argument - returns sma of largest active data point
       real gtdst
@@ -24,6 +24,8 @@ c 2D image case
       if( l2D )then
 c copy the velocity map or extract selected piece
         if( lFITS )then
+          allocate ( sdat( xrange, yrange ) )
+          allocate ( sdate( xrange, yrange ) )
           inp_pts = 0
           do j = 1, yrange
             yval( j ) = yval( j + loy - 1 )
@@ -41,6 +43,8 @@ c copy the velocity map or extract selected piece
 c set the mask now xval and yval arrays are right
         call setmsk( gtdst )
 c pixct = # pixels in fit. pix_ind = # of indep. points
+        allocate ( x2res( xrange, yrange ) )
+        allocate ( sigma( xrange, yrange ) )
         pixct = 0
         pix_ind = 0
         do j = 1, yrange
@@ -49,7 +53,7 @@ c skip bad pixels and points outside mask
             if( lgpix( i, j ) .and. inmask( i, j ) )then
               pixct = pixct + 1
               pix_ind = pix_ind + 1
-              val( pixct ) = sdat( i, j )
+              x2res( pixct, 1 ) = sdat( i, j )
             else
 c flag pixels outside the mask as bad
               lgpix( i, j ) = .false.
@@ -80,22 +84,24 @@ c              sigma( i, j ) = sqrt( sdate( i, j )**2 + eISM**2 + penalty**2 )
         end do
       else
 c 1D pixel list - xval and yval preset
-         print*, ' '
         call setmsk( gtdst )
+        allocate ( lgpix( inp_pts, 1 ) )
+        allocate ( sigma( inp_pts, 1 ) )
+        allocate ( x2res( inp_pts, 1 ) )
 c count pixels
         pixct = 0
         pix_ind = 0
         do i = 1, inp_pts
-          lgpix1( i ) = .false.
+          lgpix( i, 1 ) = .false.
 c theta = acos( abs( xel / tmpdst ) )
-          if( inmsk1( i ) )then
-            lgpix1( i ) = .true.
+          if( inmask( i, 1 ) )then
+            lgpix( i, 1 ) = .true.
             pixct = pixct + 1
             pix_ind = pix_ind + 1
-            val( pixct ) = sdat1( i )
+            x2res( pixct, 1 ) = sdat( i, 1 )
 c set uncertainty
-            sigma1( i ) = sqrt( sdate1( i )**2 + eISM**2 )
-            if( sigma1( i ) .eq. 0. )then
+            sigma( i, 1 ) = sqrt( sdate( i, 1 )**2 + eISM**2 )
+            if( sigma( i, 1 ) .eq. 0. )then
               print *, 'At least one sigma_i in dataset is'
               print *, 'exactly equal to 0: minimization will crash'
               print *, 'Change data or set deltaISM>0 in input file'
@@ -106,10 +112,10 @@ c set uncertainty
       end if
 c set typical velocity for smoothing - use Heapsort from Numerical Recipes
       if( ( lambda1 .gt. 0. ) .or. ( lambda2 .gt. 0. ) )then
-        call hpsort( pixct, val )
+        call hpsort( pixct, x2res )
         i = pixct / 10
         j = pixct - i
-        typcl = .5 * abs( val( j ) - val( i ) )
+        typcl = .5 * abs( x2res( j, 1 ) - x2res( i, 1 ) )
         if( VELmps )typcl = .001 * typcl
 c round down
         if( typcl .gt. 100. )then

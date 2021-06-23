@@ -1,4 +1,6 @@
       subroutine pseudp( jdum )
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c This subroutine uses a bootstrap technique to generate a new realization
 c   of the velocity field to be fitted
 c Creates areas with constant fractional residuals as described in SS07
@@ -8,20 +10,22 @@ c   Debugged & polished by JAS May 2009 & October 2009
 c   Alternative option pseudr created by RZS September 2009
 c   Converted to 2-D pixel map and largely rewritten by JAS March 2011
 c   Debugged again by JAS July 2011
+c   Updated to f90 - JAS Jan 2015
+c   Minor fixes - JAS Aug 2015
 c
       include 'commons.h'
 c
 c calling argument
       integer jdum
 c
-c externals
-c      integer nearpt
+c external
       real*8 ran1_dbl
 c
 c local arrays
-      integer newx( mapx, mapy ), newy( mapx, mapy )
-      logical dflag( mapx, mapy )
-      real newx2res( mapx, mapy )
+      integer, allocatable :: newx( :, : )
+      integer, allocatable :: newy( :, : )
+      logical, allocatable :: dflag( :, : )
+      real, allocatable :: newx2res( :, : )
 c
 c local variables
       integer ix, iy, j, jind, jx, jy, k, kx, ky
@@ -31,21 +35,28 @@ c
       sysv = 0
       if( lvels )sysv = vsys
       if( lsystemic )sysv = 0
+      allocate ( newx( xrange, yrange ) )
+      allocate ( newy( xrange, yrange ) )
+      allocate ( dflag( xrange, yrange ) )
+      allocate ( newx2res( xrange, yrange ) )
 c swap points at random
-      print*, xrange, yrange
+      frac = xrange * yrange
       do iy = 1, yrange
         do ix = 1, xrange
-          lp = .false.
+          if( lgpix( ix, iy ) )then
+            lp = .false.
 c ensure pixel selected to swap is good
-          do while ( .not. lp )
-            jx = int( ran1_dbl( jdum ) * xrange ) + 1
-            jy = int( ran1_dbl( jdum ) * yrange ) + 1
-            lp = lgpix( jx, jy )
-          end do
+            do while ( .not. lp )
+              jx = ran1_dbl( jdum ) * frac
+              jy = jx / xrange + 1
+              jx = jx - ( jy - 1 ) * xrange + 1
+              lp = lgpix( jx, jy )
+            end do
 c save these, set new residual, and mark all pixels as independent
-          newx( ix, iy ) = jx
-          newy( ix, iy ) = jy
-          newx2res( ix, iy ) = x2res( jx, jy )
+            newx( ix, iy ) = jx
+            newy( ix, iy ) = jy
+            newx2res( ix, iy ) = x2res( jx, jy )
+          end if
           dflag( ix, iy ) = .false.
         end do
       end do
@@ -78,18 +89,20 @@ c select the pixel neighboring that which was the source of the residual
                 in = ( jx .gt. 0 ) .and. ( jx .le. xrange )
                 jy = newy( ix, iy ) + jbl( j ) * istepout
                 in = in .and. ( jy .gt. 0 ) .and. ( jy .le. yrange )
-                if( lgpix( jx, jy ) .and. in )then
+                if( in )then
+                  if( lgpix( jx, jy ) )then
 c identify the neighboring pixel to receive the correlated residual
-                  kx = max( ix + ibl( k ) * istepout, 1 )
-                  kx = min( kx, xrange )
-                  ky = max( iy + jbl( k ) * istepout, 1 )
-                  ky = min( ky, yrange )
+                    kx = max( ix + ibl( k ) * istepout, 1 )
+                    kx = min( kx, xrange )
+                    ky = max( iy + jbl( k ) * istepout, 1 )
+                    ky = min( ky, yrange )
 c assign the correlated residual to the appropriate pixel
-                  if( lgpix( kx, ky ) .and. .not. dflag( kx, ky ) )
+                    if( lgpix( kx, ky ) .and. .not. dflag( kx, ky ) )
      +                              newx2res( kx, ky ) = x2res( jx, jy )
 c keep going until the patch is complete
-                  k = k + 1
-                  lp = k .le. jind
+                    k = k + 1
+                    lp = k .le. jind
+                  end if
                 end if
                 j = j + 1
 c blur list may run out before the patch is complete

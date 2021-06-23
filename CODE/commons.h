@@ -1,3 +1,5 @@
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c updated by RZS Mar 2009
 c      read a second fits file with velocity errors
 c      need common block to pass fits array sizes
@@ -12,7 +14,19 @@ c      logical and parameters for a simple warp model
 c updated by KS Mar 2012
 c      light fraction variables and bulge profile added
 c      updated file name variables
-
+c updated by JAS Jan 2015
+c      converted to f90 so that the sizes of all large arrays
+c      are declared dynamically to make the code more flexible
+c      the parameters mapx, mapy, mpx, & mpy have been eliminated
+c updated by JAS Sep 2015
+c      redefined file variable names - inpfile, invfile > datfile,
+c      inevfile -> errfile, and added mskfile
+c
+c the following statement makes the main allocatable arrays visible in
+c      every routine where it appears - it must come first, even before
+c      the implicit statement
+      use alldata
+c
       implicit none
 c
 c global parameters
@@ -27,17 +41,7 @@ c maximum numbers of ellipses
 c
 c mk is the maximum number of weights for each pixel
       integer mk
-      parameter ( mk = 20 )
-c
-c photometric image array
-c
-c maximum size of full image - only part may be fitted
-      integer mpx, mpy, mval
-      parameter ( mpx = 1024, mpy = 1024, mval = 5 )
-c
-c the maximum number of pixels in the fitted image or velocity map
-      integer mapx, mapy
-      parameter ( mapx = 1024, mapy = 1024 )
+      parameter ( mk = 60 )
 c
 c maximum 1D spread of blurring raster, in pixels, for seeing corrections
       integer mblur
@@ -49,17 +53,15 @@ c intrinsic disk thickness - zero for now
 c
 c common blocks
 c
-      logical evelfile, l2D, lFITS, ltext, lphot, lvels, verbose
+      logical l2D, lerrfile, lFITS, lmask, lphot, ltext, lvels, verbose
       common / data_type / lFITS, ltext, verbose, lphot, lvels, l2D,
-     +                     evelfile
-c
+     +                     lerrfile, lmask
 c
 c input and output file names:
-      character*100 inevfile, infile, inpfile, outroot
-      character*100 invfile, outpfile, outmfile, outrfile
-      common / galname / infile, inpfile,
-     +                   invfile, inevfile, outpfile, outmfile,
-     +                   outrfile, outroot
+      character*100 datfile, errfile, infile, mskfile, outroot
+      character*100 outpfile, outmfile, outrfile
+      common / galname / infile, datfile, errfile, outpfile,
+     +                   outmfile, outrfile, outroot, mskfile
 c
       integer nd, nellip, nradial, ntot
       integer nbar, nbulge, nnasymm, nmaxr, nminr, nunc, seed
@@ -118,32 +120,8 @@ c
      +                 istepout, regrad, regpa, regeps, VELmps
       equivalence ( reginc, regeps )
 c
-c large arrays for data input
-      real ldat( mpx, mpy ), ldate( mpx, mpy )
-      common / inpdat / ldat, ldate
-c
-c arrays for selected part of image or map
-      real sdat1( mapx * mapy ), sdate1( mapx * mapy )
-      real sdat( mapx, mapy ), sdate( mapx, mapy )
-      real xval( mval * mpx ), yval( mval * mpy )
-c, outvels( mapx, mapy )
-      common / fitdat / sdat, sdate, xval, yval
-      equivalence ( sdat( 1, 1 ), sdat1( 1 ) ),
-     +            ( sdate( 1, 1 ), sdate1( 1 ) )
-c
-      real sigma1( mapx * mapy )
-      real sigma( mapx, mapy )
-      common / errs / sigma
-      equivalence ( sigma( 1, 1 ), sigma1( 1 ) )
-c
       integer pix_ind, inp_pts, pixct
       common / npixs / pix_ind, inp_pts, pixct
-c
-      logical inmsk1( mpx * mpy ), lgpix1( mpx * mpy )
-      logical inmask( mpx, mpy ), lgpix( mpx, mpy )
-      common / goodpx / lgpix, inmask
-      equivalence ( inmask( 1, 1 ), inmsk1( 1 ) )
-      equivalence ( lgpix( 1, 1 ), lgpix1( 1 ) )
 c
       real rwarp, wepsm, wphim
       common / warpp / rwarp, wphim, wepsm
@@ -151,15 +129,6 @@ c
       real wba( mellip ), wcp( mellip ), wel( mellip )
       real wphi( mellip ), wsi( mellip ), wsp( mellip )
       common / warpd / wel, wphi, wba, wcp, wsp, wsi
-c
-      integer iwgt1( mk, mapx * mapy )
-      integer iwgt( mk, mapx, mapy )
-      common / iwgts / iwgt
-      equivalence ( iwgt( 1, 1, 1 ), iwgt1( 1, 1 ) )
-c
-      real wgt( mk, mapx, mapy ), wgt1( mk, mapx * mapy )
-      common / wgts / wgt
-      equivalence ( wgt( 1, 1, 1 ), wgt1( 1, 1 ) )
 c
       logical fronly
       real b_over_a, b_over_a2, bulgel, bulgen, cosphib, cos2phib
@@ -199,35 +168,6 @@ c
       real ringpts( mtot )
       common / rings / ringpts
 c
-      real res( mapx, mapy ), model( mapx, mapy ), x2res( mapx, mapy )
-      real rotvels( mapx, mapy ), radvels( mapx, mapy )
-      real diskint( mapx, mapy ), barint( mapx, mapy )
-      real bivrad( mapx, mapy) , bivtan( mapx, mapy )
-      real bulgeint( mapx, mapy )
-      real res1( mapx * mapy ), model1( mapx * mapy )
-      real rotvels1( mapx * mapy ), radvels1( mapx * mapy )
-      real diskint1( mapx * mapy ), barint1( mapx * mapy )
-      real bivrad1( mapx * mapy) , bivtan1( mapx * mapy )
-      real bulgeint1( mapx * mapy ), x2res1( mapx * mapy )
-      real bwgt( mk, mapx, mapy ), bwgt1( mk, mapx * mapy )
-      equivalence ( bwgt( 1, 1, 1 ), bwgt1( 1, 1 ) )
-      common / resids / model, x2res, res,
-     +                  rotvels, radvels, bivrad, bivtan
-      equivalence ( rotvels( 1, 1 ), diskint( 1, 1 ) )
-      equivalence ( radvels( 1, 1 ), barint( 1, 1 ) )
-      equivalence ( bivrad( 1, 1 ), bulgeint( 1, 1 ) )
-      equivalence ( res( 1, 1 ), res1( 1 ) )
-      equivalence ( model( 1, 1 ), model1( 1 ) )
-      equivalence ( x2res( 1, 1 ), x2res1( 1 ) )
-      equivalence ( rotvels( 1, 1 ), rotvels1( 1 ) )
-      equivalence ( radvels( 1, 1 ), radvels1( 1 ) )
-      equivalence ( diskint( 1, 1 ), diskint1( 1 ) )
-      equivalence ( barint( 1, 1 ), barint1( 1 ) )
-      equivalence ( bivrad( 1, 1 ), bivrad1( 1 ) )
-      equivalence ( bivtan( 1, 1 ), bivtan1( 1 ) )
-      equivalence ( bulgeint( 1, 1 ), bulgeint1( 1 ) )
-      equivalence ( bwgt( 1, 1, 1 ), res( 1, 1 ) )
-c
       real final_chi2
       integer final_iter
       common / done / final_chi2, final_iter
@@ -235,8 +175,8 @@ c
       real sky, skysig, gain
       common / skyval / sky, skysig, gain
 c
-      real eISM, errtol, rsee
-      common / sols / eISM, rsee, errtol
+      real eISM, errtol, dsee
+      common / sols / eISM, dsee, errtol
 c
       real*8 pi
       parameter ( pi = 3.141592653589793238462643d0 )

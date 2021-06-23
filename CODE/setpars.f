@@ -1,4 +1,6 @@
       subroutine setpars( params )
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c set initial guesses for non-linear parameters
 c   called from diskfit and bootstrap
 c

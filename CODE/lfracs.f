@@ -1,4 +1,6 @@
       subroutine lfracs( params )
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c computes fractions of light in each fitted component
 c
 c   Created by JAS March 2012

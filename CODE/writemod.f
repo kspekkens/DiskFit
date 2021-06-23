@@ -1,17 +1,21 @@
       subroutine writemod
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c creates FITS images of the model and residuals of the same size as the
 c   input image, with values for all pixels, not just the sampled ones.
 c   Uses same formulae as in func.f
 c
-c    Written by RZS summer 2009
-c    Polished by - JAS October 2009
-c    Improved by - JAS March 2011
-c    Adapted for warp models - JAS July 2011
-c    Added output components of the photometry - JAS March 2012
-c    Output predicted velocity values for ALL pixels, set nullval to NaN,
+c   Written by RZS summer 2009
+c   Polished by - JAS October 2009
+c   Improved by - JAS March 2011
+c   Adapted for warp models - JAS July 2011
+c   Added output components of the photometry - JAS March 2012
+c   Output predicted velocity values for ALL pixels, set nullval to NaN,
 c        and set residuals only for pixels used in the fit - JAS March 2012
-c    Polished by KS March 2012
-c    Allow for 64-bit reals JAS April 2013
+c   Polished by KS March 2012
+c   Allow for 64-bit reals JAS April 2013
+c   Updated to f90 - JAS Jan 2015
+c   Fixed bug when outputting subregions - Sept 2015
 c
       include 'commons.h'
 c
@@ -22,14 +26,19 @@ c
 c local FITS variables
       integer bitpix, blocksize, fpixel, naxis, readwrite, status
       integer naxes( 2 )
-      integer*2 datl16( mpx ), outl16( mpx )
       logical anynull
       real nullval
-      real datline( mpx ), outline( mpx )
-      real*8 datlin2( mpx ), outlin2( mpx )
+c
+c local arrays
+      integer*2, allocatable :: datl16( : )
+      integer*2, allocatable :: outl16( : )
+      real, allocatable :: datline( : )
+      real, allocatable :: outline( : )
+      real*8, allocatable :: datlin2( : )
+      real*8, allocatable :: outlin2( : )
 c
 c local variables
-      character*100 datfile, outfits, file
+      character*100 outfits, file
       integer i, ii, iout, jj, k, kk, kout
       integer unitD, unitO
       logical lout
@@ -42,11 +51,22 @@ c      nullval = nanum( 0. )
 c reopen the input data file as readonly
       call ftgiou( unitD, status )
       readwrite = 0
-      if( lvels )datfile = invfile
-      if( lphot )datfile = inpfile
       call ftopen( unitD, datfile, readwrite, blocksize, status )
 c determine the type of data
       call ftgidt( unitD, bitpix, status )
+      if( bitpix .eq. -32 )then
+        allocate ( datline( nsizex ) )
+        allocate ( outline( nsizex ) )
+      else if( bitpix .eq. -64 )then
+        allocate ( datlin2( nsizex ) )
+        allocate ( outlin2( nsizex ) )
+      else if( bitpix .eq. 16 )then
+        allocate ( datl16( nsizex ) )
+        allocate ( outl16( nsizex ) )
+      else
+        print *, 'Unrecognized value of BITPIX:', bitpix
+        call crash( 'writemod' )
+      end if
 c start a big loop over output files
       kout = 2
       if( lphot )kout = 5
@@ -87,7 +107,6 @@ c create minimal required header.
           call ftphps( unitO, bitpix, naxis, naxes, status )
 c this is the main loop
           do ii = 1, naxes( 2 )
-            jj = ii - loy + 1
             fpixel = 1 + ( ii - 1 ) * naxes( 1 )
 c get next row
             if( bitpix .eq. -32 )then
@@ -105,65 +124,71 @@ c get next row
               do i = 1, naxes( 1 )
                 datline( i ) = datl16( i )
               end do
-            else
-              print *, 'Unrecognized value of BITPIX:', bitpix
-              call crash( 'writemod' )
             end if
+c set default value for pixels outside the fitted region
             do i = 1, naxes( 1 )
-              kk = i - lox + 1
-c set default value for pixels outside the fitted region etc
               outline( i ) = nullval
+            end do
+c work on the selected region only
+            jj = ii - loy + 1
+            if( jj .gt. 0 .and. jj .le. yrange )then
+              do i = 1, naxes( 1 )
+                kk = i - lox + 1
+                if( kk .gt. 0 .and. kk .le. xrange )then
 c skip if this pixel is outside fitted region
-              if( inmask( kk, jj ) )then
+                  if( inmask( kk, jj ) )then
 c use precalculated model values
-                if( lvels )then
+                    if( lvels )then
 c save model value and get data value
-                  val = model( kk, jj )
-                  if( .not. lsystemic )val = model( kk, jj ) + vsys
-                  if( VELmps )val = val * 1000.0
-                  if( iout .eq. 1 )outline( i ) = val
-c                if( iout .eq. 1 )outline( i ) = datline( i )
+                      val = model( kk, jj )
+                      if( .not. lsystemic )val = model( kk, jj ) + vsys
+                      if( VELmps )val = val * 1000.0
+                      if( iout .eq. 1 )outline( i ) = val
+c                      if( iout .eq. 1 )outline( i ) = datline( i )
 c compute residual only if data value is reasonable
-                  if( iout .eq. 2 )then
-                    if( datline( i ) .ne. nullval) then
-                      if( Velmps )then
-                        diff = .001 * ( datline( i ) - vsys * 1000.0 )
-                      else
-                        diff = datline( i ) - vsys
-                      end if
-                      if( abs( diff ) .lt. 500. )then
-                        if( bitpix .eq. -32 )then
-                          outline( i ) = datline( i ) - val
-                        else if( bitpix .eq. -64 )then
-                          outlin2( i ) = datlin2( i ) - val
+                      if( iout .eq. 2 )then
+                        if( datline( i ) .ne. nullval) then
+                          if( Velmps )then
+                            diff =
+     +                           .001 * ( datline( i ) - vsys * 1000.0 )
+                          else
+                            diff = datline( i ) - vsys
+                          end if
+                          if( abs( diff ) .lt. 500. )then
+                            if( bitpix .eq. -32 )then
+                              outline( i ) = datline( i ) - val
+                            else if( bitpix .eq. -64 )then
+                              outlin2( i ) = datlin2( i ) - val
+                            end if
+                          end if
                         end if
                       end if
+                    else if( lphot )then
+                      if( iout .eq. 1 )outline( i ) = model( kk, jj )
+c bad pixels are flagged with a large negative value
+                      if( ( iout .eq. 2 ) .and.
+     +                    ( datline( i ) .gt. -500.0 ) )outline( i ) =
+     +                                    datline( i ) - model( kk, jj )
+                      if( iout .eq. 3 )outline( i ) = diskint( kk, jj )
+                      if( iout .eq. 4 )outline( i ) = barint( kk, jj )
+                      if( iout .eq. 5 )outline( i ) = bulgeint( kk, jj )
+                      if( bitpix .eq. -64 )outlin2( i ) = outline( i )
+                      if( bitpix .eq. 16 )outl16( i ) = outline( i )
                     end if
                   end if
-                else if( lphot )then
-                  if( iout .eq. 1 )outline( i ) = model( kk, jj )
-c bad pixels are flagged with a large negative value
-                  if( ( iout .eq. 2 ) .and.
-     +                ( datline( i ) .gt. -500.0 ) )outline( i ) =
-     +                                    datline( i ) - model( kk, jj )
-                  if( iout .eq. 3 )outline( i ) = diskint( kk, jj )
-                  if( iout .eq. 4 )outline( i ) = barint( kk, jj )
-                  if( iout .eq. 5 )outline( i ) = bulgeint( kk, jj )
-                  if( bitpix .eq. -64 )outlin2( i ) = outline( i )
-                  if( bitpix .eq. 16 )outl16( i ) = outline( i )
                 end if
-              end if
-            end do
+              end do
 c end of this row, write it out using group=0
-            if( bitpix .eq. -32 )then
-              call ftppne( unitO, 0, fpixel, naxes( 1 ), outline,
-     +                     nullval, status )
-            else if( bitpix .eq. -64 )then
-              call ftppnd( unitO, 0, fpixel, naxes( 1 ), outlin2,
-     +                     nullval, status )
-            else if( bitpix .eq. 16 )then
-              call ftppnj( unitO, 0, fpixel, naxes( 1 ), outl16,
-     +                     nullval, status )
+              if( bitpix .eq. -32 )then
+                call ftppne( unitO, 0, fpixel, naxes( 1 ), outline,
+     +                       nullval, status )
+              else if( bitpix .eq. -64 )then
+                call ftppnd( unitO, 0, fpixel, naxes( 1 ), outlin2,
+     +                       nullval, status )
+              else if( bitpix .eq. 16 )then
+                call ftppnj( unitO, 0, fpixel, naxes( 1 ), outl16,
+     +                       nullval, status )
+              end if
             end if
           end do
 c add some useful header information
@@ -246,6 +271,16 @@ c Close files
           print *, 'Wrote:  ', outfits( 1:i )
         end if
       end do
+      if( bitpix .eq. -32 )then
+        deallocate ( datline )
+        deallocate ( outline )
+      else if( bitpix .eq. -64 )then
+        deallocate ( datlin2 )
+        deallocate ( outlin2 )
+      else if( bitpix .eq. 16 )then
+        deallocate ( datl16 )
+        deallocate ( outl16 )
+      end if
 c
       call ftclos( unitD, status )
       call ftfiou( unitD, status )

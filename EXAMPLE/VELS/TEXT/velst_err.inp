@@ -2,9 +2,9 @@ KINEMATICS EXAMPLE, TEXT FILE
 vels                               # 2 vels/phot switch
 F  F                               # 3 VELS: I/O toggles: FITS I/O, vels in m/s
 'EXAMPLE/VELS/TEXT/vels.txt'       # 4 file name with input data
-no_data                            # 5 VELS + FITS:file name for velocity uncerts
-no_data                            # 6 FITS region to fit: (xlow,ylow) & (xrange,yrange)
-no_data                            # 7 FITS sampling: regrad, regpa, regeps, istepout, pixscale
+None                               # 5 VELS + FITS:file name for velocity uncerts
+None                               # 6 FITS region to fit: (xlow,ylow) & (xrange,yrange)
+None                               # 7 FITS sampling: regrad, regpa, regeps, istepout, pixscale
 'EXAMPLE/VELS/TEXT/OUT/err.out'    # 8 file name for output parameters
 T T T                              #9 Disk toggles: fit for PA, eps & cen
 80.00  0.5                         #10 initial guess for disk PA and eps=(1-b/a)

@@ -1,4 +1,6 @@
       real*8 function func( p )
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c Function minimized by the call to Powell
 c   Routine originally written by EIB
 c   Modified extensively for non-axisymmetric photometry by JAS November 2004
@@ -9,6 +11,7 @@ c   Much of the work delegated to subroutine setwgt - JAS October 2009
 c   Photometry fitting option resurrected - JAS March 2011
 c   Simple warp model added - JAS July 2011
 c   Calls to setwgtx moved to setwgt - JAS March 2012
+c   Updated to f90 - JAS Jan 2015
 c
 c real*8 precision needed for matrix arithmetic
 c
@@ -19,9 +22,11 @@ c calling argument
       real*8 p( md )
 c
 c local arrays
-      integer ipiv( mtot )
-      logical nskip( mtot )
-      real*8 rhs( mtot ), wa( mtot, mtot ), work( mtot )
+      integer, allocatable :: ipiv( : )
+      logical, allocatable :: nskip( : )
+      real*8, allocatable :: rhs( : )
+      real*8, allocatable :: wa( :, : )
+      real*8, allocatable :: work( : )
 c
 c local variables
       character*120 outh, outv
@@ -126,6 +131,10 @@ c prevent fit from wandering to absurdly small Sersic indices
             if( p( i ) .lt. 0.17 )then
               func = Avalue * ( 1. + ( p( i ) - .17 )**2 )
             end if
+c prevent fit from wandering to absurdly large Sersic indices
+            if( p( i ) .gt. 10. )then
+              func = Avalue * ( 1. + ( p( i ) - 10. )**2 )
+            end if
           end if
           if( lr_e )then
             i = i + 1
@@ -198,6 +207,12 @@ c print out calling arguments only if verbose
       if( verbose )print '( a )', outv( 1:k )
 c there's no point in evaluating func if we have set it already
       if( func .le. 0.d0 )then
+c allocate space
+        allocate ( ipiv( ntot ) )
+        allocate ( nskip( ntot ) )
+        allocate ( rhs( ntot ) )
+        allocate ( wa( ntot, ntot ) )
+        allocate ( work( ntot ) )
 c set the weights
         fronly = .false.
         call setwgt( p, lseeing, km )
@@ -253,13 +268,13 @@ c make the wa matrix
           end do
         else
           do i = 1, inp_pts
-            if( lgpix1( i ) )then
+            if( lgpix( i, 1 ) )then
               k = 0
               do kk = 1, ntot
                 if( nskip( kk ) )then
                   ik = 0
                   do ii = 1, km
-                    if( iwgt1( ii, i ) .eq. kk )ik = ii
+                    if( iwgt( ii, i, 1 ) .eq. kk )ik = ii
                   end do
                   j = k
                   k = k + 1
@@ -269,11 +284,11 @@ c make the wa matrix
                       if( ik .gt. 0 )then
                         ij = 0
                         do ii = 1, km
-                          if( iwgt1( ii, i ) .eq. jj )ij = ii
+                          if( iwgt( ii, i, 1 ) .eq. jj )ij = ii
                         end do
                         if( ij .gt. 0 )then
                           wa( j, k ) = wa( j, k ) +
-     +                    wgt1( ij, i ) * wgt1( ik, i ) / sigma1( i )**2
+     +              wgt( ij, i, 1 ) * wgt( ik, i, 1 ) / sigma( i, 1 )**2
                         end if
                       end if
                     end if
@@ -332,22 +347,22 @@ c set the rhs vector
           end do
         else
           do i = 1, inp_pts
-            if( lgpix1( i ) )then
+            if( lgpix( i, 1 ) )then
               j = 0
               do jj = 1, ntot
                 if( nskip( jj ) )then
                   ij = 0
                   do ii = 1, km
-                    if( iwgt1( ii, i ) .eq. jj )ij = ii
+                    if( iwgt( ii, i, 1 ) .eq. jj )ij = ii
                   end do
                   j = j + 1
                   if( ij .gt. 0 )then
                     if( lvels )then
-                      rhs( j ) = rhs( j ) + wgt1( ij, i ) *
-     +                            ( sdat1( i ) - sysv ) / sigma1( i )**2
+                      rhs( j ) = rhs( j ) + wgt( ij, i, 1 ) *
+     +                        ( sdat( i, 1 ) - sysv ) / sigma( i, 1 )**2
                     else
                       rhs( j ) = rhs( j ) +
-     +                       wgt1( ij, i ) * sdat1( i ) / sigma1( i )**2
+     +                  wgt( ij, i, 1 ) * sdat( i, 1 ) / sigma( i,1 )**2
                     end if
                   end if
                 end if
@@ -379,9 +394,9 @@ c        print '( a2, $ )', '.'
 c      end if
 CCCC LINPACK:
         rcond = 0
-        call dgeco( wa, mtot, rank, ipiv, rcond, work )
+        call dgeco( wa, ntot, rank, ipiv, rcond, work )
         if( abs( rcond ) .gt. 1.d-10 )then
-          call dgesl( wa, mtot, rank, ipiv, rhs, 0 )
+          call dgesl( wa, ntot, rank, ipiv, rhs, 0 )
         else
 c          print *, 'the matrix may be singular'
 c          print *,
@@ -444,24 +459,25 @@ c
           end do
         else
           do i = 1, inp_pts
-            if( lgpix1( i ) )then
+            if( lgpix( i, 1 ) )then
 c sum fitted ellipse values to find total model value
               tmod = 0
               do j = 1, ntot
                 ij = 0
                 do ii = 1, km
-                  if( iwgt1( ii, i ) .eq. j )ij = ii
+                  if( iwgt( ii, i, 1 ) .eq. j )ij = ii
                 end do
-                if( ij .gt. 0 )tmod = tmod + wgt1( ij, i ) * fitval( j )
+                if(
+     +            ij .gt. 0 )tmod = tmod + wgt( ij, i, 1 ) * fitval( j )
               end do
 c difference from observed value
               if( lvels )then
-                resd = ( sdat1( i ) - sysv ) - tmod
+                resd = ( sdat( i, 1 ) - sysv ) - tmod
               else
                 tmod = max( tmod, 0.d0 )
-                resd = sdat1( i ) - tmod
+                resd = sdat( i, 1 ) - tmod
               end if
-              func = func + ( resd / sigma1( i ) )**2
+              func = func + ( resd / sigma( i, 1 ) )**2
             end if
           end do
         end if

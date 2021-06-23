@@ -1,6 +1,9 @@
       subroutine setwgt( params, everyp, km )
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c driving routine to interpret parameter list and set weights
 c   Extracted from func - JAS March 2012
+c   Updated to f90 - JAS Jan 2015
 c
 c common block
       include 'commons.h'
@@ -161,16 +164,16 @@ c need all pixels if requested, only good pixels otherwise
           ypos = yval( i ) - ycn
           xpos = xval( i ) - xcn
 c no seeing corrections possible
-          if( everyp .or. lgpix1( i ) )then
+          if( everyp .or. lgpix( i, 1 ) )then
             if( lphot )call setwgtp(
-     +                     xpos, ypos, km, iwgt1( 1, i ), wgt1( 1, i ) )
+     +                 xpos, ypos, km, iwgt( 1, i, 1 ), wgt( 1, i, 1 ) )
             if( lvels )then
               if( warpon )then
                 call setwgtw(
-     +                     xpos, ypos, km, iwgt1( 1, i ), wgt1( 1, i ) )
+     +                 xpos, ypos, km, iwgt( 1, i, 1 ), wgt( 1, i, 1 ) )
               else
                 call setwgtv(
-     +                     xpos, ypos, km, iwgt1( 1, i ), wgt1( 1, i ) )
+     +                 xpos, ypos, km, iwgt( 1, i, 1 ), wgt( 1, i, 1 ) )
               end if
             end if
           end if
@@ -178,7 +181,7 @@ c no seeing corrections possible
       end if
       if( km .le. 0 )then
         print *, 'Something went wrong in setwgt'
-        call crash( 'func' )
+        call crash( 'setwgt' )
       end if
 c blur the weights to allow for seeing
       if( lseeing )call blurmod( km )

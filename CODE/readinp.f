@@ -1,4 +1,6 @@
       subroutine readinp
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c This subroutine reads the input file. The structure of the input file
 c   is given in the documentation.
 c
@@ -9,6 +11,8 @@ c   Incorporated photometric fitting by JAS March 2011
 c   Simple warp option added by JAS July 2011
 c   Polished KS March 2012
 c   Added call to initlz - JAS June 2012
+c   Modified to allow image mask - JAS June 2013
+c   Allow for a file of uncertainties for PHOT - JAS Sep 15
 c
 c   lines of characters in the input file can be either in single quotes
 c   or plain text.  If the first character of a line is ' [char(39)], the
@@ -22,10 +26,10 @@ c externals
 c
 c local variables:
       integer i, ic, istat, j, k
-      character line*120, str*3
+      character line*120, str*4
 c
 c we always fit for a disk or the circular speed
-      ldisk = .true.
+      ldisk     = .true.
 c initialize other logical variables
       leps      = .false.
       lcentre   = .false.
@@ -60,12 +64,12 @@ c skip a line
       read( 13, * )
 c initialize line counter
       ic = 1
-c l2: specify whether the fit is to a photometric image or to a velocity map
+c line 2: specify whether the fit is to a photometric image or to a velocity map
       call getline( 13, line, istat, ic )
       if( line( 1:1 ) .eq. char( 39 ) )then
-        str = line( 2:4 )
+        str( 1:3 ) = line( 2:4 )
       else
-        str = line( 1:3 )
+        str( 1:3 ) = line( 1:3 )
       end if
 c convert to upper case if not already
       do i = 1, 3
@@ -74,10 +78,10 @@ c convert to upper case if not already
           str( i:i ) = char( j - 32 )
         end if
       end do
-      lvels = str .eq. 'VEL'
-      lphot = str .eq. 'PHO'
+      lvels = str( 1:3 ) .eq. 'VEL'
+      lphot = str( 1:3 ) .eq. 'PHO'
       if( .not. ( lvels .or. lphot ) )go to 1
-c l3: FITS type data flag - line ignored for lphot
+c line 3: FITS type data flag - line ignored for lphot
       call getline( 13, line, istat, ic )
       if( lvels )then
         read( line, *, err = 1, end = 1 )lFITS, VELmps
@@ -85,43 +89,62 @@ c l3: FITS type data flag - line ignored for lphot
       else
 c photometry data are assumed in FITS format
         lFITS = .true.
+c determine whether photometry data come with a separate mask file
+        if( line( 1:1 ) .eq. char( 39 ) )then
+          str = line( 2:5 )
+        else
+          str = line( 1:4 )
+        end if
+c convert to upper case if not already
+        do i = 1, 4
+          j = ichar( str( i:i ) )
+          if( ( j .gt. 96 ) .and. ( j .lt. 123 ) )then
+            str( i:i ) = char( j - 32 )
+          end if
+        end do
+        lmask = ( str .ne. 'NONE' ) .and. ( str .ne. '    ' )
+c read name of mask file
+        if( lmask )then
+          if( line( 1:1 ) .eq. char( 39 ) )then
+            read( line, *, err = 1, end = 1 )mskfile
+          else
+            mskfile = line
+          end if
+        end if
       end if
-c l4: name of file with data
+c line 4: name of file with data
       call getline( 13, line, istat, ic )
-      if( lvels )then
-        if( line( 1:1 ) .eq. char( 39 ) )then
-          read( line, *, err = 1, end = 1 )invfile
-        else
-          invfile = line
-        end if
+      if( line( 1:1 ) .eq. char( 39 ) )then
+        read( line, *, err = 1, end = 1 )datfile
       else
-        if( line( 1:1 ) .eq. char( 39 ) )then
-          read( line, *, err = 1, end = 1 )inpfile
-        else
-          inpfile = line
-        end if
+        datfile = line
       end if
-c l5:
+c line 5:
       call getline( 13, line, istat, ic )
-      if( lvels )then
-c name of file that contains velocity uncertainties
-        if( line( 1:1 ) .eq. char( 39 ) )then
-          read( line, *, err = 1, end = 1 )inevfile
-        else
-          inevfile = line
-        end if
+c name of file that contains uncertainties
+      if( line( 1:1 ) .eq. char( 39 ) )then
+        read( line, *, err = 1, end = 1 )errfile
       else
-c parameters of photometry
-        read( line, *, err = 1, end = 1 )sky, skysig, gain
+        errfile = line
       end if
-c l6: read if lFITS - otherwise ignored
+c no file is flagged by the name "NONE" or "    " as the first 4 characters
+      str = errfile
+c convert to upper case if not already
+      do i = 1, 4
+        j = ichar( str( i:i ) )
+        if( ( j .gt. 96 ) .and. ( j .lt. 123 ) )then
+          str( i:i ) = char( j - 32 )
+        end if
+      end do
+      lerrfile =  ( str .ne. 'NONE' ) .and. ( str .ne. '    ' )
+c line 6: read if lFITS - otherwise ignored
       call getline( 13, line, istat, ic )
       if( lFITS )then
 c values for selecting the region of the image to fit
         read( line, *, err = 1, end = 1 )lox, loy, xrange, yrange
         inp_pts = xrange * yrange
       end if
-c l7: FITS sampling parameters - ignored if .not. lFITS
+c line 7: FITS sampling parameters - ignored if .not. lFITS
       call getline( 13, line, istat, ic )
       if( lFITS )then
 c read image region parameters needed only for FITS input
@@ -130,7 +153,7 @@ c read image region parameters needed only for FITS input
       else
         pixscale = 1
       end if
-c l8: name of file for parameter output
+c line 8: name of file for parameter output
       call getline( 13, line, istat, ic )
       if( line( 1:1 ) .eq. char( 39 ) )then
         read( line, *, err = 1, end = 1 )outpfile
@@ -148,16 +171,16 @@ c parse name of output file for subdirectories and root name
       i = index( outpfile( k:j ), '.' )
       k = k + i - 1
       outroot = outpfile( 1:k )
-c l9: toggles for axisymmetric part of fit
+c line 9: toggles for axisymmetric part of fit
       call getline( 13, line, istat, ic )
       read( line, *, err = 1, end = 1 )lpa, leps, lcentre
-c l10: initial guesses for disk PA and eps = (1 - b/a)
+c line 10: initial guesses for disk PA and eps = (1 - b/a)
       call getline( 13, line, istat, ic )
       read( line, *, err = 1, end = 1 )pa, eps
-c l11: initial guess for galaxy center
+c line 11: initial guess for galaxy center
       call getline( 13, line, istat, ic )
       read( line, *, err = 1, end = 1 )xcen, ycen
-c l12: toggles for non-axisymmetric fitting
+c line 12: toggles for non-axisymmetric fitting
       call getline( 13, line, istat, ic )
       read( line, *, err = 1, end = 1 )lnax
       if( lnax )then
@@ -185,12 +208,22 @@ c supply defaults
           bar_eps = 0.5
         end if
       end if
-c l13: ignored if phot
+c line 13: ignored in photometry, unless there is no uncertainties file
       call getline( 13, line, istat, ic )
       if( lvels )then
         read( line, *, err = 1, end = 1 )linter0, lradial
+      else
+c parameters of photometry
+        if( .not. lerrfile )then
+          read( line, *, iostat = i )sky, skysig, gain
+          if( i .ne. 0 )then
+            print *, 'You specified no uncertainties file, so l13' //
+     +  ' must contain the parameters needed to compute the noise level'
+            go to 1
+          end if
+        end if
       end if
-c l14:
+c line 14:
       call getline( 13, line, istat, ic )
       if( lvels )then
 c initial systemic velocity, ISM turbulence parameter, & vel error tolerance
@@ -210,12 +243,12 @@ c supply defaults
           bulge_I0 = 0
         end if
       end if
-c l15:
+c line 15:
       call getline( 13, line, istat, ic )
       if( lvels )then
 c warp toggle and parameters
         read( line, *, err = 1, end = 1 )lwarp
-c set invidual warp toggles and initial parameters
+c set individual warp toggles and initial parameters
         if( lwarp )then
           read( line, *, err = 1, end = 1 )lwarp, lrwarp, lwepsm, lwpm,
      +                                     rwarp, wepsm, wphim
@@ -241,23 +274,23 @@ c set defaults
           bulge_el = 0
         end if
       end if
-c l16: seeing correction - rsee = FWHM of seeing disk
+c line 16: seeing correction - dsee = FWHM of seeing disk
       call getline( 13, line, istat, ic )
-      read( line, *, err = 1, end = 1 )rsee
-      lseeing = rsee .gt. 0.
-c l17: smoothing parameters
+      read( line, *, err = 1, end = 1 )dsee
+      lseeing = dsee .gt. 0.
+c line 17: smoothing parameters
       call getline( 13, line, istat, ic )
       read( line, *, err = 1, end = 1 )lambda1, lambda2
-c l18: uncertainty parameters
+c line 18: uncertainty parameters
       call getline( 13, line, istat, ic )
       read( line, *, err = 1, end = 1 )luncert
 c read bootstrap parameters only if uncertainties were requested
       if( luncert )read( line, *, err = 1, end = 1 )luncert,
      +                                                  seed, nunc, junc
-c l19: verbose toggle
+c line 19: verbose toggle
       call getline( 13, line, istat, ic )
       read( line, *, err = 1, end = 1 )verbose
-c l20:
+c line 20:
       call getline( 13, line, istat, ic )
       if( lnax .or. lradial )then
 c minimum, maximum radius for bar or non-circular flow fit
@@ -267,7 +300,7 @@ c supply defaults
         minr = 0
         maxr = 10000
       end if
-c l21: input ring radii
+c line 21: input ring radii
       istat = 0
       i = 0
       do while ( istat .eq. 0 )

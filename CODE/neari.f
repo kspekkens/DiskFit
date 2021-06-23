@@ -1,4 +1,6 @@
       integer function neari( a, n, x )
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c utility routine to find the nearest value in a 1D array to the given value
 c   assumes the values in the input array are sequenced and works by bisection
       implicit none

@@ -1,4 +1,6 @@
       subroutine smoothp( wa, mt )
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c Purpose is to add the penalty for large second derivatives between
 c   the values of the mean orbital speed and non-axisymmetric velocities
 c   WARNING - assumes sma values are equally spaced, but need not start

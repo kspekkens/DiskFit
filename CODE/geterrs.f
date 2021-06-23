@@ -1,9 +1,12 @@
       subroutine geterrs( aparams, afitval, lfrac, eparams, m )
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c make uncertainty estimates from bootstrap iterations
 c   uses parameter sdev returned from Numerical Recipes routine _moment
 c   called from bootstrap and bootlace
 c
 c  Created by cutting code from bootstrap.f by JAS - June 2012
+c  Made indata an allocatable array - JAS Aug 2015
 c
       include 'commons.h'
 c
@@ -14,7 +17,7 @@ c calling arguments
 c
 c local arrays
       logical langle( md )
-      real*8 indata( m )
+      real*8, allocatable :: indata(:)
 c
 c local variables
       integer i, j, k
@@ -48,8 +51,10 @@ c flag angle parameters that need more spohisticated treatment
         end if
       else
         if( lnax )then
-          j = j + 1
-          langle( j ) = .true.
+         if( lphib )then
+           j = j + 1
+           langle( j ) = .true.
+         end if
         end if
         if( lwarp )then
           if( lrwarp )j = j + 1
@@ -61,6 +66,7 @@ c flag angle parameters that need more spohisticated treatment
         print *, 'mismatched number of parameters'
         call crash( 'geterrs' )
       end if
+      allocate ( indata( nunc ) )
 c compute mean and standard deviation of outputs
       do j = 1, nd
         do i = 1, nunc
@@ -81,7 +87,7 @@ c pilot estimate of mean
           if( ave .lt. 0. )ave = ave + pi 
 c ensure distribution is symmetric about this mean
           a = .5 * pi
-          do i = 1, nd
+          do i = 1, nunc
             if( indata( i ) - ave .gt. a )indata( i ) = indata( i ) - pi
             if( indata( i ) - ave .lt.-a )indata( i ) = indata( i ) + pi
           end do

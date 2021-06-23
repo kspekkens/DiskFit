@@ -1,4 +1,6 @@
       subroutine warpset( diskel, diskpa, rw, wpm, welm )
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c sets the values of position angle and inclination of each ellipse
 c   for the selected warp model
 c

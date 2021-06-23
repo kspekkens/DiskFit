@@ -1,4 +1,6 @@
       subroutine initlz
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c sets   nd: the number of non-linear parameters in the fit
 c  and ntot: the rank (number of rows) of the matrix
 c

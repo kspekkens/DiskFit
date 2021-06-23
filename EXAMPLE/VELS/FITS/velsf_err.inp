@@ -2,10 +2,10 @@ KINEMATICS EXAMPLE, DISKFIT # beamsize = 6.00'' # pixscale-> 1.00''/pix # ringst
 vels                               # 2 vels/phot switch
 T  T                               # 3 VELS: I/O toggles: FITS I/O, vels in m/s
 'EXAMPLE/VELS/FITS/vels.fits'      # 4 file name with input data
-no_data                            # 5 VELS + FITS:file name for velocity uncerts
+None                               # 5 VELS + FITS:file name for velocity uncerts
 1  1  255 255                      # 6 FITS region to fit: (xlow,ylow) & (xrange,yrange)
 12.0  45.00  0.45  6 1.0           # 7 FITS sampling: regrad, regpa, regeps, istepout, pixscale
-'EXAMPLE/VELS/FITS/OUT/err.out'   # 8 file name for output parameters
+'EXAMPLE/VELS/FITS/OUT/err.out'    # 8 file name for output parameters
 T T T                              # 9 Disk toggles: fit for PA, eps & cen
 45.00  0.45                        #10 initial guess for disk PA and eps=(1-b/a)
 130.50  126.50                     #11 initial guess for disk center

@@ -1,7 +1,9 @@
       subroutine getline( iunit, line, istat, ic )
-c utility routine to read in the next significant line of ASCII data from a specified
-c   logical unit.   The # character is interpreted as the beginning of a comment and
-c   it is eliminated together with all subsequent characters
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
+c utility routine to read in the next significant line of ASCII data from a
+c   specified logical unit.   The # character is interpreted as the beginning
+c   of a comment and it is eliminated together with all subsequent characters
 c   blank lines and lines containing only comments are skipped
 c
 c   Created by JAS March 2010

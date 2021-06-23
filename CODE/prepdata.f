@@ -1,7 +1,10 @@
       subroutine prepdata
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c a driver routine to read and prepare data for the fit
 c
 c   Created by JAS Sep 11
+c   Updated to f90 - JAS Jan 2015
 c
       include 'commons.h'
 c
@@ -23,17 +26,13 @@ c check input values and space
           call crash( 'prepdata' )
         end if
       end if
-      if( l2D )then
-        if( ( xrange .gt. mapx ) .or. ( yrange .gt. mapy ) )then
-          print *, 'Either xrange or yrange is too large'
-          print *, xrange, mapx, yrange, mapy
-          print *, 'increase mapx and/or mapy and recompile'
-          call crash( 'prepdata' )
-        end if
-      end if
 c select the data to fit
       if( lvels )call prepvels( gtdst )
       if( lphot )call prepimg( gtdst )
+c return space that is no longer needed
+      if( allocated( ldat ) )deallocate ( ldat )
+      if( allocated( ldate ) )deallocate ( ldate )
+      if( allocated( x2res ) )deallocate ( x2res )
 c check pixel count
       if( pixct .eq. 0 )then
         print *, 'prepdata returned 0 pixels!!!'

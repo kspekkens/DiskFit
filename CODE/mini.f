@@ -1,4 +1,6 @@
       subroutine mini( params, chi2, iterl )
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c this subroutine implements the Powell chi-squared minimization routine
 c   and returns the best fit parameters as well as the minimum chi-squared
 c   value chi2

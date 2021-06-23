@@ -1,16 +1,15 @@
       subroutine bootstrap( params, eparams )
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c estimates uncertainties for best-fit parameters using a bootstrap technique
 c  Originally written by KS
 c  Modified by RZS in July 2009
 c  Polished by JAS October 2009
 c  Modified to include photometry by JAS October 2011
 c  Fixed problem of angle errors and split off geterrs - JAS June 2012
+c  Updated to f90 - JAS Jan 2015
 c
       include 'commons.h'
-      real sdot( mapx, mapy ), x2ros( mapx, mapy )
-      real sdot1( mapx * mapy ), x2ros1( mapx * mapy )
-      equivalence ( sdot( 1, 1 ), sdot1( 1 ) )
-      equivalence ( x2ros( 1, 1 ), x2ros1( 1 ) )
 c
 c calling arguments
       real*8 params( md ), eparams( md )
@@ -19,10 +18,14 @@ c external
       integer lnblnk
 c
 c local arrays
-      integer m
-      parameter ( m = 1000 )
-      real*8 afitval( m, mtot ), aparams( m, md ), inparams( md )
-      real*8 fitval0( mtot ), lfrac( 3, m ), params0( md )
+      real, allocatable :: sdot( :, : )
+      real, allocatable :: x2ros( :, : )
+      real*8, allocatable :: afitval( :, : )
+      real*8, allocatable :: aparams( :, : )
+      real*8, allocatable :: inparams( : )
+      real*8, allocatable :: fitval0( : )
+      real*8, allocatable :: lfrac( :, : )
+      real*8, allocatable :: params0( : )
 c
 c local variables
       character form*7
@@ -31,11 +34,12 @@ c local variables
       real*8 chi2
       character*100 erasefile, bootfile
 c
-      if( nunc .gt. m )then
-        print *, 'too many bootstrap iterations requested', nunc
-        print *, 'decrease nunc or contact code administrator'
-        call crash( 'bootstrap' )
-      end if
+      allocate ( afitval( nunc, ntot ) )
+      allocate ( aparams( nunc, ntot ) )
+      allocate ( inparams( nd ) )
+      allocate ( fitval0( ntot ) )
+      allocate ( lfrac( 3, nunc ) )
+      allocate ( params0( nd ) )
 c set up blurring arrays in case they were not preset - no harm to do it again
       if( l2D )call blurset
 c
@@ -49,6 +53,8 @@ c save best fitting parameters, initial data, and best fit x2res map
         fitval0( j ) = fitval( j )
       end do
       if( l2D )then
+        allocate ( sdot( xrange, yrange ) )
+        allocate ( x2ros( xrange, yrange ) )
         do iy = 1, yrange
           do ix = 1, xrange
             sdot( ix, iy ) = sdat( ix, iy )
@@ -56,9 +62,11 @@ c save best fitting parameters, initial data, and best fit x2res map
           end do
         end do
       else
-        do i = 1, xrange
-          sdot1( i ) = sdat1( i )
-          x2ros1( i ) = x2res1( i )
+        allocate ( sdot( inp_pts, 1 ) )
+        allocate ( x2ros( inp_pts, 1 ) )
+        do i = 1, inp_pts
+          sdot( i, 1 ) = sdat( i, 1 )
+          x2ros( i, 1 ) = x2res( i, 1 )
         end do
       end if
 c save best fitting light fractions
@@ -137,7 +145,7 @@ c restore input x2res map
           end do
         else
           do i = 1, inp_pts
-            x2res1( i ) = x2ros1( i )
+            x2res( i, 1 ) = x2ros( i, 1 )
           end do
         end if
         if( junc .ge. 0.0 ) then
@@ -221,7 +229,7 @@ c restore best fitting parameters and values
         blgfrac = blgfrac_loc
       end if
 c get error estimates
-      call geterrs( aparams, afitval, lfrac, eparams, m )
+      call geterrs( aparams, afitval, lfrac, eparams, nunc )
 c restore intial data
       if( l2D )then
         do iy = 1, yrange
@@ -231,7 +239,7 @@ c restore intial data
         end do
       else
         do i = 1, inp_pts
-          sdat1( i ) = sdot1( i )
+          sdat( i, 1 ) = sdot( i, 1 )
         end do
       end if
 c reset the weights for the original parameters

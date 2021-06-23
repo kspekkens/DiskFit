@@ -1,4 +1,6 @@
       subroutine setwgtv( xpos, ypos, km, iwt, wt )
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c Sets the weight factors for a point at xpos, ypos relative to the
 c   current disk center.  Called both from func & from writemod
 c

@@ -1,4 +1,6 @@
       subroutine readvels
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c reads in a dataset to xval, yval, vels2, evel2
 c
 c   Orignal version requires a text file - KS

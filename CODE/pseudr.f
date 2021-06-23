@@ -1,4 +1,6 @@
       subroutine pseudr( jdum )
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c Uses a bootstrap technique to generate a new realization of the velocity
 c   field to be fitted - an alternative to pseudp written by KS
 c Creates a new velocity map by adding errors to the model velocity
@@ -7,6 +9,7 @@ c   x2res map
 c
 c   Created by RZS August 2009
 c   Polished by JAS October 2009
+c   Updated to f90 - JAS Jan 2015
 c
       include 'commons.h'
 c
@@ -18,8 +21,8 @@ c externals
       real*8 ran1_dbl
 c
 c local arrays
-      real annwidth( 3 ), cosrpa( 3 ), sinrpa( 3 )
-      real newx2res( mapx, mapy ), rini( 3 ), rout( 3 )
+      real annwidth( 3 ), cosrpa( 3 ), sinrpa( 3 ), rini( 3 ), rout( 3 )
+      real, allocatable :: newx2res( :, : )
 c
 c local variables
       integer i, ix, iy, j, jind, jx, jy, kx, ky, nreg
@@ -83,6 +86,7 @@ c find new random beginning of annulus
       rrad = ran1_dbl( jdum )
 c      print '( a, f10.3 )', 'new random radius', rrad
 c initialize newx2res map
+      allocate ( newx2res( xrange, yrange ) )
       do iy = 1, yrange
         do ix = 1, xrange
           newx2res( ix, iy ) = x2res( ix, iy )

@@ -1,4 +1,6 @@
       subroutine bestfit( params, eparams )
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c copies best fitting parameters and values to more useful areas
 c
 c   Created by KS
@@ -204,9 +206,14 @@ c set other parameters to their final values:
           k = k + 2
         end if
         if( lnax )then
-          newphib = params( k + 1 )
-          enewphib = eparams( k + 1 )
-          k = k + 1
+          if( lphib )then
+           newphib = params( k + 1 )
+           enewphib = eparams( k + 1 )
+           k = k + 1
+          else
+           newphib = phib
+           enewphib = 0
+          end if
         end if
         if( lwarp )then
           if( lrwarp )then

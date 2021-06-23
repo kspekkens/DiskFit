@@ -1,4 +1,6 @@
       subroutine screenoutput
+c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+c
 c screen output with input to minimization
 c
 c   Orignally written by KS
@@ -15,17 +17,17 @@ c
       write( *, * )'Read in input parameters from: ', infile( 1:100 )
       write( *, * )
       if( ldisk )then
-        write( *, '( a22, f5.2 )' )'Input disk eps: (deg) ', eps
-        write( *, '( a28, f6.2 )' )'Input disk PA (N->E; deg) = ',
+        write( *, '( a, f5.2 )' )'Input disk eps: (1-b/a) ', eps
+        write( *, '( a, f6.2 )' )'Input disk PA (N->E; deg) = ',
      +                                              180. * pa / pi - 90.
       end if
-      write( *, '( a30, f8.2 )' )
+      write( *, '( a, f8.2 )' )
      +                     'Input x-center (data units) = ', xcen
-      write( *, '( a30, f8.2 )' )
+      write( *, '( a, f8.2 )' )
      +                     'Input y-center (data units) = ', ycen
-      if( lvels )write( *, '( a36, f8.2 )' )
+      if( lvels )write( *, '( a, f8.2 )' )
      +              'Input disk systemic velocity (km/s) = ', vsys
-      if( lphot )write( *, '( a27, 3f8.2 )' )
+      if( lphot )write( *, '( a, 3f8.2 )' )
      +              'Sky, sky sig, gain (ADU) = ', sky, skysig, gain
       write( *, * )
       if( lpa .or. leps .or. lcentre .or. lnax .or. lbulge .or.
@@ -139,11 +141,11 @@ c construct output string
       if( lvels )then
         write( *, * )
      +             'Read in measured velocities and uncertainties from:'
-        s1l = lnblnk( invfile )
-        s2l = lnblnk( inevfile )
-        write( *, * )invfile( 1:s1l )
-        if( evelfile )then
-          write( *, * )inevfile( 1:s2l )
+        s1l = lnblnk( datfile )
+        s2l = lnblnk( errfile )
+        write( *, * )datfile( 1:s1l )
+        if( lerrfile )then
+          write( *, * )errfile( 1:s2l )
         else
           write( *, * )
         end if
@@ -154,8 +156,8 @@ c construct output string
       end if
       if( lphot )then
         write( *, * )'Read in photometric image from:'
-        s1l = lnblnk( inpfile )
-        write( *, * )inpfile( 1:s1l )
+        s1l = lnblnk( datfile )
+        write( *, * )datfile( 1:s1l )
       end if
       write( *, *)
       if( lvels )then
