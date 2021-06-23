@@ -30,6 +30,10 @@ c read in file
         xmax = max( xmax, temp( 1, i ) )
         ymin = min( ymin, temp( 2, i ) )
         ymax = max( ymax, temp( 2, i ) )
+        if( VELmps )then
+          temp( 3, i ) = 1.e-3 * temp( 3, i )
+          temp( 4, i ) = 1.e-3 * temp( 4, i )
+        end if
       end do
 c no end of file encountered
       print *
@@ -73,8 +77,8 @@ c 2D raster option possible if the user wishes
      + ' enough that they could be inserted into a 2D raster of pixels.'
           print *, 'This has both advantages and disadvantages - see' //
      +        ' section 2.1.2 of the documentation'
-      print *, 'Would you like DiskFit to rasterize your data (y/n)?' //
-     +       '  (Enter n if you are inexperienced or do not understand)'
+          print *, 'Would you like DiskFit to rasterize your data' //
+     +' (y/n)?  (Enter n if you are inexperienced or do not understand)'
           read '( a )', yn
 c ensure lowercase
           j = ichar( yn )

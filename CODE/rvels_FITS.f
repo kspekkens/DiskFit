@@ -4,16 +4,18 @@ c
 c   Created by RZS March 2009
 c   Polished by JAS October 2009
 c   Revised by JAS March 2011
+c   Allow for 64-bit reals JAS April 2013
 c
       include 'commons.h'
 c
 c local FITS variables, from FITS cookbook
-      integer blocksize, firstpix, group, nbuffer, nfound
+      integer bitpix, blocksize, firstpix, group, nbuffer, nfound
       integer readwrite, status, unit, unit2
       integer naxes( 2 ), naxes2( 2 )
       logical anynull
       real evelnow, eveltmp, nullval
       real buffer( mpx ), buffer2( mpx )
+      real*8 buf( mpx )
 c
 c local variables
       integer i, istepin, j, nline
@@ -74,12 +76,13 @@ c        print *, 'Adopting error ', evelnow, ', eISM ', eISM, 'km/s'
 c
 c determine the size of the image
       call ftgknj( unit, 'NAXIS', 1, 2, naxes, nfound, status )
-c
 c check that it found both NAXIS1 and NAXIS2 keywords
       if( nfound .ne. 2 )then
         print *, 'Failed to read the NAXISn keywords from vels file'
         call crash( 'rvels_FITS' )
       end if
+c determine the type of data
+      call ftgidt( unit, bitpix, status )
 c
       if( evelfile )then
         call ftgknj( unit2, 'NAXIS', 1, 2, naxes2, nfound, status )
@@ -90,7 +93,16 @@ c check that it found both NAXIS1 and NAXIS2 keywords
         end if
         if( ( naxes( 1 ) .ne. naxes2( 1 ) ) .and.
      +      ( naxes( 2 ) .ne. naxes2( 2 ) ) )then
+          print *, naxes, naxes2
           print *, 'Your vels and evels images differ in size. Fix it.'
+          call crash( 'rvels_FITS' )
+        end if
+c check the type of data
+        call ftgidt( unit2, i, status )
+        if( i .ne. bitpix )then
+          print *, i, bitpix
+          print *,
+     +         'Your vels and evels images differ in data type. Fix it.'
           call crash( 'rvels_FITS' )
         end if
       end if
@@ -119,12 +131,31 @@ c
 c loop though array twice - first get pixels within regrad
       nline = 1
       do while ( nline .le. naxes( 2 ) )
-        call ftgpve( unit, group, firstpix, nbuffer, nullval,
-     +               buffer, anynull, status )
+        if( bitpix .eq. -32 )then
+          call ftgpve( unit, group, firstpix, nbuffer, nullval,
+     +                 buffer, anynull, status )
+        else if( bitpix .eq. -64 )then
+          call ftgpvd( unit, group, firstpix, nbuffer, nullval,
+     +                 buf, anynull, status )
+          do i = 1, nbuffer
+            buffer( i ) = buf( i )
+          end do
+        else
+          print *, 'Unrecognized value of BITPIX:', bitpix
+          call crash( 'rvels_FITS' )
+        end if
 c read uncertainties only if the file exists
         if( evelfile )then
-          call ftgpve( unit2, group, firstpix, nbuffer, nullval,
-     +                 buffer2, anynull, status )
+          if( bitpix .eq. -32 )then
+            call ftgpve( unit2, group, firstpix, nbuffer, nullval,
+     +                   buffer2, anynull, status )
+          else if( bitpix .eq. -64 )then
+            call ftgpvd( unit2, group, firstpix, nbuffer, nullval,
+     +                   buf, anynull, status )
+            do i = 1, nbuffer
+              buffer2( i ) = buf( i )
+            end do
+          end if
         end if
         yval( nline ) = nline
 c place data in array

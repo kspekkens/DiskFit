@@ -33,15 +33,19 @@ c create "output model file" only if maps are in text format
      +          // '(VEL-VMOD)/SIGn' //
      +          '   Vt           Vr          Vm,t          Vm,r        '
         write( 3, '( 149a )' )( dash, i = 1, 149 )
+        a = 1
+        if( VELmps )a = 1000
         if( l2D )then
           do j = 1, yrange
             do i = 1, xrange
               if( lgpix( i, j ) )then
                 write( 3, '( 3f12.2, 2f11.2, 7f13.2 )' )
-     +            xval( i ), yval( j ), sdat( i, j ),
-     +            sdate( i, j ), sigma( i, j ), model( i, j ),
-     +            res( i, j ), x2res( i, j ), rotvels( i, j ),
-     +            radvels( i, j ), bivtan( i, j ), bivrad( i, j )
+     +            xval( i ), yval( j ), a * sdat( i, j ),
+     +            a * sdate( i, j ), a * sigma( i, j ),
+     +            a * model( i, j ), a * res( i, j ),
+     +            x2res( i, j ), a * rotvels( i, j ),
+     +            a * radvels( i, j ), a * bivtan( i, j ),
+     +            a * bivrad( i, j )
               end if
             end do
           end do
@@ -49,10 +53,10 @@ c create "output model file" only if maps are in text format
           do i = 1, inp_pts
             if( lgpix1( i ) )then
               write( 3, '( 3f12.2, 2f11.2, 7f13.2 )' )
-     +          xval( i ), yval( i ), sdat1( i ),
-     +          sdate1( i ), sigma1( i ), model1( i ),
-     +          res1( i ), x2res1( i ), rotvels1( i ),
-     +          radvels1( i ), bivtan1( i ), bivrad1( i )
+     +          xval( i ), yval( i ), a * sdat1( i ),
+     +          a * sdate1( i ), a * sigma1( i ), a * model1( i ),
+     +          a * res1( i ), x2res1( i ), a * rotvels1( i ),
+     +          a * radvels1( i ), a * bivtan1( i ), a * bivrad1( i )
             end if
           end do
         end if
@@ -251,7 +255,6 @@ c output best fitting values of the parameters
      +                                             newi * 180. / pi, pm,
      +                                 eneweps / sin( newi ) * 180. / pi
         else
-          write( 4, * )
           write( 4, * )
           neweps = eps
         end if
