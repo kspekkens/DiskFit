@@ -7,6 +7,9 @@ c   called from bootstrap and bootlace
 c
 c  Created by cutting code from bootstrap.f by JAS - June 2012
 c  Made indata an allocatable array - JAS Aug 2015
+c  Fixed bug in error on angles     - JAS Mar 2017
+c  Fix-up for angles -> fix-angles  - JAS Jul 2017
+c  Use the bi-weight to compute uncertainties- JAS Aug 2017
 c
       include 'commons.h'
 c
@@ -15,85 +18,21 @@ c calling arguments
       real*8 afitval( m, mtot ), aparams( m, md ), eparams( md )
       real*8 lfrac( 3, m )
 c
-c local arrays
-      logical langle( md )
+c local array
       real*8, allocatable :: indata(:)
 c
 c local variables
       integer i, j, k
       logical lc
-      real*8 a, adev, ave, b, curt, sdev, skew, var
+      real*8 ave, sdev
 c
-c set flags for non-angle parameters
-      do j = 1, nd
-        langle( j ) = .false.
-      end do
-c flag angle parameters that need more spohisticated treatment
-      j = 0
-      if( lpa )then
-        j = j + 1
-        langle( j ) = .true.
-      end if
-      if( leps )j = j + 1
-      if( lcentre )j = j + 2
-      if( lphot )then
-        if( lnax )then
-          if( lphib )then
-            j = j + 1
-            langle( j ) = .true.
-          end if
-          if( lepsb )j = j + 1
-        end if
-        if( lbulge )then
-          if( lbleps )j = j + 1
-          if( lsersn )j = j + 1
-          if( lr_e )j = j + 1
-        end if
-      else
-        if( lnax )then
-         if( lphib )then
-           j = j + 1
-           langle( j ) = .true.
-         end if
-        end if
-        if( lwarp )then
-          if( lrwarp )j = j + 1
-          if( lwepsm )j = j + 1
-          if( lwpm )j = j + 1
-        end if
-      end if
-      if( j .ne. nd )then
-        print *, 'mismatched number of parameters'
-        call crash( 'geterrs' )
-      end if
       allocate ( indata( nunc ) )
 c compute mean and standard deviation of outputs
       do j = 1, nd
         do i = 1, nunc
           indata( i ) = aparams( i, j )
         end do
-c allow for restricted range of angular parameters
-        if( langle( j ) )then
-          a = 0
-          b = 0
-          do i = 1, nunc
-            indata( i ) = mod( indata( i ), pi )
-            if( indata( i ) .lt. 0. )indata( i ) = indata( i ) + pi
-            a = a + cos( 2. * indata( i ) )
-            b = b + sin( 2. * indata( i ) )
-          end do
-c pilot estimate of mean
-          ave = .5 * atan2( b, a )
-          if( ave .lt. 0. )ave = ave + pi 
-c ensure distribution is symmetric about this mean
-          a = .5 * pi
-          do i = 1, nunc
-            if( indata( i ) - ave .gt. a )indata( i ) = indata( i ) - pi
-            if( indata( i ) - ave .lt.-a )indata( i ) = indata( i ) + pi
-          end do
-        end if
-        call moment_dbl(
-     +                  indata, nunc, ave, adev, sdev, var, skew, curt )
+        call biwght2( indata, nunc, ave, sdev )
         eparams( j ) = sdev
       end do
 c uncertainties in fitted values
@@ -101,8 +40,7 @@ c uncertainties in fitted values
         do i = 1, nunc
           indata( i ) = afitval( i, j )
         end do
-        call moment_dbl(
-     +                  indata, nunc, ave, adev, sdev, var, skew, curt )
+        call biwght2( indata, nunc, ave, sdev )
         efitval( j ) = sdev
       end do
 c separate efitval array into disk, bar and bulge
@@ -180,8 +118,7 @@ c uncertainties in light fractions
             do i = 1, nunc
               indata( i ) = lfrac( k, i )
             end do
-            call moment_dbl(
-     +                  indata, nunc, ave, adev, sdev, var, skew, curt )
+            call biwght2( indata, nunc, ave, sdev )
             if( k .eq. 1 )edskfrac = sdev
             if( k .eq. 2 )ebarfrac = sdev
             if( k .eq. 3 )eblgfrac = sdev

@@ -23,7 +23,7 @@ c local variables
       integer i, j
       real*8 chi2, eparams( md ), params( md )
 c
-      print *, 'DiskFit (v1.2)  Copyright (C) 2015,' //
+      print *, 'DiskFit (v1.2.2)  Copyright (C) 2015, 2017,' //
      +         ' Jerry Sellwood and Kristine Spekkens'
       print *
       print *, 'This program comes with ABSOLUTELY NO WARRANTY.' //

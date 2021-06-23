@@ -12,6 +12,8 @@ c   Photometry fitting option resurrected - JAS March 2011
 c   Simple warp model added - JAS July 2011
 c   Calls to setwgtx moved to setwgt - JAS March 2012
 c   Updated to f90 - JAS Jan 2015
+c   Set an upper bound on bulge r_e of 10x initial guess - JAS Mar 2017
+c   Increased Avalue from 400 to 4000 - JAS Aug 2017
 c
 c real*8 precision needed for matrix arithmetic
 c
@@ -33,16 +35,17 @@ c local variables
       integer i, ii, ij, ik, iuse, ix, iy, j, jj, k, kk, km, rank !, info
       logical creath, flag
       real best
-      real*8 Avalue, rcond, resd, sysv, tmod
-      save best, iuse, outh
+      real*8 Avalue, rcond, re_ini, resd, sysv, tmod
+      save best, iuse, outh, re_ini
 c
-      parameter ( Avalue = 400 )
+      parameter ( Avalue = 4000 )
       data iuse / -1 /
 c
 c flag first call
       creath = iuse .eq. -1
 c initialize function value
       func = 0
+      flag = .false.
 c build output string
       k = 0
 c output calling parameter list and check for reasonalble values
@@ -145,6 +148,12 @@ c prevent fit wandering to negative r_eff
             if( p( i ) .lt. 0.05 )then
               func = Avalue * ( 1. + ( p( i ) - .05 )**2 )
             end if
+c prevent fit from wandering to very large values
+            if( creath )re_ini = p( i )            
+            flag = p( i ) .gt. 9. * re_ini
+            if( p( i ) .gt. 10. * re_ini )then
+              func = Avalue * ( 1. + ( p( i ) - re_ini )**2 )
+            end if
           end if
         end if
       end if
@@ -201,6 +210,12 @@ c output header if this is a new iteration
         end if
         print '( a )', outh( 1:k )
         if( .not. verbose )print '( a )', outv( 1:k )
+c output warning if needed
+        if( flag )then
+          print *, 'Warning: bulge effective radius near its maximum' //
+     +                         ' allowed value of', 10. * sngl( re_ini )
+          print *, '   the minimum could be artificial'
+        end if
         iuse = iter
       end if
 c print out calling arguments only if verbose

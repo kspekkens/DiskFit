@@ -8,6 +8,10 @@ c  Polished by JAS October 2009
 c  Modified to include photometry by JAS October 2011
 c  Fixed problem of angle errors and split off geterrs - JAS June 2012
 c  Updated to f90 - JAS Jan 2015
+c  Fixed array dimensions bug passed to geterrs,
+c     changed to adjust the fitted bar angle for vels only,
+c     added calls to fix_angles and tabcov, and
+c     close and reopen the .bstrp file every 10 bootstraps - JAS Aug 2017
 c
       include 'commons.h'
 c
@@ -101,8 +105,8 @@ c ensure a different file name for each seed in case of parallel bootstrap runs
       end if
       k = k + 5
       write( bootfile( k:k+i-1 ), form )abs( seed )
-c save results to output file for post-proecessing
-      open( 4, file = bootfile, status = 'unknown' )
+c save results to a new output file for post-processing
+      open( 4, file = bootfile, status = 'new' )
       write( 4, '( a )' )infile
       write( 4, '( 7( a9, l2 ) )' )' lpa: ', lpa, ' leps:', leps,
      *             ' lcentre: ', lcentre, ' lsystemic:   ', lsystemic,
@@ -149,21 +153,22 @@ c restore input x2res map
           end do
         end if
         if( junc .ge. 0.0 ) then
-c generate new velocity field - with coherent patches of residuals as SS07
+c generate new map - with coherent patches of residuals as SS07
           if( l2D )then
             call pseudp( jdum )
           else
             call pseudo( jdum )
           end if
         else
-c generate new velocity field - with rotation and radial scaling as SZS09
+c generate new map - with rotation and radial scaling as SZS09
           call pseudr( jdum )
         end if
 c run minimization
         chi2 = 0.d0
         iter = 0
         call mini( params, chi2, iter )
-        if( lnax )then
+c allow for fit having returned the angle of the minor axis - vels only
+        if( lvels .and. lnax )then
           j = 0
           if( lpa )j = j + 1
           if( leps )j = j + 1
@@ -196,12 +201,19 @@ c save outputs in arrays
           lfrac( 3, ii ) = blgfrac
         end if
 c output new fitted parameters to bootstrap file
-        write( 4, * )'Bootstrap number: ', ii
+        write( 4,
+     + '( '' Bootstrap number: '', i5, ''/'', i5, ''  Chisq '', f12.5 )'
+     +                                                   )ii, nunc, chi2
         write( 4, * )( params( j ), j = 1, nd )
         write( 4, * )( fitval( j ), j = 1, ntot )
         if( lphot .and. ldisk .and. ( lnax .or. lbulge ) )
      +      write( 4, * )lfrac( 1, ii ), lfrac( 2, ii ), lfrac( 3, ii )
         write( 4, * )
+c flush output buffer after every 10 bootstraps
+        if( mod( ii, 10 ) .eq. 0 )then
+          close( 4 )
+          open( 4, file = bootfile, status = 'old', access = 'append' )
+        end if
 c try to open flag file - error on opening is the signal to end gracefully
         open( 3, file = erasefile, status = 'old', iostat = ierr )
         if( ierr .eq. 0 )read( 3, *, iostat = ierr )
@@ -209,10 +221,8 @@ c try to open flag file - error on opening is the signal to end gracefully
 c end bootstrap loop here
         if( ii .eq. nunc )ierr = 1
       end do
-c close output file
+c close output file and report
       close( 4 )
-c update the actual number of bootstrap iterations
-      nunc = ii
       print *
       print *
       print *, 'Finished', ii, ' bootstrap iterations'
@@ -229,7 +239,14 @@ c restore best fitting parameters and values
         blgfrac = blgfrac_loc
       end if
 c get error estimates
-      call geterrs( aparams, afitval, lfrac, eparams, nunc )
+      i = nunc
+      nunc = ii
+      if( nunc .gt. 1 )then
+c last argument is the actual 1st dimension of the array(s)
+        call fix_angles( aparams, i )
+        call tabcov( aparams, afitval, lfrac, i )
+        call geterrs( aparams, afitval, lfrac, eparams, i )
+      end if
 c restore intial data
       if( l2D )then
         do iy = 1, yrange

@@ -5,7 +5,9 @@ c to update the output file with the uncertainties from post-processing
 c of bootstrap outputc
 c
 c created by JAS - June 2012
-c   modified by JAS to allow vels data - Aug 2015 
+c   modified by JAS to allow vels data - Aug 2015
+c   fixed formatting problem for bulge_I0 - JAS Mar 2017
+c   output the actual number of bootstraps in the merged files - JAS Aug 2017
 c
       include 'commons.h'
 c
@@ -30,6 +32,10 @@ c create new file
       open( 4, file = outroot( 1:j )//'new', status = 'unknown' )
 c copy preamble
       do while ( line( 1:19 ) .ne. 'Best fitting values' )
+c update number of bootstraps
+        if( line( 1:13 ) .eq. 'Uncertainties' )then
+          write( line( 62:70 ), '( i9 )' )nunc
+        end if
         j = lnblnk( line )
         if( j .gt. 0 )then
           write( 4, '( a)' )line( 1:j )
@@ -39,7 +45,7 @@ c copy preamble
         read( 3, '( a)', iostat = i )line
         if( i .ne. 0 )then
           print *,
-     +            'Best fiting values line not found in file ', outpfile
+     +           'Best fitting values line not found in file ', outpfile
           call crash( 'revisout' )
         end if
       end do
@@ -79,7 +85,7 @@ c read and edit parameters and fitted values
         else if( line( 1:9 ) .eq. 'Bulge r_e' )then
           write( line( 49:53 ), '( f5.2 )' )enewr_bulge
         else if( line( 1:9 ) .eq. 'Bulge I_0' )then
-          write( line( 49:53 ), '( f5.2 )' )eibulge( 1 )
+          write( line( 49:56 ), '( f8.2 )' )eibulge( 1 )
         else if( line( 1:10 ) .eq. 'Bulge eps:' )then
           write( line( 49:53 ), '( f5.2 )' )enewbulge_l
         else if( line( 1:19 ) .eq. 'Disk light fraction' )then
