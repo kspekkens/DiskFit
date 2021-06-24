@@ -1,0 +1,65 @@
+ DiskFit (v1.2.2)  Copyright (C) 2015, 2017, Jerry Sellwood and Kristine Spekkens
+
+ This program comes with ABSOLUTELY NO WARRANTY.  It is free software
+ and you are welcome to redistribute it under certain conditions.
+ See <http://www.gnu.org/licenses/> for details.
+
+ Enter input parameter file name
+
+ Read in input parameters from: EXAMPLE/VELS/FITS/velsf_bi.inp                                                                      
+
+Input disk eps: (1-b/a)  0.45
+Input disk PA (N->E; deg) =  45.00
+Input x-center (data units) =   130.50
+Input y-center (data units) =   126.50
+Input disk systemic velocity (km/s) =   110.00
+
+ Fitting for:
+ disk PA
+ disk ellipticity
+ disk x-center, y-center
+ non-axisymmetric disk components
+ PA of non-axisymmetric component
+ disk systemic velocity
+ --> Other attributes fixed to input values
+
+ Velocity field components extracted at radii:
+    3.0    9.0   15.0   21.0   27.0   33.0   39.0   45.0   51.0   57.0
+   63.0   69.0   75.0   81.0   87.0   93.0   99.0  105.0  111.0  117.0
+  123.0  129.0  135.0  141.0  147.0
+
+ Fitting for m = 2 bisymmetric flow (radial and tangential components)
+ in addition to rotation velocities
+ Non-axisymm flows set to 0 in rings beyond    111.000000    
+
+ Read in measured velocities and uncertainties from:
+ EXAMPLE/VELS/FITS/vels.fits
+
+
+ Number of datapoints read in:        1224
+ Number of datapoints to be used in fit:        1224
+   diskpa:   diskel:     xcen:     ycen:    phi_b:
+   45.0000  0.450000  130.5000  126.5000   45.0000
+starting iteration    1 best reduced chisq so far: 1.308E+02
+   diskpa:   diskel:     xcen:     ycen:    phi_b:
+   45.0000  0.450000  130.5000  126.5000   45.0000
+s starting iteration    2 best reduced chisq so far: 2.020E+01
+   diskpa:   diskel:     xcen:     ycen:    phi_b:
+   40.2138  0.502785  126.6453  127.9658   76.4177
+starting iteration    3 best reduced chisq so far: 8.255E+00
+   diskpa:   diskel:     xcen:     ycen:    phi_b:
+   40.0074  0.507540  128.5559  128.5574  110.1719
+starting iteration    4 best reduced chisq so far: 8.198E+00
+   diskpa:   diskel:     xcen:     ycen:    phi_b:
+   40.0911  0.502861  128.5684  128.5753  108.4468
+starting iteration    5 best reduced chisq so far: 8.197E+00
+   diskpa:   diskel:     xcen:     ycen:    phi_b:
+   40.0583  0.502611  128.5684  128.5778  108.4367
+
+ Done minimization
+ Total number of iterations:            5
+ Minimum chi^2 found:    8.19682884    
+
+ Wrote:  EXAMPLE/VELS/FITS/OUT/bi.mod.fits
+ Wrote:  EXAMPLE/VELS/FITS/OUT/bi.res.fits
+ Wrote out: EXAMPLE/VELS/FITS/OUT/bi.out

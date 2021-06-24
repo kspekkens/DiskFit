@@ -1,0 +1,257 @@
+ DiskFit (v1.2.2)  Copyright (C) 2015, 2017, Jerry Sellwood and Kristine Spekkens
+
+ This program comes with ABSOLUTELY NO WARRANTY.  It is free software
+ and you are welcome to redistribute it under certain conditions.
+ See <http://www.gnu.org/licenses/> for details.
+
+ Enter input parameter file name
+
+ Read in input parameters from: EXAMPLE/PHOT/phot_err.inp                                                                           
+
+Input disk eps: (1-b/a)  0.40
+Input disk PA (N->E; deg) =  35.00
+Input x-center (data units) =   130.00
+Input y-center (data units) =   130.00
+Sky, sky sig, gain (ADU) =   800.00   14.14    4.00
+
+ Fitting for:
+ disk PA
+ disk ellipticity
+ disk x-center, y-center
+ Bar profile
+ Bar PA
+ Bar ellipticity
+ Sersic bulge profile
+ bulge effective radius
+ bulge ellipticity
+ bulge Sersic index
+ --> Other attributes fixed to input values
+
+ Surface brightnesses extracted at radii:
+    5.0   10.0   15.0   20.0   25.0   30.0   35.0   40.0   45.0   50.0
+   55.0   60.0   65.0   70.0   75.0   80.0   90.0  100.0  110.0
+
+ Fitting for a bar component
+ Axisymmetric model outside    40.0000000    
+
+ Read in photometric image from:
+ EXAMPLE/PHOT/phot.fits
+
+ Number of pixels in selected part of the image:       65536
+ Number of pixels used in fit:        7495
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   35.0000  0.400000  130.0000  130.0000    5.0000    0.5000    0.2000    2.0000   10.0000
+starting iteration    1 best reduced chisq so far: 1.838E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   35.0000  0.400000  130.0000  130.0000    5.0000    0.5000    0.2000    2.0000   10.0000
+starting iteration    2 best reduced chisq so far: 9.880E-01
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.7303  0.306540  129.9455  129.9945   11.2600    0.5840    0.1452    1.9261   10.2436
+starting iteration    3 best reduced chisq so far: 9.662E-01
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.7849  0.296538  129.9724  130.0020   10.1985    0.5922    0.1642    1.8599    9.8998
+starting iteration    4 best reduced chisq so far: 9.644E-01
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.1262  0.295257  129.9756  130.0021    9.9673    0.5915    0.1769    1.7627    9.2936
+starting iteration    5 best reduced chisq so far: 9.640E-01
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.0680  0.294488  129.9827  130.0015   10.0086    0.5911    0.1781    1.7385    9.1781
+starting iteration    6 best reduced chisq so far: 9.637E-01
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.9360  0.293710  129.9916  130.0009   10.0593    0.5910    0.1789    1.6905    8.8266
+starting iteration    7 best reduced chisq so far: 9.636E-01
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.9697  0.293546  129.9918  130.0008   10.0676    0.5910    0.1778    1.6857    8.7210
+starting iteration    8 best reduced chisq so far: 9.636E-01
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.9823  0.292840  129.9915  130.0013   10.0497    0.5909    0.1739    1.6705    8.3468
+
+ Done minimization
+ Total number of iterations:            8
+ Minimum chi^2 found:   0.963588774    
+
+ Wrote:  EXAMPLE/PHOT/OUT/err.mod.fits
+ Wrote:  EXAMPLE/PHOT/OUT/err.res.fits
+ Wrote:  EXAMPLE/PHOT/OUT/err.dsk.fits
+ Wrote:  EXAMPLE/PHOT/OUT/err.bar.fits
+ Wrote:  EXAMPLE/PHOT/OUT/err.blg.fits
+
+ Determining uncertainties...
+ Beginning bootstrap
+
+
+ Bootstrap number:            1
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   35.0000  0.400000  130.0000  130.0000    5.0000    0.5000    0.2000    2.0000   10.0000
+starting iteration    1 best reduced chisq so far: 1.982E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   35.0000  0.400000  130.0000  130.0000    5.0000    0.5000    0.2000    2.0000   10.0000
+starting iteration    2 best reduced chisq so far: 1.111E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.8636  0.304491  129.9458  129.9790   12.1363    0.5817    0.1633    1.9046   10.5121
+starting iteration    3 best reduced chisq so far: 1.082E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.6659  0.290866  129.9800  129.9794   10.9447    0.5905    0.1881    1.8359   10.1908
+starting iteration    4 best reduced chisq so far: 1.080E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.9219  0.289887  129.9816  129.9808   10.7078    0.5912    0.1936    1.7968    9.9129
+starting iteration    5 best reduced chisq so far: 1.080E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.1020  0.289155  129.9896  129.9865   10.5956    0.5908    0.1982    1.7088    9.1889
+starting iteration    6 best reduced chisq so far: 1.080E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.0434  0.288464  129.9908  129.9892   10.6374    0.5909    0.1975    1.6955    9.0202
+starting iteration    7 best reduced chisq so far: 1.079E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.0162  0.287588  129.9872  129.9924   10.6502    0.5909    0.1962    1.6765    8.6583
+starting iteration    8 best reduced chisq so far: 1.079E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.0140  0.287416  129.9869  129.9915   10.6317    0.5910    0.1950    1.6749    8.5545
+starting iteration    9 best reduced chisq so far: 1.079E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.0242  0.287381  129.9873  129.9906   10.6191    0.5910    0.1924    1.6708    8.3685
+
+ Done minimization
+ Total number of iterations:            9
+ Minimum chi^2 found:    1.07940936    
+
+
+
+ Bootstrap number:            2
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   35.0000  0.400000  130.0000  130.0000    5.0000    0.5000    0.2000    2.0000   10.0000
+starting iteration    1 best reduced chisq so far: 1.974E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   35.0000  0.400000  130.0000  130.0000    5.0000    0.5000    0.2000    2.0000   10.0000
+starting iteration    2 best reduced chisq so far: 1.103E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.8344  0.306568  129.9463  129.9692   11.9279    0.5840    0.1475    1.9402   10.4606
+starting iteration    3 best reduced chisq so far: 1.074E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.6430  0.294451  129.9869  129.9698   10.6744    0.5922    0.1689    1.8867   10.1194
+starting iteration    4 best reduced chisq so far: 1.073E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.7664  0.294547  129.9882  129.9697   10.4033    0.5916    0.1762    1.8204    9.6029
+starting iteration    5 best reduced chisq so far: 1.072E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.7944  0.294188  129.9924  129.9730   10.4175    0.5914    0.1768    1.8000    9.4745
+starting iteration    6 best reduced chisq so far: 1.072E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.7454  0.293466  129.9920  129.9826   10.5039    0.5915    0.1777    1.7389    8.9657
+starting iteration    7 best reduced chisq so far: 1.072E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.7684  0.292874  129.9921  129.9823   10.5035    0.5914    0.1767    1.7331    8.8320
+starting iteration    8 best reduced chisq so far: 1.072E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.7653  0.291910  129.9930  129.9816   10.4932    0.5906    0.1733    1.7145    8.4065
+
+ Done minimization
+ Total number of iterations:            8
+ Minimum chi^2 found:    1.07174957    
+
+
+
+ Bootstrap number:            3
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   35.0000  0.400000  130.0000  130.0000    5.0000    0.5000    0.2000    2.0000   10.0000
+starting iteration    1 best reduced chisq so far: 1.934E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   35.0000  0.400000  130.0000  130.0000    5.0000    0.5000    0.2000    2.0000   10.0000
+starting iteration    2 best reduced chisq so far: 1.123E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.6763  0.303392  129.9437  130.0018   10.9438    0.5813    0.1443    1.9072   10.3781
+starting iteration    3 best reduced chisq so far: 1.105E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.2560  0.295536  129.9725  130.0106   10.0492    0.5877    0.1656    1.8376   10.2663
+starting iteration    4 best reduced chisq so far: 1.103E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.5986  0.294723  129.9808  130.0038    9.8029    0.5880    0.1838    1.7487   10.1839
+starting iteration    5 best reduced chisq so far: 1.102E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.5615  0.294547  129.9869  130.0030    9.8818    0.5878    0.1870    1.7370   10.3669
+starting iteration    6 best reduced chisq so far: 1.102E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.5131  0.294868  129.9908  130.0031    9.9509    0.5877    0.1902    1.7289   10.6011
+starting iteration    7 best reduced chisq so far: 1.102E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.5077  0.295046  129.9907  130.0030    9.9509    0.5877    0.1903    1.7321   10.6200
+
+ Done minimization
+ Total number of iterations:            7
+ Minimum chi^2 found:    1.10209358    
+
+
+
+ Bootstrap number:            4
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   35.0000  0.400000  130.0000  130.0000    5.0000    0.5000    0.2000    2.0000   10.0000
+starting iteration    1 best reduced chisq so far: 1.901E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   35.0000  0.400000  130.0000  130.0000    5.0000    0.5000    0.2000    2.0000   10.0000
+starting iteration    2 best reduced chisq so far: 1.130E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.2216  0.310524  129.9469  129.9891   12.1355    0.5850    0.1402    1.9391   10.2957
+starting iteration    3 best reduced chisq so far: 1.094E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   38.9263  0.299437  129.9755  129.9929   10.5136    0.5949    0.1608    1.8831    9.8165
+starting iteration    4 best reduced chisq so far: 1.092E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.1257  0.299428  129.9733  129.9952   10.3075    0.5948    0.1639    1.8445    9.4260
+starting iteration    5 best reduced chisq so far: 1.090E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.3143  0.297446  129.9825  130.0015   10.1565    0.5918    0.1653    1.6627    7.5139
+starting iteration    6 best reduced chisq so far: 1.090E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.2381  0.295750  129.9879  129.9999   10.2274    0.5930    0.1604    1.6279    7.1131
+starting iteration    7 best reduced chisq so far: 1.090E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.2102  0.295051  129.9904  129.9995   10.2180    0.5934    0.1577    1.6138    6.9476
+starting iteration    8 best reduced chisq so far: 1.090E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.1846  0.294811  129.9923  129.9991   10.2144    0.5936    0.1551    1.6006    6.7999
+
+ Done minimization
+ Total number of iterations:            8
+ Minimum chi^2 found:    1.08974755    
+
+
+
+ Bootstrap number:            5
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   35.0000  0.400000  130.0000  130.0000    5.0000    0.5000    0.2000    2.0000   10.0000
+starting iteration    1 best reduced chisq so far: 1.866E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   35.0000  0.400000  130.0000  130.0000    5.0000    0.5000    0.2000    2.0000   10.0000
+starting iteration    2 best reduced chisq so far: 1.130E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.7920  0.316249  129.9420  129.9948   11.9600    0.5807    0.1383    1.9518   10.2778
+starting iteration    3 best reduced chisq so far: 1.096E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.7754  0.305510  129.9686  129.9986   10.3375    0.5910    0.1576    1.9032    9.8241
+starting iteration    4 best reduced chisq so far: 1.094E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.8999  0.305743  129.9668  129.9998   10.0786    0.5907    0.1599    1.8687    9.4400
+starting iteration    5 best reduced chisq so far: 1.093E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.0106  0.304906  129.9670  129.9998   10.1086    0.5906    0.1586    1.7266    7.8684
+starting iteration    6 best reduced chisq so far: 1.092E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   40.0177  0.302020  129.9773  129.9998   10.0196    0.5903    0.1551    1.6739    7.2702
+starting iteration    7 best reduced chisq so far: 1.091E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.9920  0.301236  129.9810  130.0003    9.9964    0.5903    0.1519    1.6535    7.0559
+starting iteration    8 best reduced chisq so far: 1.091E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.9784  0.301019  129.9830  130.0003    9.9919    0.5903    0.1506    1.6431    6.9666
+starting iteration    9 best reduced chisq so far: 1.091E+00
+   diskpa:   diskel:     xcen:     ycen:   bar-pa:   bar-el:   blg-el:    blg-n:    r-blg:
+   39.9724  0.300935  129.9842  130.0001    9.9894    0.5903    0.1503    1.6381    6.9373
+
+ Done minimization
+ Total number of iterations:            9
+ Minimum chi^2 found:    1.09124732    
+
+
+
+ Finished           5  bootstrap iterations
+ Wrote out: EXAMPLE/PHOT/OUT/err.out

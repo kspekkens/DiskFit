@@ -1,0 +1,59 @@
+ DiskFit (v1.2.2)  Copyright (C) 2015, 2017, Jerry Sellwood and Kristine Spekkens
+
+ This program comes with ABSOLUTELY NO WARRANTY.  It is free software
+ and you are welcome to redistribute it under certain conditions.
+ See <http://www.gnu.org/licenses/> for details.
+
+ Enter input parameter file name
+
+ Read in input parameters from: EXAMPLE/VELS/FITS/velsf_disk.inp                                                                    
+
+Input disk eps: (1-b/a)  0.45
+Input disk PA (N->E; deg) =  45.00
+Input x-center (data units) =   130.50
+Input y-center (data units) =   126.50
+Input disk systemic velocity (km/s) =   110.00
+
+ Fitting for:
+ disk PA
+ disk ellipticity
+ disk x-center, y-center
+ disk systemic velocity
+ --> Other attributes fixed to input values
+
+ Velocity field components extracted at radii:
+    3.0    9.0   15.0   21.0   27.0   33.0   39.0   45.0   51.0   57.0
+   63.0   69.0   75.0   81.0   87.0   93.0   99.0  105.0  111.0  117.0
+  123.0  129.0  135.0  141.0  147.0
+
+ Read in measured velocities and uncertainties from:
+ EXAMPLE/VELS/FITS/vels.fits
+
+
+ Number of datapoints read in:        1224
+ Number of datapoints to be used in fit:        1224
+   diskpa:   diskel:     xcen:     ycen:
+   45.0000  0.450000  130.5000  126.5000
+starting iteration    1 best reduced chisq so far: 2.630E+02
+   diskpa:   diskel:     xcen:     ycen:
+   45.0000  0.450000  130.5000  126.5000
+starting iteration    2 best reduced chisq so far: 5.659E+01
+   diskpa:   diskel:     xcen:     ycen:
+   37.9961  0.502733  126.7728  127.7303
+starting iteration    3 best reduced chisq so far: 4.650E+01
+   diskpa:   diskel:     xcen:     ycen:
+   38.3531  0.491871  128.1495  128.3479
+starting iteration    4 best reduced chisq so far: 4.616E+01
+   diskpa:   diskel:     xcen:     ycen:
+   38.1442  0.500750  128.2245  128.3675
+starting iteration    5 best reduced chisq so far: 4.615E+01
+   diskpa:   diskel:     xcen:     ycen:
+   38.1286  0.501701  128.2318  128.3612
+
+ Done minimization
+ Total number of iterations:            5
+ Minimum chi^2 found:    46.1519241    
+
+ Wrote:  EXAMPLE/VELS/FITS/OUT/disk.mod.fits
+ Wrote:  EXAMPLE/VELS/FITS/OUT/disk.res.fits
+ Wrote out: EXAMPLE/VELS/FITS/OUT/disk.out
