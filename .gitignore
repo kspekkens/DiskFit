@@ -1,0 +1,8 @@
+# Ignore compilation files
+CODE/**/*.mod
+CODE/**/*.o
+CODE/DiskFit
+CODE/bootlace
+# Ignore files copied during testing
+TESTS/EXAMPLE
+TESTS/DiskFit

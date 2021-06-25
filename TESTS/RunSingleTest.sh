@@ -23,12 +23,15 @@ if [ ! -e "$diskfit" ]; then
     # It's not here. Look at ../CODE/DiskFit
     if [ -e "$diskfit_built_executable" ]; then
         echo "Copying DiskFit executable from CODE directory..."
-        cp -v "$diskfit_built_executable" "$diskfit"
+        cp "$diskfit_built_executable" "$diskfit"
+    else
+        echo "DiskFit doesn't exist in TESTS directory or in CODE directory."
+        echo "Please compile or provide the DiskFit executable."
     fi
 fi
 if [ -e "$diskfit" ]; then
     # It exists
-    if [ -d "$diskfit"]; then
+    if [ -d "$diskfit" ]; then
         # It exists but it is a directory
         echo "DiskFit folder exists in the current directory."
         echo "Please delete the folder named DiskFit, then"
@@ -53,7 +56,7 @@ if [ ! -e "$example_dir" ]; then
     # It's not here. Look at ../EXAMPLE
     if [ -e "../EXAMPLE" ]; then
         echo "Copying EXAMPLE directory..."
-        cp -rv "../EXAMPLE" "$example_dir"
+        cp -r "../EXAMPLE" "$example_dir"
     fi
 fi
 [ -d "$example_dir" ] || panic "Example directory doesn't exist!"
