@@ -6,3 +6,9 @@ CODE/bootlace
 # Ignore files copied during testing
 TESTS/EXAMPLE
 TESTS/DiskFit
+# Ignore non-open-source source code
+CODE/NRCODE/*.f
+# Ignore cfitsio files
+CODE/CFITSIO/libcfitsio.a
+CODE/CFITSIO/*.tar.gz
+CODE/CFITSIO/cfitsio_src/**/*
