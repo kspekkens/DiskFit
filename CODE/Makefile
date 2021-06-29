@@ -35,9 +35,12 @@ obj_modules := $(patsubst %.f,%.o,$(src_modules))
 src_common := $(wildcard COMMON/*.f LINPACK/*.f NRCODE/*.f)
 obj_common := $(patsubst %.f,%.o,$(src_common))
 
-all: $(targets)
+# We put libcfitsio here as a dependency so that it will be built first,
+# before all the normal object files. It's the most complicated step,
+# so we should get it out of the way first.
+all: CFITSIO/libcfitsio.a $(targets)
 
-%: CFITSIO/libcfitsio.a %.o $(obj_modules) $(obj_common)
+%: %.o $(obj_modules) $(obj_common) CFITSIO/libcfitsio.a
 	$(FC) $(FFLAGS) $(link_flags) -o $@ $^ $(link_libs)
 
 CFITSIO/libcfitsio.a:

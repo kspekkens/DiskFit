@@ -16,7 +16,7 @@ $(cfitsio_dir)/libcfitsio.a: $(cfitsio_dir)/Makefile
 	$(MAKE) -C $(cfitsio_dir) libcfitsio.a
 
 $(cfitsio_dir)/Makefile: $(cfitsio_dir)/configure-patched
-	cd $(cfitsio_dir) && CFLAGS="$(cflags)" ./configure-patched --enable-sse2 --enable-ssse3
+	cd $(cfitsio_dir) && CFLAGS="$(cflags)" ./configure-patched --enable-sse2
 
 $(cfitsio_dir)/configure-patched: $(cfitsio_dir) configure.patch
 	cp $(cfitsio_dir)/configure $(cfitsio_dir)/configure-patched
