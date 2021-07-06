@@ -20,6 +20,7 @@ c
 c local variables
       integer j, jg, jl, k
       real ct, frac0, frac1, rg2, rl2, r2max, r2min, rp2, st, theta
+      real*8 rp_inv
       real tiny, x, y
       parameter ( tiny = 1.e-2 )
 c
@@ -29,10 +30,16 @@ c clear the wgt array
         wt( j ) = 0
       end do
 c angle of this pixel from the center
-      theta = atan2( ypos, xpos )
+c Previously, theta = atan2(y,x) was calculated and then
+c sin(theta) and cos(theta) were found.
+c Instead, we now divide the x/y by the radius to get
+c the intended result faster and with less error.
       rp2 = xpos**2 + ypos**2
-      ct = cos( theta )
-      st = sin( theta )
+c Do sum of squares with double precision just in case
+      rp_inv = xpos**2D0 + ypos**2D0
+      rp_inv = 1 / dsqrt( rp_inv )
+      ct = xpos * rp_inv
+      st = ypos * rp_inv
 c tabulate projected radii of rings along this radius vector
       r2max = 0
       r2min = 2 * sma( nellip )**2
