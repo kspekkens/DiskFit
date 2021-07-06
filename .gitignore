@@ -12,3 +12,5 @@ CODE/NRCODE/*.f
 CODE/CFITSIO/libcfitsio.a
 CODE/CFITSIO/*.tar.gz
 CODE/CFITSIO/cfitsio_src/**/*
+# Ignore user-specific / editor-specific files
+.vscode
