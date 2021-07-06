@@ -18,7 +18,7 @@ $(cfitsio_dir)/libcfitsio.a: $(cfitsio_dir)/Makefile
 $(cfitsio_dir)/Makefile: $(cfitsio_dir)/configure-patched
 	cd $(cfitsio_dir) && CFLAGS="$(cflags)" ./configure-patched --enable-sse2
 
-$(cfitsio_dir)/configure-patched: $(cfitsio_dir) configure.patch
+$(cfitsio_dir)/configure-patched: $(cfitsio_dir) clean configure.patch
 	cp $(cfitsio_dir)/configure $(cfitsio_dir)/configure-patched
 	patch $(cfitsio_dir)/configure-patched configure.patch
 
@@ -31,9 +31,9 @@ $(cfitsio_tarball):
 
 .PHONY: $(cfitsio_dir) all clean clean-all
 clean:
-	[ -n "$(cfitsio_dir)/Makefile" ] || $(MAKE) -C $(cfitsio_dir) clean
+	[ ! -e "$(cfitsio_dir)/Makefile" ] || $(MAKE) -C $(cfitsio_dir) clean
 	rm -f $(cfitsio_dir)/Makefile $(cfitsio_dir)/configure-patched
-	rm -f $(target)
+	rm -f $(target) $(cfitsio_dir)/libcfitsio.a
 clean-all: clean
 clean-src: clean-all
 	rm -rf $(cfitsio_dir)

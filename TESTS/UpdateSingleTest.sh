@@ -9,6 +9,8 @@ function panic {
 testfile="$1"
 [ -f "$testfile" ] || panic "Unable to open testfile!"
 
+diskfit="./DiskFit"
+
 # Parse some data from testfile and the corresponding input file
 echo "=== Reading testfile '$testfile'..."
 diskfit_input_file=$(sed -Ee "5{s/'([^']+)'/\\1/;q};d" < "$testfile")
@@ -32,7 +34,7 @@ mkdir -vp "$expected_directory"
 # Run DiskFit and save output to a temporary file in the output directory
 echo "=== Running DiskFit..."
 # sed -e '/^-- start input/,/^-- end input/{/^--/d; p};d' < "$testfile" | ./DiskFit 2>&1 | tee "$diskfit_output_file_no_ext".console_output
-tail -n +5 "$testfile" | ../CODE/DiskFit 2>&1 | tee "$diskfit_output_file_no_ext".console_output
+tail -n +5 "$testfile" | "$diskfit" 2>&1 | tee "$diskfit_output_file_no_ext".console_output
 
 # Copy files to update expected
 echo "=== Updating expected results..."

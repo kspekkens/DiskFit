@@ -84,7 +84,7 @@ echo "=== Using expected outputs directory '$expected_directory'..."
 # Run DiskFit and save output to a temporary file in the output directory
 echo "=== Running DiskFit..."
 # sed -e '/^-- start input/,/^-- end input/{/^--/d; p};d' < "$testfile" | ./DiskFit 2>&1 | tee "$diskfit_output_file_no_ext".console_output
-tail -n +5 "$testfile" | ../CODE/DiskFit 2>&1 >"$diskfit_output_file_no_ext".console_output
+tail -n +5 "$testfile" | "$diskfit" 2>&1 >"$diskfit_output_file_no_ext".console_output
 
 # Run diff to compare output to expected output
 echo "=== Comparing results..."
