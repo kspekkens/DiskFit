@@ -33,23 +33,26 @@ obj_targets := $(patsubst %,%.o,$(targets))
 # We have to put the module files separately so that they are built first
 src_modules := $(wildcard MODULES/*.f)
 obj_modules := $(patsubst %.f,%.o,$(src_modules))
-src_common := $(wildcard COMMON/*.f LINPACK/*.f NRCODE/*.f)
+src_common := $(wildcard COMMON/*.f)
 obj_common := $(patsubst %.f,%.o,$(src_common))
+src_3rdparty := $(wildcard LINPACK/*.f NRCODE/*.f)
+obj_3rdparty := $(patsubst %.f,%.o,$(src_3rdparty))
 
 # We put libcfitsio here as a dependency so that it will be built first,
 # before all the normal object files. It's the most complicated step,
 # so we should get it out of the way first.
 all: CFITSIO/libcfitsio.a $(targets)
 
-%: %.o $(obj_modules) $(obj_common) CFITSIO/libcfitsio.a
+%: %.o $(obj_modules) $(obj_common) $(obj_3rdparty) CFITSIO/libcfitsio.a
 	$(FC) $(FFLAGS) $(link_flags) -o $@ $^ $(link_libs)
 
 CFITSIO/libcfitsio.a:
 	$(MAKE) -C CFITSIO libcfitsio.a
 
-# Indicate that all other objects depend on the modules.
+# Indicate that all other DiskFit objects depend on the modules.
 # This forces the modules to be built first.
-$(obj_targets) $(obj_common): $(obj_modules)
+# Additionally, recompile all objects if the commons.h file changes
+$(obj_targets) $(obj_common): $(obj_modules) COMMON/commons.h
 
 # We use the implicit rule for compiling Fortran to object files.
 
