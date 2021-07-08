@@ -40,8 +40,8 @@ c quadratic function from rw to disk edge
           else
             wsi( i ) = 1
           end if
-          wcp( i ) = cos( wphi( i ) )
-          wsp( i ) = sin( wphi( i ) )
+          wcp( i ) = real( dcos( dble( wphi( i ) ) ) )
+          wsp( i ) = real( dsin( dble( wphi( i ) ) ) )
         end if
       end do
       return
