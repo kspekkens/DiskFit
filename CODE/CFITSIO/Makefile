@@ -35,6 +35,6 @@ clean:
 	rm -f $(cfitsio_dir)/Makefile $(cfitsio_dir)/configure-patched
 	rm -f $(target) $(cfitsio_dir)/libcfitsio.a
 clean-all: clean
-clean-src: clean-all
+clean-src:
 	rm -rf $(cfitsio_dir)
 	rm -f $(cfitsio_tarball)
