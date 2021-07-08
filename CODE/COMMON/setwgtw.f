@@ -36,7 +36,7 @@ c Instead, we now divide the x/y by the radius to get
 c the intended result faster and with less error.
       rp2 = xpos**2 + ypos**2
 c Do sum of squares with double precision just in case
-      rp_inv = xpos**2D0 + ypos**2D0
+      rp_inv = dble(xpos)**2 + dble(ypos)**2
       rp_inv = 1 / dsqrt( rp_inv )
       ct = xpos * rp_inv
       st = ypos * rp_inv

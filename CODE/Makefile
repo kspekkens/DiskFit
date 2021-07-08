@@ -31,10 +31,10 @@ targets := DiskFit bootlace
 obj_targets := $(patsubst %,%.o,$(targets))
 
 # We have to put the module files separately so that they are built first
-src_modules := $(wildcard MODULES/*.f)
-obj_modules := $(patsubst %.f,%.o,$(src_modules))
-src_common := $(wildcard COMMON/*.f)
-obj_common := $(patsubst %.f,%.o,$(src_common))
+src_modules  := $(wildcard MODULES/*.f)
+obj_modules  := $(patsubst %.f,%.o,$(src_modules))
+src_common   := $(wildcard COMMON/*.f)
+obj_common   := $(patsubst %.f,%.o,$(src_common))
 src_3rdparty := $(wildcard LINPACK/*.f NRCODE/*.f)
 obj_3rdparty := $(patsubst %.f,%.o,$(src_3rdparty))
 
@@ -43,29 +43,44 @@ obj_3rdparty := $(patsubst %.f,%.o,$(src_3rdparty))
 # so we should get it out of the way first.
 all: CFITSIO/libcfitsio.a $(targets)
 
+# Pattern rule to build the targets by linking the .o file with all the
+# other object files, as well as libcfitsio.a
 %: %.o $(obj_modules) $(obj_common) $(obj_3rdparty) CFITSIO/libcfitsio.a
 	$(FC) $(FFLAGS) $(link_flags) -o $@ $^ $(link_libs)
 
-CFITSIO/libcfitsio.a:
-	$(MAKE) -C CFITSIO libcfitsio.a
+# We use the implicit rule for compiling Fortran to object files.
 
 # Indicate that all other DiskFit objects depend on the modules.
 # This forces the modules to be built first.
 # Additionally, recompile all objects if the commons.h file changes
 $(obj_targets) $(obj_common): $(obj_modules) COMMON/commons.h
 
-# We use the implicit rule for compiling Fortran to object files.
+# Build licfitsio.a using the makefile in the subdirectory.
+CFITSIO/libcfitsio.a:
+	$(MAKE) -C CFITSIO libcfitsio.a
 
 # New target for generating assembly source from all Fortran files.
 # Used only for debugging.
-all-asm: $(patsubst %.o,%.S,$(obj_common) $(obj_modules))
+all-asm: $(patsubst %.o,%.S,$(obj_targets) $(obj_modules) $(obj_common) $(obj_3rdparty))
 %.S: %.f
 	$(FC) $(FFLAGS) -S -o $@ $^
 
-.PHONY: all all-asm clean clean-all
 clean:
-	rm -f $(obj_targets) $(obj_modules) $(obj_common) *.mod
+	rm -f $(obj_targets) $(obj_modules) $(obj_common) $(obj_3rdparty) *.mod
 	$(MAKE) -C CFITSIO clean
 clean-all: clean
 	rm -f $(targets)
 	$(MAKE) -C CFITSIO clean-all
+
+# Phony targets: targets that don't represent actual files, but instead
+# they are symbolic names.
+.PHONY: all all-asm clean clean-all
+# Adjust suffixes to enable only the implicit rules for .f files.
+.SUFFIXES:    # Delete the default suffixes
+.SUFFIXES: .f # Define our suffix list (just .f)
+# Prevent compilation of .f into executables directly, forcing our
+# custom compilation rule to be used.
+%: %.f
+# Mark all intermediate files as secondary, meaning that they won't be
+# deleted after compilation.
+.SECONDARY:
