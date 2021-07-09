@@ -43,40 +43,37 @@ starting iteration    1 best reduced chisq so far: 2.636E+02
 starting iteration    2 best reduced chisq so far: 5.200E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
    37.9972  0.502725  126.7736  127.7304   92.0004   -0.0138    0.0592
-starting iteration    3 best reduced chisq so far: 3.742E+01
+starting iteration    3 best reduced chisq so far: 3.741E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   37.3768  0.503961  127.8512  128.2406   31.1731   -0.0017    0.0629
+   37.3757  0.503972  127.8505  128.2404   31.2171   -0.0017    0.0629
 starting iteration    4 best reduced chisq so far: 3.263E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   36.4628  0.507850  128.2340  128.4003    9.0174   -0.0012    0.0800
+   36.4628  0.507843  128.2339  128.4003    9.0112   -0.0011    0.0800
 starting iteration    5 best reduced chisq so far: 2.980E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   35.6950  0.508318  128.3470  128.4545    9.0008   -0.0008    0.0995
-starting iteration    6 best reduced chisq so far: 2.804E+01
+   35.6961  0.508285  128.3468  128.4544    9.0003   -0.0008    0.0995
+starting iteration    6 best reduced chisq so far: 2.545E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   35.0812  0.507903  128.3974  128.4750    9.0001   -0.0025    0.1161
-s starting iteration    7 best reduced chisq so far: 2.535E+01
+   33.0101  0.506640  128.5550  128.5404    9.0002   -0.0080    0.1720
+starting iteration    7 best reduced chisq so far: 2.537E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.9894  0.505597  128.5144  128.5421    9.0001   -0.0144    0.1752
-starting iteration    8 best reduced chisq so far: 2.531E+01
+   33.0029  0.504943  128.5073  128.5392    9.0001   -0.0165    0.1737
+starting iteration    8 best reduced chisq so far: 2.524E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.9894  0.507614  128.5072  128.5400    9.0000   -0.0221    0.1757
-starting iteration    9 best reduced chisq so far: 2.525E+01
+   32.9216  0.515215  128.5059  128.5418    9.0001   -0.0382    0.1819
+starting iteration    9 best reduced chisq so far: 2.522E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.9698  0.511696  128.5062  128.5414    9.0000   -0.0284    0.1773
+   32.9281  0.517122  128.5053  128.5414    9.0001   -0.0384    0.1814
 starting iteration   10 best reduced chisq so far: 2.519E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.9196  0.520704  128.5124  128.5510    9.0000   -0.0408    0.1798
+   32.9329  0.520839  128.5064  128.5436    9.0001   -0.0415    0.1787
 starting iteration   11 best reduced chisq so far: 2.519E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.9275  0.521179  128.5104  128.5442    9.0000   -0.0414    0.1791
-starting iteration   12 best reduced chisq so far: 2.519E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.9288  0.521181  128.5049  128.5422    9.0000   -0.0414    0.1790
+   32.9300  0.521204  128.5047  128.5419    9.0001   -0.0415    0.1790
 
  Done minimization
- Total number of iterations:           12
- Minimum chi^2 found:    25.1926575    
+ Total number of iterations:           11
+ Minimum chi^2 found:    25.1926460    
 
  Wrote:  EXAMPLE/VELS/FITS/OUT/warp.mod.fits
  Wrote:  EXAMPLE/VELS/FITS/OUT/warp.res.fits
@@ -91,174 +88,144 @@ starting iteration   12 best reduced chisq so far: 2.519E+01
 starting iteration    1 best reduced chisq so far: 3.306E+02
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
    45.0000  0.450000  130.5000  126.5000   90.0000    0.0000    0.0000
-starting iteration    2 best reduced chisq so far: 5.833E+01
+starting iteration    2 best reduced chisq so far: 5.616E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   36.6261  0.499356  126.6665  127.8286  111.5896    0.0467    0.0517
-starting iteration    3 best reduced chisq so far: 4.051E+01
+   36.6278  0.499369  126.6653  127.8277  106.3287    0.0482    0.0650
+starting iteration    3 best reduced chisq so far: 3.751E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   36.0314  0.495589  127.8835  128.4347   83.5647    0.0746    0.0687
-starting iteration    4 best reduced chisq so far: 2.999E+01
+   35.8567  0.494581  127.8866  128.4407   81.9399    0.0678    0.0877
+starting iteration    4 best reduced chisq so far: 2.515E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   33.4867  0.462102  129.0081  128.8359   62.9475    0.0934    0.1327
-starting iteration    5 best reduced chisq so far: 2.480E+01
+   33.1289  0.463274  129.0594  128.8387   50.3926    0.0790    0.1737
+s starting iteration    5 best reduced chisq so far: 2.124E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.7651  0.441671  128.8955  128.7852   40.0683    0.0925    0.1513
-starting iteration    6 best reduced chisq so far: 2.148E+01
+   32.0118  0.446752  128.8454  128.7839   35.7615    0.0712    0.1904
+starting iteration    6 best reduced chisq so far: 1.994E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.2744  0.426689  128.5609  128.6979   38.3572    0.0800    0.2055
-starting iteration    7 best reduced chisq so far: 2.036E+01
+   31.3092  0.443282  128.5059  128.6914   32.6731    0.0593    0.2226
+starting iteration    7 best reduced chisq so far: 1.962E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.9881  0.436202  128.3963  128.6498   44.5284    0.0537    0.2332
-s starting iteration    8 best reduced chisq so far: 1.972E+01
+   31.3672  0.448386  128.5041  128.6854   36.3909    0.0524    0.2241
+s starting iteration    8 best reduced chisq so far: 1.790E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.7943  0.445461  128.3735  128.6330   48.2340    0.0330    0.2498
-starting iteration    9 best reduced chisq so far: 1.811E+01
+   32.0601  0.486474  128.4870  128.7069   61.8808   -0.0186    0.2426
+starting iteration    9 best reduced chisq so far: 1.762E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.6738  0.484458  128.3867  128.6332   61.4442   -0.0298    0.2727
-starting iteration   10 best reduced chisq so far: 1.762E+01
+   32.1955  0.490817  128.5225  128.6999   63.2245   -0.0287    0.2525
+starting iteration   10 best reduced chisq so far: 1.760E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.9008  0.491367  128.5061  128.6909   61.3825   -0.0331    0.2599
-starting iteration   11 best reduced chisq so far: 1.751E+01
+   32.1656  0.492376  128.5352  128.7019   63.1661   -0.0329    0.2562
+starting iteration   11 best reduced chisq so far: 1.756E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.9967  0.495551  128.5285  128.6980   61.5246   -0.0424    0.2567
-starting iteration   12 best reduced chisq so far: 1.749E+01
+   32.0751  0.497123  128.5632  128.7090   61.8053   -0.0435    0.2606
+starting iteration   12 best reduced chisq so far: 1.750E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.0242  0.498348  128.5428  128.7120   60.8965   -0.0482    0.2570
+   32.0026  0.497955  128.5630  128.7137   61.5952   -0.0477    0.2599
 starting iteration   13 best reduced chisq so far: 1.749E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.0259  0.498863  128.5423  128.7067   61.1360   -0.0502    0.2577
+   32.0679  0.498812  128.5395  128.7054   61.8452   -0.0516    0.2586
 starting iteration   14 best reduced chisq so far: 1.749E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.0602  0.499596  128.5310  128.7028   61.6311   -0.0516    0.2576
-starting iteration   15 best reduced chisq so far: 1.749E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.0691  0.499450  128.5341  128.7038   61.6952   -0.0514    0.2574
-starting iteration   16 best reduced chisq so far: 1.749E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.1011  0.498954  128.5339  128.7031   62.3170   -0.0516    0.2582
-starting iteration   17 best reduced chisq so far: 1.749E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.0952  0.499039  128.5359  128.7038   62.2265   -0.0518    0.2584
+   32.0904  0.499008  128.5364  128.7048   62.1947   -0.0518    0.2584
 
  Done minimization
- Total number of iterations:           17
- Minimum chi^2 found:    17.4881954    
+ Total number of iterations:           14
+ Minimum chi^2 found:    17.4883442    
 
 
 
  Bootstrap number:            2
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
    45.0000  0.450000  130.5000  126.5000   90.0000    0.0000    0.0000
-starting iteration    1 best reduced chisq so far: 2.306E+02
+starting iteration    1 best reduced chisq so far: 2.305E+02
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
    45.0000  0.450000  130.5000  126.5000   90.0000    0.0000    0.0000
-starting iteration    2 best reduced chisq so far: 3.113E+01
+starting iteration    2 best reduced chisq so far: 3.124E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   38.3061  0.504545  127.2776  127.6536  107.5648   -0.0452    0.1080
-starting iteration    3 best reduced chisq so far: 1.758E+01
+   38.3041  0.504546  127.2772  127.6533   92.0004   -0.0220    0.0813
+starting iteration    3 best reduced chisq so far: 1.893E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   37.0671  0.515253  128.6647  128.3529   87.5867   -0.0169    0.1059
-starting iteration    4 best reduced chisq so far: 1.664E+01
+   37.3161  0.507710  128.2335  128.1355   82.5497    0.0016    0.0918
+starting iteration    4 best reduced chisq so far: 1.657E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   36.6088  0.512017  128.6741  128.3081   84.8923   -0.0205    0.1215
-starting iteration    5 best reduced chisq so far: 1.623E+01
+   36.7482  0.506076  128.5316  128.2509   76.0660    0.0050    0.1022
+starting iteration    5 best reduced chisq so far: 1.610E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   36.0235  0.507926  128.6496  128.3000   78.4256   -0.0217    0.1399
-starting iteration    6 best reduced chisq so far: 1.615E+01
+   35.8372  0.499075  128.7131  128.3272   65.4944    0.0099    0.1219
+starting iteration    6 best reduced chisq so far: 1.605E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   35.9800  0.505587  128.6574  128.3105   76.2207   -0.0148    0.1370
-starting iteration    7 best reduced chisq so far: 1.605E+01
+   35.8133  0.496666  128.6625  128.3092   66.0440    0.0100    0.1223
+starting iteration    7 best reduced chisq so far: 1.604E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   35.8712  0.500765  128.6439  128.3027   70.7713    0.0032    0.1272
+   35.8107  0.496310  128.6407  128.3012   67.1294    0.0100    0.1248
 starting iteration    8 best reduced chisq so far: 1.604E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   35.8541  0.498947  128.6360  128.3005   69.5510    0.0051    0.1266
+   35.8104  0.496321  128.6404  128.3015   67.2838    0.0095    0.1251
 starting iteration    9 best reduced chisq so far: 1.604E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   35.8387  0.498378  128.6392  128.3013   69.0000    0.0053    0.1267
-s starting iteration   10 best reduced chisq so far: 1.604E+01
+   35.8099  0.496862  128.6435  128.3020   67.6124    0.0084    0.1256
+starting iteration   10 best reduced chisq so far: 1.604E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   35.8310  0.498245  128.6424  128.3030   68.7406    0.0055    0.1268
+   35.8225  0.497104  128.6422  128.3019   67.8367    0.0082    0.1254
 
  Done minimization
  Total number of iterations:           10
- Minimum chi^2 found:    16.0376892    
+ Minimum chi^2 found:    16.0403137    
 
 
 
  Bootstrap number:            3
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
    45.0000  0.450000  130.5000  126.5000   90.0000    0.0000    0.0000
-starting iteration    1 best reduced chisq so far: 2.585E+02
+starting iteration    1 best reduced chisq so far: 2.584E+02
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
    45.0000  0.450000  130.5000  126.5000   90.0000    0.0000    0.0000
-starting iteration    2 best reduced chisq so far: 6.598E+01
+starting iteration    2 best reduced chisq so far: 6.454E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   39.5853  0.534103  126.6850  127.7312  113.5346   -0.0097    0.1239
-starting iteration    3 best reduced chisq so far: 4.351E+01
+   39.5844  0.534118  126.6840  127.7302  106.3287   -0.0068    0.1296
+starting iteration    3 best reduced chisq so far: 4.137E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   38.3734  0.551220  127.9209  128.3233   89.0610    0.0087    0.1253
-s starting iteration    4 best reduced chisq so far: 3.119E+01
+   38.0765  0.551606  127.9305  128.3341   85.9955    0.0075    0.1315
+starting iteration    4 best reduced chisq so far: 2.993E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   35.2327  0.565652  128.7268  128.5650   46.1514    0.0315    0.1529
-s starting iteration    5 best reduced chisq so far: 2.578E+01
+   35.0231  0.563816  128.7889  128.5829   41.5445    0.0264    0.1612
+s starting iteration    5 best reduced chisq so far: 2.490E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   34.2747  0.542123  128.6587  128.5608   27.7593    0.0456    0.1621
-s starting iteration    6 best reduced chisq so far: 2.281E+01
+   34.0807  0.542290  128.6922  128.5710   24.2858    0.0395    0.1700
+starting iteration    6 best reduced chisq so far: 2.213E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   33.5053  0.527812  128.6543  128.5639   16.6635    0.0537    0.1822
-starting iteration    7 best reduced chisq so far: 2.108E+01
+   33.2939  0.529876  128.6855  128.5734   14.1121    0.0467    0.1904
+s starting iteration    7 best reduced chisq so far: 2.066E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.9375  0.519099  128.6369  128.5701    9.0003    0.0565    0.1991
-starting iteration    8 best reduced chisq so far: 2.041E+01
+   32.9024  0.521104  128.6021  128.5602    9.0010    0.0489    0.2042
+starting iteration    8 best reduced chisq so far: 2.011E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.8965  0.512913  128.5148  128.5361    9.0001    0.0537    0.2080
-s starting iteration    9 best reduced chisq so far: 1.966E+01
+   32.7717  0.516991  128.5376  128.5432    9.0002    0.0485    0.2133
+s starting iteration    9 best reduced chisq so far: 1.950E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.3242  0.512490  128.5860  128.5667    9.0002    0.0504    0.2363
-s starting iteration   10 best reduced chisq so far: 1.929E+01
+   32.2931  0.511119  128.4576  128.5432    9.0009    0.0391    0.2410
+s starting iteration   10 best reduced chisq so far: 1.932E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   32.0457  0.512679  128.5630  128.5600    9.0001    0.0446    0.2438
-s starting iteration   11 best reduced chisq so far: 1.899E+01
+   32.1996  0.514452  128.5018  128.5432    9.0011    0.0340    0.2443
+starting iteration   11 best reduced chisq so far: 1.919E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.6560  0.515826  128.5405  128.5536    9.0000    0.0345    0.2541
-starting iteration   12 best reduced chisq so far: 1.892E+01
+   32.1239  0.517510  128.5076  128.5457    9.0004    0.0298    0.2463
+starting iteration   12 best reduced chisq so far: 1.897E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.6560  0.518484  128.5405  128.5575    9.0000    0.0306    0.2537
-s starting iteration   13 best reduced chisq so far: 1.871E+01
+   31.9512  0.523642  128.5069  128.5457    9.0000    0.0202    0.2513
+starting iteration   13 best reduced chisq so far: 1.893E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.6560  0.536453  128.5325  128.5547    9.0000    0.0051    0.2583
-starting iteration   14 best reduced chisq so far: 1.868E+01
+   31.9025  0.523166  128.5313  128.5535    9.0000    0.0213    0.2521
+starting iteration   14 best reduced chisq so far: 1.866E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.6560  0.539553  128.5385  128.5610    9.0000   -0.0010    0.2570
-s starting iteration   15 best reduced chisq so far: 1.868E+01
+   31.2618  0.533960  128.5516  128.5607    9.0000    0.0037    0.2688
+starting iteration   15 best reduced chisq so far: 1.866E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.6560  0.541372  128.5446  128.5645    9.0000   -0.0052    0.2571
-starting iteration   16 best reduced chisq so far: 1.868E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.6560  0.541300  128.5487  128.5665    9.0000   -0.0052    0.2574
-starting iteration   17 best reduced chisq so far: 1.867E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.6560  0.541313  128.5509  128.5678    9.0000   -0.0057    0.2578
-starting iteration   18 best reduced chisq so far: 1.862E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.4463  0.542373  128.5510  128.5682    9.0000   -0.0133    0.2659
-starting iteration   19 best reduced chisq so far: 1.861E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.3990  0.543253  128.5414  128.5624    9.0000   -0.0138    0.2664
-starting iteration   20 best reduced chisq so far: 1.860E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.3021  0.544720  128.5609  128.5723    9.0000   -0.0147    0.2693
-starting iteration   21 best reduced chisq so far: 1.860E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.3082  0.544796  128.5596  128.5733    9.0000   -0.0142    0.2687
-starting iteration   22 best reduced chisq so far: 1.860E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   31.3014  0.544583  128.5590  128.5723    9.0000   -0.0137    0.2686
+   31.2618  0.533960  128.5567  128.5685    9.0000    0.0037    0.2682
 
  Done minimization
- Total number of iterations:           22
- Minimum chi^2 found:    18.5959778    
+ Total number of iterations:           15
+ Minimum chi^2 found:    18.6626301    
 
 
 
@@ -268,34 +235,34 @@ starting iteration   22 best reduced chisq so far: 1.860E+01
 starting iteration    1 best reduced chisq so far: 2.312E+02
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
    45.0000  0.450000  130.5000  126.5000   90.0000    0.0000    0.0000
-starting iteration    2 best reduced chisq so far: 3.662E+01
+starting iteration    2 best reduced chisq so far: 3.665E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   38.4897  0.481766  126.8680  127.6631   92.0004    0.0592    0.0328
-starting iteration    3 best reduced chisq so far: 2.406E+01
+   38.4864  0.481442  126.8657  127.6619   92.0004    0.0598    0.0326
+starting iteration    3 best reduced chisq so far: 2.410E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   38.2945  0.465537  127.9207  128.1834   52.2075    0.0610    0.0476
-starting iteration    4 best reduced chisq so far: 2.039E+01
+   38.2995  0.465306  127.9196  128.1835   52.3605    0.0628    0.0471
+starting iteration    4 best reduced chisq so far: 2.043E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   37.0336  0.459213  128.6417  128.4903   11.1328    0.0517    0.0765
-starting iteration    5 best reduced chisq so far: 1.942E+01
+   37.0547  0.457935  128.6390  128.4873   11.5569    0.0526    0.0764
+starting iteration    5 best reduced chisq so far: 1.945E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   36.5644  0.461056  128.6374  128.4769   13.5997    0.0438    0.0877
-s starting iteration    6 best reduced chisq so far: 1.858E+01
+   36.5746  0.460521  128.6390  128.4773   13.5945    0.0445    0.0875
+starting iteration    6 best reduced chisq so far: 1.852E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   36.0612  0.468292  128.6070  128.4737    9.0000    0.0266    0.1053
-starting iteration    7 best reduced chisq so far: 1.843E+01
+   36.0180  0.468873  128.5969  128.4701    9.0002    0.0256    0.1067
+starting iteration    7 best reduced chisq so far: 1.837E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   35.8231  0.470603  128.6070  128.4800    9.0000    0.0255    0.1053
-starting iteration    8 best reduced chisq so far: 1.843E+01
+   35.7882  0.470853  128.5969  128.4778    9.0000    0.0240    0.1067
+starting iteration    8 best reduced chisq so far: 1.837E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   35.8021  0.471762  128.6070  128.4800    9.0001    0.0239    0.1053
-starting iteration    9 best reduced chisq so far: 1.843E+01
+   35.7713  0.473127  128.5969  128.4778    9.0000    0.0207    0.1067
+starting iteration    9 best reduced chisq so far: 1.837E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   35.8047  0.472293  128.6070  128.4813    9.0000    0.0229    0.1053
+   35.7794  0.473382  128.5969  128.4776    9.0000    0.0201    0.1067
 
  Done minimization
  Total number of iterations:            9
- Minimum chi^2 found:    18.4256134    
+ Minimum chi^2 found:    18.3713665    
 
 
 
@@ -305,67 +272,34 @@ starting iteration    9 best reduced chisq so far: 1.843E+01
 starting iteration    1 best reduced chisq so far: 2.319E+02
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
    45.0000  0.450000  130.5000  126.5000   90.0000    0.0000    0.0000
-starting iteration    2 best reduced chisq so far: 4.081E+01
+starting iteration    2 best reduced chisq so far: 3.714E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   38.8839  0.506024  126.5771  127.9233  135.3668   -0.5000    0.5903
-starting iteration    3 best reduced chisq so far: 2.877E+01
+   38.8846  0.506034  126.5761  127.9230   99.4734   -0.0802    0.1174
+starting iteration    3 best reduced chisq so far: 2.253E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   38.4333  0.517444  127.6187  128.4449  124.6526   -0.5000    0.4850
-starting iteration    4 best reduced chisq so far: 2.633E+01
+   37.0838  0.518991  128.2579  128.8144   73.5348   -0.0557    0.1251
+starting iteration    4 best reduced chisq so far: 2.139E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   37.9696  0.522462  127.9233  128.5981  119.2721   -0.5000    0.4561
-starting iteration    5 best reduced chisq so far: 2.566E+01
+   36.6499  0.516225  128.2663  128.7552   69.0098   -0.0669    0.1419
+starting iteration    5 best reduced chisq so far: 2.023E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   37.0495  0.528374  128.1759  128.7161  111.8569   -0.3980    0.3856
-starting iteration    6 best reduced chisq so far: 2.543E+01
+   35.4064  0.524788  128.1856  128.7167   54.1216   -0.0876    0.1777
+starting iteration    6 best reduced chisq so far: 2.004E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   36.7748  0.529175  128.1487  128.7076  108.7605   -0.3368    0.3682
-starting iteration    7 best reduced chisq so far: 2.398E+01
+   35.3016  0.522050  128.1661  128.7307   52.3664   -0.0787    0.1754
+starting iteration    7 best reduced chisq so far: 1.977E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   35.6523  0.533547  128.2259  128.7599   91.4280   -0.1410    0.2216
-starting iteration    8 best reduced chisq so far: 2.347E+01
+   34.9961  0.513535  128.0981  128.7024   43.2653   -0.0526    0.1662
+starting iteration    8 best reduced chisq so far: 1.976E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   35.6670  0.528035  128.0676  128.6868   90.0811   -0.1198    0.2152
-starting iteration    9 best reduced chisq so far: 2.262E+01
+   34.9667  0.512678  128.1077  128.7117   41.7706   -0.0510    0.1665
+starting iteration    9 best reduced chisq so far: 1.976E+01
    diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   35.8939  0.507538  127.8896  128.6217   85.6512   -0.0673    0.1855
-starting iteration   10 best reduced chisq so far: 2.225E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   36.0622  0.504824  127.9603  128.6377   85.3704   -0.0735    0.1895
-starting iteration   11 best reduced chisq so far: 2.144E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   36.5072  0.510130  128.1269  128.6991   80.4974   -0.0665    0.1590
-starting iteration   12 best reduced chisq so far: 2.139E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   36.5007  0.510945  128.0871  128.6829   79.9425   -0.0661    0.1572
-starting iteration   13 best reduced chisq so far: 2.117E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   36.3439  0.522014  127.9839  128.6473   77.0635   -0.0826    0.1600
-starting iteration   14 best reduced chisq so far: 2.111E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   36.3416  0.523164  128.0161  128.6620   75.7456   -0.0818    0.1569
-starting iteration   15 best reduced chisq so far: 2.005E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   35.0952  0.519571  127.9675  128.6442   49.2302   -0.0587    0.1618
-starting iteration   16 best reduced chisq so far: 1.983E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   34.9287  0.514089  128.0477  128.6852   45.7034   -0.0542    0.1691
-starting iteration   17 best reduced chisq so far: 1.976E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   34.9230  0.513544  128.0945  128.7059   43.6940   -0.0535    0.1687
-starting iteration   18 best reduced chisq so far: 1.976E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   34.9328  0.513012  128.1303  128.7209   41.3493   -0.0526    0.1674
-starting iteration   19 best reduced chisq so far: 1.976E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   34.9450  0.512290  128.1231  128.7181   41.2383   -0.0510    0.1667
-starting iteration   20 best reduced chisq so far: 1.976E+01
-   diskpa:   diskel:     xcen:     ycen:    rwarp:    wepsm:    wphim:
-   34.9509  0.511987  128.1199  128.7169   41.1984   -0.0506    0.1665
+   34.9635  0.511961  128.1133  128.7141   41.4220   -0.0505    0.1663
 
  Done minimization
- Total number of iterations:           20
- Minimum chi^2 found:    19.7588120    
+ Total number of iterations:            9
+ Minimum chi^2 found:    19.7587719    
 
 
 
