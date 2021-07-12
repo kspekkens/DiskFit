@@ -13,7 +13,7 @@ c calling arguments
 c
 c local variables
       integer i
-      real f
+      real*8 f
 c
 c work over all ellipses
       do i = 1, nellip
@@ -36,12 +36,12 @@ c quadratic function from rw to disk edge
           wba( i ) = 1.d0 - wel( i )
           if( wba( i ) .gt. q )then
             wsi( i ) =
-     +           sqrt( 1.d0 - ( wba( i )**2 - q**2 ) / ( 1.d0 - q**2 ) )
+     +           dsqrt( 1.d0 - ( wba( i )**2 - q**2 ) / ( 1.d0 - q**2 ))
           else
             wsi( i ) = 1
           end if
-          wcp( i ) = real( dcos( dble( wphi( i ) ) ) )
-          wsp( i ) = real( dsin( dble( wphi( i ) ) ) )
+          wcp( i ) = dcos( wphi( i ) )
+          wsp( i ) = dsin( wphi( i ) )
         end if
       end do
       return

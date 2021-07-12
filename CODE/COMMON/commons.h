@@ -126,8 +126,8 @@ c
       real rwarp, wepsm, wphim
       common / warpp / rwarp, wphim, wepsm
 c
-      real wba( mellip ), wcp( mellip ), wel( mellip )
-      real wphi( mellip ), wsi( mellip ), wsp( mellip )
+      real*8 wba( mellip ), wcp( mellip ), wel( mellip )
+      real*8 wphi( mellip ), wsi( mellip ), wsp( mellip )
       common / warpd / wel, wphi, wba, wcp, wsp, wsi
 c
       logical fronly
