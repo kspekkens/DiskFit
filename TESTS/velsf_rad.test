@@ -1,0 +1,5 @@
+-- DiskFit test
+-- Expected outputs directory follows on line 3:
+EXPECTED_velsf_rad
+-- Command line inputs follow on line 5+:
+'EXAMPLE/VELS/FITS/velsf_rad.inp'
