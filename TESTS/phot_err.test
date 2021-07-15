@@ -1,0 +1,6 @@
+-- DiskFit test
+-- Expected outputs directory follows on line 3:
+EXPECTED_phot_err
+-- Command line inputs follow on line 5+:
+'EXAMPLE/PHOT/phot_err.inp'
+n

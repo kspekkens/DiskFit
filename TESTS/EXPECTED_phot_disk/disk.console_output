@@ -1,0 +1,50 @@
+ DiskFit (v1.2.2)  Copyright (C) 2015, 2017, Jerry Sellwood and Kristine Spekkens
+
+ This program comes with ABSOLUTELY NO WARRANTY.  It is free software
+ and you are welcome to redistribute it under certain conditions.
+ See <http://www.gnu.org/licenses/> for details.
+
+ Enter input parameter file name
+
+ Read in input parameters from: EXAMPLE/PHOT/phot_disk.inp                                                                          
+
+Input disk eps: (1-b/a)  0.40
+Input disk PA (N->E; deg) =  35.00
+Input x-center (data units) =   130.00
+Input y-center (data units) =   130.00
+Sky, sky sig, gain (ADU) =   800.00   14.14    4.00
+
+ Fitting for:
+ disk PA
+ disk ellipticity
+ disk x-center, y-center
+ --> Other attributes fixed to input values
+
+ Surface brightnesses extracted at radii:
+    5.0   10.0   15.0   20.0   25.0   30.0   35.0   40.0   45.0   50.0
+   55.0   60.0   65.0   70.0   75.0   80.0   90.0  100.0  110.0
+
+ Read in photometric image from:
+ EXAMPLE/PHOT/phot.fits
+
+ Number of pixels in selected part of the image:       65536
+ Number of pixels used in fit:        7495
+   diskpa:   diskel:     xcen:     ycen:
+   35.0000  0.400000  130.0000  130.0000
+starting iteration    1 best reduced chisq so far: 5.223E+00
+   diskpa:   diskel:     xcen:     ycen:
+   35.0000  0.400000  130.0000  130.0000
+starting iteration    2 best reduced chisq so far: 4.195E+00
+   diskpa:   diskel:     xcen:     ycen:
+   30.3458  0.299129  130.0000  130.0000
+starting iteration    3 best reduced chisq so far: 4.195E+00
+   diskpa:   diskel:     xcen:     ycen:
+   30.7228  0.299256  130.0000  130.0000
+
+ Done minimization
+ Total number of iterations:            3
+ Minimum chi^2 found:    4.19463110    
+
+ Wrote:  EXAMPLE/PHOT/OUT/disk.mod.fits
+ Wrote:  EXAMPLE/PHOT/OUT/disk.res.fits
+ Wrote out: EXAMPLE/PHOT/OUT/disk.out
