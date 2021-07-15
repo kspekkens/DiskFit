@@ -48,10 +48,11 @@ c copy the image, or excise selected piece, and find the brightest pixel
           sdat( i, j ) = ldat( i + lox - 1, j + loy - 1 )
           if( lerrfile )sigma( i, j ) =
      +                  ldate( i + lox - 1, j + loy - 1 )
-          if( lmask .and.
-     +               ( dmask( i + lox - 1, j + loy - 1 ) .ne. 0. ) )then
-            sdat( i, j ) = -9999
-            k = k + 1
+          if( lmask )then
+            if( dmask( i + lox - 1, j + loy - 1 ) .ne. 0. )then
+              sdat( i, j ) = -9999
+              k = k + 1
+            end if
           end if
           if( sdat( i, j ) .gt. maxim )then
             maxim = sdat( i, j )
