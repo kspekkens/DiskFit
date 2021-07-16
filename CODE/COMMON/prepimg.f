@@ -78,8 +78,8 @@ c select pixels to be used
 c parameters for sparse sampling
       b_over_a = 1 - regeps
       regpa = ( regpa + 90. ) * pi / 180.
-      cospa = cos( regpa )
-      sinpa = sin( regpa )
+      cospa = sngl( cos( dble( regpa ) ) )
+      sinpa = sngl( sin( dble( regpa ) ) )
 c allocate space
       allocate ( lgpix( xrange, yrange ) )
       allocate ( x2res( xrange * yrange, 1 ) )
@@ -139,8 +139,8 @@ c assume photon counting statistics dominate
       end if
 c increase uncertainties of pixels outside largest ellipse
 c   to reduce their weight in the fit
-      cospa = cos( pa )
-      sinpa = sin( pa )
+      cospa = sngl( cos( dble( pa ) ) )
+      sinpa = sngl( sin( dble( pa ) ) )
       do j = 1, yrange
         yr = yval( j ) - ycen
         do i = 1, xrange

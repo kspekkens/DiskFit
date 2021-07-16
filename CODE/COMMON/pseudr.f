@@ -75,13 +75,13 @@ c      print *, 'regions, boundaries & random angle:'
 c create random PA angles for each annulus/region
         rpa = ran1_dbl( jdum ) * 2.d0 * pi
 c        print '( i3, 3f10.2)', i, rini( i ), rout( i ), 180. * rpa / pi
-        cosrpa( i ) = cos( rpa )
-        sinrpa( i ) = sin( rpa )
+        cosrpa( i ) = sngl( cos( dble( rpa ) ) )
+        sinrpa( i ) = sngl( sin( dble( rpa ) ) )
       end do
 c local disk geometric parameters
       meps = 0.9 * eps
-      cospa = cos( pa )
-      sinpa = sin( pa )
+      cospa = sngl( cos( dble( pa ) ) )
+      sinpa = sngl( sin( dble( pa ) ) )
 c find new random beginning of annulus
       rrad = ran1_dbl( jdum )
 c      print '( a, f10.3 )', 'new random radius', rrad

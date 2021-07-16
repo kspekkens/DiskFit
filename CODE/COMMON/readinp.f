@@ -341,7 +341,7 @@ c set up parameters for seeing correction if selected
       if( lseeing )call blurset
 c
 c compute inclination from input ellipticity: cos( incl ) = 1 - eps
-      incl = acos( 1. - eps ) * 180. / pi
+      incl = sngl( acos( dble( 1. - eps ) ) * 180. / pi)
 c change to definition PA used in program (y-axis to left)
       pa = pa + 90.
       if( lphot .and. lnax )bar_pa = bar_pa + 90.
