@@ -34,12 +34,26 @@ c Previously, theta = atan2(y,x) was calculated and then
 c sin(theta) and cos(theta) were found.
 c Instead, we now divide the x/y by the radius to get
 c the intended result faster and with less error.
-      rp2 = xpos**2 + ypos**2
 c Do sum of squares with double precision just in case
       rp_inv = dble(xpos)**2 + dble(ypos)**2
-      rp_inv = 1 / dsqrt( rp_inv )
-      ct = sngl( xpos * rp_inv )
-      st = sngl( ypos * rp_inv )
+      if (rp_inv .le. tiny) then
+c Our vector has magnitude zero (effectively) - edge case! In this case,
+c it works out that setting (ct,st) to the zero vector will result in
+c the weights computing out to be zero - which is what we want, as the
+c velocity at the center of the disk should have zero bearing on the
+c rotation at each radius.
+c This edge case can only happen when linter0 is true, as otherwise,
+c the center pixels will be masked out of the image. Since linter0 is
+c true, we know that by setting rp2=0 we will get a final weight of 0.
+        ct = 0
+        st = 0
+        rp2 = 0
+      else
+        rp_inv = 1 / dsqrt( rp_inv )
+        ct = sngl( xpos * rp_inv )
+        st = sngl( ypos * rp_inv )
+        rp2 = xpos**2 + ypos**2
+      endif
 c tabulate projected radii of rings along this radius vector
       r2max = 0
       r2min = 2 * sma( nellip )**2
