@@ -36,7 +36,7 @@ c Instead, we now divide the x/y by the radius to get
 c the intended result faster and with less error.
 c Do sum of squares with double precision just in case
       rp_inv = dble(xpos)**2 + dble(ypos)**2
-      if (rp_inv .le. tiny) then
+      if (rp_inv .le. 1.e-5) then
 c Our vector has magnitude zero (effectively) - edge case! In this case,
 c it works out that setting (ct,st) to the zero vector will result in
 c the weights computing out to be zero - which is what we want, as the
