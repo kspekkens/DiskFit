@@ -119,8 +119,8 @@ c raw data arrays
       allocate ( xval( nsizex ) )
       allocate ( yval( nsizey ) )
 c
-      cospa = cos( regpa )
-      sinpa = sin( regpa )
+      cospa = sngl( cos( dble( regpa ) ) )
+      sinpa = sngl( sin( dble( regpa ) ) )
 c
       j = 0
 c loop though array twice - first get pixels within regrad

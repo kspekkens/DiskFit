@@ -22,8 +22,8 @@ c outer mask boundary larger and a little rounder than the outermost ellipse
       maskeout = 0.9 * eps
 c position angle is the initial guess
       maskp = pa
-      cmp = cos( maskp )
-      smp = sin( maskp )
+      cmp = sngl( cos( dble( maskp ) ) )
+      smp = sngl( sin( dble( maskp ) ) )
 c ellipticities of inner mask boundary - needed for vels only
       if( lvels .and. ( .not. linter0 ) )then
         masksmin = sma0
