@@ -5,15 +5,16 @@ c This subroutine sets up the parameters for the seeing correction as
 c   described in the documentation
 c
 c   Created by JAS March 2011
-c   Input seeing disk size change to FWHM - Sep 2011
-c   Limit range of seeing to dsee =< 3 pixels - Jun 2015
+c   Input seeing disk size change to FWHM - JAS Sep 2011
+c   Limit range of seeing to dsee =< 3 pixels - JAS Jun 2015
+c   Increased mblur to 101, needed for junc =<100 in bootstraps - JAS Sep 2020
 c
 c common blocks
       include 'commons.h'
 c
 c local arrays
       integer nsprd
-      parameter ( nsprd = 11 )
+      parameter ( nsprd = 17 )
       integer mwide( nsprd ), npt( nsprd )
       real rmx( nsprd )
 c
@@ -24,9 +25,12 @@ c local variables
       save rmx
 c
       data firstc / .true. /
-      data mwide / 3, 3, 5, 5, 5, 7, 7, 7, 9, 9, 9 /
-      data npt / 5, 9, 13, 21, 25, 29, 37, 45, 49, 57, 61 /
-      data rmx / 1., 2., 4., 5., 8., 9., 10., 13., 16., 17., 18. /
+      data mwide / 3, 3, 5, 5, 5, 7, 7, 7, 9, 9, 7, 9, 11, 9, 11,
+     +             11, 9 /
+      data npt / 5, 9, 13, 21, 25, 29, 37, 45, 49, 57, 61, 69, 73, 81,
+     +           89, 93, 101 /
+      data rmx / 1., 2., 4., 5., 8., 9., 10., 13., 16., 17., 18., 20.,
+     +           25., 25., 27., 29., 32. /
 c
 c initialize on first call only
       if( firstc )then
@@ -38,13 +42,13 @@ c set pixel offset arrays - useful also for bootstrap code
         k = 1
         ibl( k ) = 0
         jbl( k ) = 0
-c first nearest neighbours
+c first nearest neighbours - r^2 = 1
         do i = -1, 1, 2
           ibl( k + 1 ) = i
           jbl( k + 2 ) = i
           k = k + 2
         end do
-c second nearest neighbours
+c second nearest neighbours - r^2 = 2
         do i = -1, 1, 2
           do j = -1, 1, 2
             k = k + 1
@@ -52,13 +56,13 @@ c second nearest neighbours
             jbl( k ) = j
           end do
         end do
-c third nearest neighbours
+c third nearest neighbours - r^2 = 4
         do i = -1, 1, 2
           ibl( k + 1 ) = 2 * i
           jbl( k + 2 ) = 2 * i
           k = k + 2
         end do
-c fourth nearest neighbours
+c fourth nearest neighbours - r^2 = 5
         do i = -1, 1, 2
           do j = -1, 1, 2
             ibl( k + 1 ) = 2 * i
@@ -68,7 +72,7 @@ c fourth nearest neighbours
             k = k + 2
           end do
         end do
-c fifth nearest neighbours
+c fifth nearest neighbours - r^2 = 8
         do i = -1, 1, 2
           do j = -1, 1, 2
             k = k + 1
@@ -76,13 +80,13 @@ c fifth nearest neighbours
             jbl( k ) = 2 * j
           end do
         end do
-c sixth nearest neighbours
+c sixth nearest neighbours - r^2 = 9
         do i = -1, 1, 2
           ibl( k + 1 ) = 3 * i
           jbl( k + 2 ) = 3 * i
           k = k + 2
         end do
-c seventh nearest neighbours
+c seventh nearest neighbours - r^2 = 10
         do i = -1, 1, 2
           do j = -1, 1, 2
             ibl( k + 1 ) = 3 * i
@@ -92,7 +96,7 @@ c seventh nearest neighbours
             k = k + 2
           end do
         end do
-c eighth nearest neighbours
+c eighth nearest neighbours - r^2 = 13
         do i = -1, 1, 2
           do j = -1, 1, 2
             ibl( k + 1 ) = 3 * i
@@ -102,13 +106,13 @@ c eighth nearest neighbours
             k = k + 2
           end do
         end do
-c ninth nearest neighbours
+c ninth nearest neighbours - r^2 = 16
         do i = -1, 1, 2
           ibl( k + 1 ) = 4 * i
           jbl( k + 2 ) = 4 * i
           k = k + 2
         end do
-c tenth nearest neighbours
+c tenth nearest neighbours - r^2 = 17
         do i = -1, 1, 2
           do j = -1, 1, 2
             ibl( k + 1 ) = 4 * i
@@ -118,12 +122,66 @@ c tenth nearest neighbours
             k = k + 2
           end do
         end do
-c eleventh nearest neighbours
+c eleventh nearest neighbours - r^2 = 18
         do i = -1, 1, 2
           do j = -1, 1, 2
             k = k + 1
             ibl( k ) = 3 * i
             jbl( k ) = 3 * j
+          end do
+        end do
+c twelvth nearest neighbours - r^2 = 20
+        do i = -1, 1, 2
+          do j = -1, 1, 2
+            ibl( k + 1 ) = 4 * i
+            jbl( k + 1 ) = 2 * j
+            ibl( k + 2 ) = 2 * i
+            jbl( k + 2 ) = 4 * j
+            k = k + 2
+          end do
+        end do
+c thirteenth nearest neighbours - r^2 = 25
+        do i = -1, 1, 2
+          ibl( k + 1 ) = 5 * i
+          jbl( k + 2 ) = 5 * i
+          k = k + 2
+        end do
+c fourteenth nearest neighbours - r^2 = 25
+        do i = -1, 1, 2
+          do j = -1, 1, 2
+            ibl( k + 1 ) = 4 * i
+            jbl( k + 1 ) = 3 * j
+            ibl( k + 2 ) = 3 * i
+            jbl( k + 2 ) = 4 * j
+            k = k + 2
+          end do
+        end do
+c fifteenth nearest neighbours - r^2 = 27
+        do i = -1, 1, 2
+          do j = -1, 1, 2
+            ibl( k + 1 ) = 5 * i
+            jbl( k + 1 ) = j
+            ibl( k + 2 ) = i
+            jbl( k + 2 ) = 5 * j
+            k = k + 2
+          end do
+        end do
+c sixteenth nearest neighbours - r^2 = 29
+        do i = -1, 1, 2
+          do j = -1, 1, 2
+            ibl( k + 1 ) = 5 * i
+            jbl( k + 1 ) = 2 * j
+            ibl( k + 2 ) = 2 * i
+            jbl( k + 2 ) = 5 * j
+            k = k + 2
+          end do
+        end do
+c seventeenth nearest neighbours - r^2 = 32
+        do i = -1, 1, 2
+          do j = -1, 1, 2
+            k = k + 1
+            ibl( k ) = 4 * i
+            jbl( k ) = 4 * j
           end do
         end do
         if( k .gt. mblur )then

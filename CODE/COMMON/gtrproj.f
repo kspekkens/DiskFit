@@ -1,68 +1,38 @@
-      subroutine setwgtw( xpos, ypos, km, iwt, wt )
-c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
+      subroutine gtrproj( xpos, ypos, rproj )
+c Copyright (C) 2020, Jerry Sellwood and Kristine Spekkens
 c
-c Sets the weight factors for a point at xpos, ypos relative to the
-c   current disk center.  Called both from func & from writemod
-c   This version differs from setwgtv because it allows for a warp
+c finds the deprojected radius in a warped disk of the pixel at xpos, ypos
+c   relative to the current disk center
+c Most of the code here is copied from setwgtw
 c
-c   Created for a simple warp model - JAS July 2011
-c   Allow for two nearly coincident rings - JAS May 2020
-c   Prevent division by zero when b/a = 0 - JAS Aug 2020
+c   Created - JAS Aug 2020
 c
 c common block
       include 'commons.h'
 c
 c calling arguments
-      integer km, iwt( mk )
-      real xpos, ypos, wt( mk )
+      real rproj, xpos, ypos
 c
-c local arrays
-      real r2( mellip ), cst( mellip )
+c local array!s
+      real r2( mellip )
 c
 c local variables
       integer j, jg, jl, k
       real ct, frac0, frac1, rg2, rl2, r2max, r2min, rp2, st, theta
-      real*8 rp_inv
       real tiny, x, y
       parameter ( tiny = 1.e-2 )
 c
-c clear the wgt array
-      do j = 1, mk
-        iwt( j ) = 0
-        wt( j ) = 0
-      end do
 c angle of this pixel from the center
-c Previously, theta = atan2(y,x) was calculated and then
-c sin(theta) and cos(theta) were found.
-c Instead, we now divide the x/y by the radius to get
-c the intended result faster and with less error.
-c Do sum of squares with double precision just in case
-      rp_inv = dble(xpos)**2 + dble(ypos)**2
-      if (rp_inv .le. 1.e-5) then
-c Our vector has magnitude zero (effectively) - edge case! In this case,
-c it works out that setting (ct,st) to the zero vector will result in
-c the weights computing out to be zero - which is what we want, as the
-c velocity at the center of the disk should have zero bearing on the
-c rotation at each radius.
-c This edge case can only happen when linter0 is true, as otherwise,
-c the center pixels will be masked out of the image. Since linter0 is
-c true, we know that by setting rp2=0 we will get a final weight of 0.
-        ct = 0
-        st = 0
-        rp2 = 0
-      else
-        rp_inv = 1 / dsqrt( rp_inv )
-        ct = sngl( xpos * rp_inv )
-        st = sngl( ypos * rp_inv )
-        rp2 = xpos**2 + ypos**2
-      endif
-c tabulate projected radii of rings along this radius vector
+      theta = atan2( ypos, xpos )
+      rp2 = xpos**2 + ypos**2
+      ct = cos( theta )
+      st = sin( theta )
+c tabulate radii of rings along this radius vector
       r2max = 0
       r2min = 2 * sma( nellip )**2
       do j = 1, nellip
         x = ct * wcp( j ) + st * wsp( j )
-        cst( j ) = x
-        y = ( st * wcp( j ) - ct * wsp( j ) ) / ( wba( j ) + tiny )
+        y = ( st * wcp( j ) - ct * wsp( j ) ) / wba( j )
         r2( j ) = sma( j )**2 / ( x**2 + y**2 )
         r2max = max( r2max, r2( j ) )
         r2min = min( r2min, r2( j ) )
@@ -139,9 +109,9 @@ c find the closest ellipses on either side of this point
         do j = jl, jg
           print *, j, r2( j )
         end do
-        call crash( 'setwgtw' )
+        call crash( 'GTRPROJ' )
       end if
-
+c
       rl2 = sqrt( rl2 )
       rp2 = sqrt( rp2 )
       rg2 = sqrt( rg2 )
@@ -158,24 +128,7 @@ c interpolate to zero at center inside innermost ring
         frac0 = rp2 / rg2
         frac1 = 0
       end if
-      iwt( 1 ) = jl
-      iwt( 2 ) = jg
-      if( fronly )then
-        wt( 1 ) = frac1
-        wt( 2 ) = frac0
-      else
-c velocity weights sin(i) * cos(theta), with theta the in-plane angle
-        if( jl .gt. 0 )wt( 1 ) =
-     +            frac1 * wsi( jl ) * cst( jl ) * rl2 / sma( jl )
-        wt( 2 ) = frac0 * wsi( jg ) * cst( jg ) * rg2 / sma( jg )
-      end if
-      j = 2
-c systemic velocity weights - they are all 1
-      if( lsystemic )then
-        j = j + 1
-        iwt( j ) = ntot
-        wt( j ) = 1
-      end if
-      km = max( j, km )
+c get projected radius
+      rproj = frac1 * sma( jl ) + frac0 * sma( jg )
       return
       end

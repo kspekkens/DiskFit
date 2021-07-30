@@ -13,6 +13,8 @@ c   Polished KS March 2012
 c   Added call to initlz - JAS June 2012
 c   Modified to allow image mask - JAS June 2013
 c   Allow for a file of uncertainties for PHOT - JAS Sep 15
+c   Initialized order=2 for a bar for PHOT - JAS Mar 17
+c   Set skpbimod as 3rd parameter vels option on line 3 - JAS Aug 2020
 c
 c   lines of characters in the input file can be either in single quotes
 c   or plain text.  If the first character of a line is ' [char(39)], the
@@ -84,7 +86,11 @@ c convert to upper case if not already
 c line 3: FITS type data flag - line ignored for lphot
       call getline( 13, line, istat, ic )
       if( lvels )then
-        read( line, *, err = 1, end = 1 )lFITS, VELmps
+        read( line, *, iostat = i )lFITS, VELmps, skpbimod
+        if( i .ne. 0 )then
+          read( line, *, err = 1, end = 1 )lFITS, VELmps
+          skpbimod = .false.
+        end if
         lText = .not. lFITS
       else
 c photometry data are assumed in FITS format
@@ -137,6 +143,19 @@ c convert to upper case if not already
         end if
       end do
       lerrfile =  ( str .ne. 'NONE' ) .and. ( str .ne. '    ' )
+      if( lerrfile )then
+        if( skpbimod )then
+          print *, 'Pixels flagged as bimodal will be skipped'
+        else
+          print *,
+     +          'Pixels flagged as bimodal will be included in the fit'
+        end if
+      else
+        if( skpbimod )then
+          print *, 'No error file, so bimodal profiles are not flagged'
+          skpbimod = .false.
+        end if
+      end if
 c line 6: read if lFITS - otherwise ignored
       call getline( 13, line, istat, ic )
       if( lFITS )then
@@ -195,6 +214,8 @@ c check for an allowed value of order
 c bar position angle and apparent ellipticity (1-b/a)
           read( line, *, err = 1, end = 1 )lnax, lphib, lepsb,
      +                                     bar_pa, bar_eps
+c a bar is bisymmetric
+          order = 2
         end if
       else
 c supply defaults

@@ -12,6 +12,7 @@ c   Converted to 2-D pixel map and largely rewritten by JAS March 2011
 c   Debugged again by JAS July 2011
 c   Updated to f90 - JAS Jan 2015
 c   Minor fixes - JAS Aug 2015
+c   Fixed inequality to select frac pixels and not (1-frac) - JAS Sep 2020
 c
       include 'commons.h'
 c
@@ -70,7 +71,7 @@ c raise flag for randomly chosen independent points
           do ix = 1, xrange
             if( lgpix( ix, iy ) )then
               val = ran1_dbl( jdum )
-              if( val .gt. frac )dflag( ix, iy ) = .true.
+              if( val .lt. frac )dflag( ix, iy ) = .true.
             end if
           end do
         end do

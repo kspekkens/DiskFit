@@ -6,8 +6,7 @@ c of bootstrap outputc
 c
 c created by JAS - June 2012
 c   modified by JAS to allow vels data - Aug 2015
-c   fixed formatting problem for bulge_I0 - JAS Mar 2017
-c   output the actual number of bootstraps in the merged files - JAS Aug 2017
+c   JAS fixed formatting problem for bulge_I0 - Mar 2017
 c
       include 'commons.h'
 c
@@ -19,12 +18,7 @@ c local variables
       integer i, j
       real a
 c
-c      if( .not. lphot )then
-c        print *, 'routine programmed for photometry data only'
-c        call crash( 'revisout' )
-c      end if
 c open old output file
-c      open( 3, file = outpfile, status = 'old', readonly )
       open( 3, file = outpfile, status = 'old' )
       read( 3, '( a)' )line
 c create new file
@@ -32,10 +26,6 @@ c create new file
       open( 4, file = outroot( 1:j )//'new', status = 'unknown' )
 c copy preamble
       do while ( line( 1:19 ) .ne. 'Best fitting values' )
-c update number of bootstraps
-        if( line( 1:13 ) .eq. 'Uncertainties' )then
-          write( line( 62:70 ), '( i9 )' )nunc
-        end if
         j = lnblnk( line )
         if( j .gt. 0 )then
           write( 4, '( a)' )line( 1:j )
@@ -45,7 +35,7 @@ c update number of bootstraps
         read( 3, '( a)', iostat = i )line
         if( i .ne. 0 )then
           print *,
-     +           'Best fitting values line not found in file ', outpfile
+     +            'Best fiting values line not found in file ', outpfile
           call crash( 'revisout' )
         end if
       end do
@@ -99,7 +89,8 @@ c read and edit parameters and fitted values
         else if( line( 1:9 ) .eq. 'r_w (data' )then
           write( line( 49:53 ), '( f5.2 )' )enewrw
         else if( line( 1:8 ) .eq. 'Warp eps' )then
-          write( line( 49:53 ), '( f5.2 )' )( 180. * enewem / pi )
+          write( line( 49:53 ), '( f5.2 )' )enewem
+          write( line( 36:43 ), '( f8.2 )' )newem
         else if( line( 1:7 ) .eq. 'Warp PA' )then
           write( line( 49:53 ), '( f5.2 )' )( 180. * enewpm / pi )
         end if

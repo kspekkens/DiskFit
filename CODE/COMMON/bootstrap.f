@@ -12,6 +12,9 @@ c  Fixed array dimensions bug passed to geterrs,
 c     changed to adjust the fitted bar angle for vels only,
 c     added calls to fix_angles and tabcov, and
 c     close and reopen the .bstrp file every 10 bootstraps - JAS Aug 2017
+c  Reordered subscripts of arrays afitval and aparams - JAS Dec 2017
+c  Include best fit params in error estimate and csv file - JAS Aug 2020
+c  Initialize warp deprojection, if needed - JAS Sep 2020
 c
       include 'commons.h'
 c
@@ -20,42 +23,45 @@ c calling arguments
 c
 c external
       integer lnblnk
+c$$$      real*8 ran1_dbl
 c
 c local arrays
       real, allocatable :: sdot( :, : )
       real, allocatable :: x2ros( :, : )
+      real, allocatable :: wparr( :, : )
       real*8, allocatable :: afitval( :, : )
       real*8, allocatable :: aparams( :, : )
       real*8, allocatable :: inparams( : )
-      real*8, allocatable :: fitval0( : )
       real*8, allocatable :: lfrac( :, : )
-      real*8, allocatable :: params0( : )
 c
 c local variables
       character form*7
       integer i, ierr, ii, ix, iy, j, jdum, k, ntimes
-      real barfrac_loc, blgfrac_loc, dskfrac_loc
       real*8 chi2
       character*100 erasefile, bootfile
 c
-      allocate ( afitval( nunc, ntot ) )
-      allocate ( aparams( nunc, ntot ) )
+c the first dimension of aparams has to be the same as that of afitval
+      allocate ( afitval( ntot, nunc + 1 ) )
+      allocate ( aparams( ntot, nunc + 1 ) )
       allocate ( inparams( nd ) )
-      allocate ( fitval0( ntot ) )
-      allocate ( lfrac( 3, nunc ) )
-      allocate ( params0( nd ) )
+      allocate ( lfrac( 3, nunc + 1 ) )
 c set up blurring arrays in case they were not preset - no harm to do it again
       if( l2D )call blurset
 c
       jdum = seed
 c
 c save best fitting parameters, initial data, and best fit x2res map
-      do i = 1, nd
-        params0( i ) = params( i )
+      do j = 1, nd
+        aparams( j, 1 ) = params( j )
       end do
       do j = 1, ntot
-        fitval0( j ) = fitval( j )
+        afitval( j, 1 ) = fitval( j )
       end do
+      if( lphot )then
+        lfrac( 1, 1 ) = dskfrac
+        lfrac( 2, 1 ) = barfrac
+        lfrac( 3, 1 ) = blgfrac
+      end if
       if( l2D )then
         allocate ( sdot( xrange, yrange ) )
         allocate ( x2ros( xrange, yrange ) )
@@ -72,12 +78,6 @@ c save best fitting parameters, initial data, and best fit x2res map
           sdot( i, 1 ) = sdat( i, 1 )
           x2ros( i, 1 ) = x2res( i, 1 )
         end do
-      end if
-c save best fitting light fractions
-      if( lphot )then
-        dskfrac_loc = dskfrac
-        barfrac_loc = barfrac
-        blgfrac_loc = blgfrac
       end if
 c set initial guesses for non-linear parameters and keep a copy
       call setpars( params )
@@ -106,7 +106,11 @@ c ensure a different file name for each seed in case of parallel bootstrap runs
       k = k + 5
       write( bootfile( k:k+i-1 ), form )abs( seed )
 c save results to a new output file for post-processing
-      open( 4, file = bootfile, status = 'new' )
+      open( 4, file = bootfile, status = 'new', iostat = ii )
+      if( ii .ne. 0 )then
+        print *, 'failed to open new bootstrap file'
+        call crash( 'BOOTSTRAP' )
+      end if
       write( 4, '( a )' )infile
       write( 4, '( 7( a9, l2 ) )' )' lpa: ', lpa, ' leps:', leps,
      *             ' lcentre: ', lcentre, ' lsystemic:   ', lsystemic,
@@ -115,30 +119,47 @@ c save results to a new output file for post-processing
       write( 4, '( a )' )
      +               '#nunc   npars    ntot   nellip  nminr  nmaxr seed'
       write( 4, '( 7i7 )' )nunc, nd, ntot, nellip, nminr, nmaxr, seed
-      write( 4, '( a )') ' '
+      write( 4, * )
 c output best-fit parameters to bootstrap file
       ii = 0
-      write( 4, * )'Bootstrap number: ', ii
-      write( 4, * )( params( j ), j = 1, nd )
-      write( 4, * )( fitval( j ), j = 1, ntot )
+      write( 4, * )'Bootstrap number: ', ii, ' (Best fit)'
+      write( 4, * )( aparams( j, 1 ), j = 1, nd )
+      write( 4, * )( sngl( afitval( j, 1 ) ), j = 1, ntot )
       if( lphot .and. ldisk .and. ( lnax .or. lbulge ) )
      +                            write( 4, * )dskfrac, barfrac, blgfrac
       write( 4, * )
 c create flag file - a graceful exit occurs should this file be deleted
-      open( 1, file = erasefile, status = 'UNKNOWN' )
+      open( 1, file = erasefile, status = 'unknown' )
       write( 1, '( a )') 'Erase this file to exit DiskFit gracefully'
       close( 1 )
+c setup and save warp arrays, if needed
+      if( lwarp )then
+        call warpinit( params )
+        allocate ( wparr( 6, nellip ) )
+        do i = 1, nellip
+          wparr( 1, i ) = wel( i )
+          wparr( 2, i ) = wphi( i )
+          wparr( 3, i ) = wba( i )
+          wparr( 4, i ) = wcp( i )
+          wparr( 5, i ) = wsp( i )
+          wparr( 6, i ) = wsi( i )
+        end do
+      end if
+      if( nint( junc ) .ge. mblur )print '( a, i5 )', 'Warning: proper'
+     + // ' functioning of this bootstrap option requires junc <', mblur
 c bootstrap loop
       ierr = 0
-      ii = 0
+      ii = 1
       do while ( ierr .eq. 0 )
         ii = ii + 1
         print *
         print *
-        print *, 'Bootstrap number: ', ii
+        print *, 'Bootstrap number: ', ii - 1
 c re-initialize params
         do j = 1, nd
           params( j ) = inparams( j )
+c$$$          params( j ) = inparams( j ) *
+c$$$     +                           ( 1 + .04 * ( ran1_dbl( jdum ) - .5 ) )
         end do
 c restore input x2res map
         if( l2D )then
@@ -160,6 +181,17 @@ c generate new map - with coherent patches of residuals as SS07
             call pseudo( jdum )
           end if
         else
+c restore warp arrays, if needed
+          if( lwarp )then
+            do i = 1, nellip
+              wel( i ) = wparr( 1, i )
+              wphi( i ) = wparr( 2, i )
+              wba( i ) = wparr( 3, i )
+              wcp( i ) = wparr( 4, i )
+              wsp( i ) = wparr( 5, i )
+              wsi( i ) = wparr( 6, i )
+            end do
+          end if
 c generate new map - with rotation and radial scaling as SZS09
           call pseudr( jdum )
         end if
@@ -190,10 +222,10 @@ c allow for fit having returned the angle of the minor axis - vels only
         end if
 c save outputs in arrays
         do j = 1, nd
-          aparams( ii, j ) = params( j )
+          aparams( j, ii ) = params( j )
         end do
         do j = 1, ntot
-          afitval( ii, j ) = fitval( j )
+          afitval( j, ii ) = fitval( j )
         end do
         if( lphot )then
           lfrac( 1, ii ) = dskfrac
@@ -203,7 +235,7 @@ c save outputs in arrays
 c output new fitted parameters to bootstrap file
         write( 4,
      + '( '' Bootstrap number: '', i5, ''/'', i5, ''  Chisq '', f12.5 )'
-     +                                                   )ii, nunc, chi2
+     +                                               )ii - 1, nunc, chi2
         write( 4, * )( params( j ), j = 1, nd )
         write( 4, * )( fitval( j ), j = 1, ntot )
         if( lphot .and. ldisk .and. ( lnax .or. lbulge ) )
@@ -219,33 +251,32 @@ c try to open flag file - error on opening is the signal to end gracefully
         if( ierr .eq. 0 )read( 3, *, iostat = ierr )
         close( 3 )
 c end bootstrap loop here
-        if( ii .eq. nunc )ierr = 1
+        if( ii .eq. nunc + 1 )ierr = 1
       end do
 c close output file and report
       close( 4 )
       print *
       print *
-      print *, 'Finished', ii, ' bootstrap iterations'
+      print *, 'Finished', ii - 1, ' bootstrap iterations'
 c restore best fitting parameters and values
       do i = 1, nd
-        params( i ) = params0( i )
+        params( i ) = aparams( i, 1 )
       end do
       do j = 1, ntot
-        fitval( j ) = fitval0( j )
+        fitval( j ) = afitval( j, 1 )
       end do
       if( lphot )then
-        dskfrac = dskfrac_loc
-        barfrac = barfrac_loc
-        blgfrac = blgfrac_loc
+        dskfrac = lfrac( 1, 1 )
+        barfrac = lfrac( 2, 1 )
+        blgfrac = lfrac( 3, 1 )
       end if
 c get error estimates
-      i = nunc
+      i = nunc + 1
       nunc = ii
       if( nunc .gt. 1 )then
-c last argument is the actual 1st dimension of the array(s)
-        call fix_angles( aparams, i )
-        call tabcov( aparams, afitval, lfrac, i )
-        call geterrs( aparams, afitval, lfrac, eparams, i )
+        call fix_angles( aparams, ntot, i )
+        call tabcov( aparams, afitval, ntot, lfrac, i )
+        call geterrs( aparams, afitval, ntot, lfrac, eparams, i )
       end if
 c restore intial data
       if( l2D )then

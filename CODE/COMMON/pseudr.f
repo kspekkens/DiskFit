@@ -10,6 +10,8 @@ c
 c   Created by RZS August 2009
 c   Polished by JAS October 2009
 c   Updated to f90 - JAS Jan 2015
+c   Flatten warped disk as well as deproject it - JAS Aug 2020
+c    (First attempt has not been robustly tested)
 c
       include 'commons.h'
 c
@@ -27,7 +29,7 @@ c
 c local variables
       integer i, ix, iy, j, jind, jx, jy, kx, ky, nreg
       logical lp
-      real cospa, fring, meps, newr, rpa, rrad, rtmp, sinpa, sysv
+      real cospa, fr, meps, newr, rpa, rrad, rtmp, sinpa, sysv
       real x, xr, xel, y, yr, yel
 c
 c this routine assumes a 2D map
@@ -40,11 +42,11 @@ c
       sysv = 0
       if( lvels )sysv = vsys
       if( lsystemic )sysv = 0
-      fring = sma0
-      if( linter0 )fring = 0
+      fr = sma0
+      if( linter0 )fr = 0
 c determine regions. If bar 1, 2 or 3. If no bar, just one.
       nreg = 1
-      rini( 1 ) = fring
+      rini( 1 ) = fr
       if( lnax )then
         if( ( nminr .eq. 1 ) .neqv. ( nmaxr .eq. nellip ) )then
           nreg = 2
@@ -75,13 +77,13 @@ c      print *, 'regions, boundaries & random angle:'
 c create random PA angles for each annulus/region
         rpa = ran1_dbl( jdum ) * 2.d0 * pi
 c        print '( i3, 3f10.2)', i, rini( i ), rout( i ), 180. * rpa / pi
-        cosrpa( i ) = sngl( cos( dble( rpa ) ) )
-        sinrpa( i ) = sngl( sin( dble( rpa ) ) )
+        cosrpa( i ) = cos( rpa )
+        sinrpa( i ) = sin( rpa )
       end do
 c local disk geometric parameters
       meps = 0.9 * eps
-      cospa = sngl( cos( dble( pa ) ) )
-      sinpa = sngl( sin( dble( pa ) ) )
+      cospa = cos( pa )
+      sinpa = sin( pa )
 c find new random beginning of annulus
       rrad = ran1_dbl( jdum )
 c      print '( a, f10.3 )', 'new random radius', rrad
@@ -96,28 +98,51 @@ c rotate each annulus in x2res by a random angle
       do iy = 1, yrange
         do ix = 1, xrange
           if( lgpix( ix, iy ) )then
-c deproject current pixel
+c get deprojected radius of current pixel
             yr = yval( iy ) - ycen
             xr = xval( ix ) - xcen
+            if( lwarp )then
+c PA and eps are dependent on radius, and warp may re-order ellipses
+              call gtrproj( xr, yr, rtmp )
+              i = neari( sma, nellip, rtmp )
+              if( rtmp .lt. sma( i ) )i = i + 1
+              i = min( i, nellip - 1 )
+              fr = ( rtmp - sma( i ) ) / ( sma( i + 1 ) - sma( i ) )
+              fr = min( fr, 1. )
+              cospa = ( 1. - fr ) * wcp( i ) + fr * wcp( i + 1 )
+              sinpa = ( 1. - fr ) * wsp( i ) + fr * wsp( i + 1 )
+              meps =  ( 1. - fr ) * wel( i ) + fr * wel( i + 1 )
+            end if
             xel =    xr * cospa + yr * sinpa
             yel = ( -xr * sinpa + yr * cospa ) / ( 1.d0 - meps )
-c find which annulus and region the pixel is in
-            rtmp = sqrt( xel**2.0 + yel**2.0 )
-c region 1 is the default
+            if( .not. lwarp )rtmp = sqrt( xel**2 + yel**2 )
+c find which annulus and region the pixel is in, region 1 is the default
             j = 1
             do jind = 1, nreg
               if( rtmp .gt. rini( jind ) )j = jind
             end do
-c rotate pixel through a random angle
+c rotate pixel through the previously chosen random angle
             x =  xel * cosrpa( j ) + yel * sinrpa( j )
             y = -xel * sinrpa( j ) + yel * cosrpa( j )
 c shift pixel in radius
             newr = rtmp + rrad * ( rout( j ) - rini( j ) )
             if( newr .gt. rout( j ) )newr = newr + rini( j ) - rout( j )
-c compute projected position (recycle xr, yr variables)
+c compute projected position
+            if( lwarp )then
+              i = neari( sma, nellip, newr )
+              if( newr .lt. sma( i ) )i = i + 1
+              i = min( i, nellip - 1 )
+              fr = ( newr - sma( i ) ) / ( sma( i + 1 ) - sma( i ) )
+              fr = min( fr, 1. )
+              cospa = ( 1. - fr ) * wcp( i ) + fr * wcp( i + 1 )
+              sinpa = ( 1. - fr ) * wsp( i ) + fr * wsp( i + 1 )
+              meps =  ( 1. - fr ) * wel( i ) + fr * wel( i + 1 )
+            end if
+c rescale and reproject
             rtmp = max( rtmp, 0.01 )
             x = ( newr / rtmp ) * x
             y = ( newr / rtmp ) * y * ( 1.d0 - meps )
+c recycle xr, yr variables
             xr = x * cospa - y * sinpa + xcen
             yr = y * cospa + x * sinpa + ycen
 c the position of the closest pixel in the original map

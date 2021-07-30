@@ -45,7 +45,7 @@ c mk is the maximum number of weights for each pixel
 c
 c maximum 1D spread of blurring raster, in pixels, for seeing corrections
       integer mblur
-      parameter ( mblur = 61 )
+      parameter ( mblur = 101 )
 c
 c intrinsic disk thickness - zero for now
       real q
@@ -176,7 +176,8 @@ c
       common / skyval / sky, skysig, gain
 c
       real eISM, errtol, dsee
-      common / sols / eISM, dsee, errtol
+      logical skpbimod
+      common / sols / eISM, dsee, errtol, skpbimod
 c
       real*8 pi
       parameter ( pi = 3.141592653589793238462643d0 )

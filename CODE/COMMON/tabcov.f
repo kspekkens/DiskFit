@@ -1,16 +1,19 @@
-      subroutine tabcov( aparams, afitval, lfrac, m )
+      subroutine tabcov( aparams, afitval, n, lfrac, m )
 c Copyright (C) 2017, Jerry Sellwood and Kristine Spekkens
 c
 c outputs a table in csv format of all the bootstrap values of the principal
 c   parameters, and light fractions, for possible analysis of co-variances
 c
-c   Originally written by JAS Aug 2017
+c  Originally written by JAS Aug 2017
+c  Reordered subscripts of calling args - JAS Dec 2017
+c  Included vsys in csv file, when appropriate - JAS Aug 2020
+c  Commented out adjust to positve values loop - JAS Aug 2020
 c
       include 'commons.h'
 c
 c calling arguments
-      integer m
-      real*8 afitval( m, mtot ), aparams( m, md ), lfrac( 3, m )
+      integer m, n
+      real*8 afitval( n, m ), aparams( n, m ), lfrac( 3, m )
 c
 c external
       integer lnblnk
@@ -23,7 +26,7 @@ c
 c local variables
       character*10 label( md + 4 )
       character comma*1, line*256
-      integer i, i_bl, i_br, i_dk, iI_0, j, k, l, nI_0, nnd
+      integer i, i_bl, i_br, i_dk, iI_0, i_vsys, j, k, l, nI_0, nnd
       logical lc
       real val, xmin, xmax
 c
@@ -50,6 +53,10 @@ c determine number of parameters for output
           end if
         end if
       end if
+      if( lvels .and. lsystemic )then
+        nnd = nnd + 1
+        i_vsys = nnd
+      end if
       if( nnd .le. 1 )then
         print *, 'no covariances to plot'
         return
@@ -68,7 +75,7 @@ c set defaults
 c set column headers, etc
       i = 0
       if( lpa )then
-        i = 1
+        i = i + 1
         label( i ) = 'disk pa'
         ldeg( i ) = .true.
         aoffs( i ) = -90
@@ -156,6 +163,10 @@ c max position angle of warp
           ldeg( i ) = .true.
         end if
       end if
+      if( lsystemic )then
+        i = i + 1
+        label( i ) = 'vsys'
+      end if
 c check that the number of parameters set agrees with the number expected
       if( i .ne. nnd )then
         print *, 'logical error in number of parameters'
@@ -168,8 +179,10 @@ c work over columns and rows
         xmax = -10000
         xmin = -xmax
         do i = 1, nunc
-          if( lI_0 .and. j .eq. nI_0 )then
-            x( j, i ) = afitval( i, iI_0 )
+          if( lsystemic .and. j .eq. i_vsys )then
+            x( j, i ) = afitval( n, i )
+          else if( lI_0 .and. j .eq. nI_0 )then
+            x( j, i ) = afitval( iI_0, i )
           else if( ldisk .and. ( j .eq. i_dk ) )then
             x( j, i ) = lfrac( 1, i )
           else if( lnax .and. ( j .eq. i_br ) )then
@@ -177,24 +190,24 @@ c work over columns and rows
           else if( lbulge .and. ( j .eq. i_bl ) )then
             x( j, i ) = lfrac( 3, i )
           else
-            x( j, i ) = aparams( i, j )
+            x( j, i ) = aparams( j, i )
           end if
           if( ldeg( j ) )x( j, i ) = x( j, i ) * 180. / pi + aoffs( j )
           xmax = max( xmax, x( j, i ) )
           xmin = min( xmin, x( j, i ) )
         end do
-c adjust to positive values if needed
-        if( ldeg( j ) )then
-          val = 0
-          if( xmax .lt. 0. )then
-            val = 180
-            do i = 1, nunc
-              x( j, i ) = x( j, i ) + val
-            end do
-            xmin = xmin + val
-            xmax = xmax + val
-          end if
-        end if
+c$$$c adjust to positive values if needed
+c$$$        if( ldeg( j ) )then
+c$$$          val = 0
+c$$$          if( xmax .lt. 0. )then
+c$$$            val = 180
+c$$$            do i = 1, nunc
+c$$$              x( j, i ) = x( j, i ) + val
+c$$$            end do
+c$$$            xmin = xmin + val
+c$$$            xmax = xmax + val
+c$$$          end if
+c$$$        end if
       end do
 c create .csv file
       k = lnblnk( outroot )

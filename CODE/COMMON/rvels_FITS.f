@@ -8,6 +8,7 @@ c   Polished by JAS October 2009
 c   Revised by JAS March 2011
 c   Allow for 64-bit reals JAS April 2013
 c   Updated to f90 - JAS Jan 2015
+c   Mask out pixels with bimodal line profiles if requested - JAS Aug 2020
 c
       include 'commons.h'
 c
@@ -174,11 +175,15 @@ c set initial dummy values for all pixels
 c use pixel only if value is valid
             if( ( buffer( i ) .gt. velmin ) .and.
      +          ( buffer( i ) .lt. velmax ) .and.
-     +          ( eveltmp .gt. 0.01 ) .and.
      +          ( eveltmp .lt. errtol ) )then
               ldat( i, nline ) = buffer( i ) / mpsfac
               ldate( i, nline ) = evelnow
-              lgpix( i, nline ) = .true.
+c mask out pixels with bimodal line flag only if requested
+              if( skpbimod .and. ( evelnow .lt. 0. ) )then
+                lgpix( i, nline ) = .false.
+              else
+                lgpix( i, nline ) = .true.
+              end if
               j = j + 1
             end if
           end if
@@ -233,11 +238,15 @@ c place data in array
 c use pixel only if value is valid
             if( ( buffer( i ) .gt. velmin ) .and.
      +          ( buffer( i ) .lt. velmax ) .and.
-     +          ( eveltmp .gt. 0.01 ) .and.
      +          ( eveltmp .lt. errtol ) )then
               ldat( i, nline ) = buffer( i ) / mpsfac
               ldate( i, nline ) = evelnow
-              lgpix( i, nline ) = .true.
+c mask out pixels with bimodal line flag only if requested
+              if( skpbimod .and. ( evelnow .lt. 0. ) )then
+                lgpix( i, nline ) = .false.
+              else
+                lgpix( i, nline ) = .true.
+              end if
               j = j + 1
             end if
           end if

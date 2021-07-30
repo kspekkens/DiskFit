@@ -9,6 +9,7 @@ c   Convert data to pixel map by JAS March 2011
 c   Conversion made a user option JAS July 2012
 c   Updated to f90 - JAS Jan 2015
 c   Fixed bug in rasterization - JAS Aug 2015
+c   Mask out pixels with bimodal line profiles if requested - JAS Aug 2020
 c
       include 'commons.h'
       real, allocatable :: temp( :, : )
@@ -131,9 +132,14 @@ c insert input values into pixel map
         do k = 1, inp_pts
           i = nint( ( temp( 1, k ) - xmin ) / spacing ) + 1
           j = nint( ( temp( 2, k ) - ymin ) / spacing ) + 1
-          lgpix( i, j ) = .true.
           sdat( i, j ) = temp( 3, k )
           sdate( i, j ) = temp( 4, k )
+c mask out pixels with bimodal line flagged only if requested
+          if( skpbimod .and. ( temp( 4, k ) .lt. 0. ) )then
+            lgpix( i, j ) = .false.
+          else
+            lgpix( i, j ) = .true.
+          end if
         end do
 c parameter needed for plotting
         istepout = max( nint( spacing ), 1 )

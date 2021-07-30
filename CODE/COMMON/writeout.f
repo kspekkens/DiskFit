@@ -11,6 +11,7 @@ c   Revised by KS  Oct 2011 to integrate vels, phot options
 c   Polished by KS Mar 2012
 c   Updated to f90 - JAS Jan 2015
 c   Eliminated most trailing white space - JAS Aug 2015
+c   Fixed a bug: wepsm is NOT an angle, wphim IS - JAS Aug 2020
 c
       include 'commons.h'
 c
@@ -303,8 +304,8 @@ c output parameters for velocities
             write( 4, * )
           end if
           if( lwepsm )then
-            write( 4, '( a, 21x, f8.2, a5, f5.2 )' ) 'Warp eps welm:',
-     +                 ( 180. * newem / pi ), pm, ( 180. * enewem / pi )
+            write( 4, '( a, 21x, f8.2, a5, f5.2 )' )
+     +                               'Warp eps welm:', newem, pm, enewem
           else
             write( 4, * )
           end if

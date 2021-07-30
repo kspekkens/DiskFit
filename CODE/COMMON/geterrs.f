@@ -1,4 +1,4 @@
-      subroutine geterrs( aparams, afitval, lfrac, eparams, m )
+      subroutine geterrs( aparams, afitval, n, lfrac, eparams, m )
 c Copyright (C) 2015, Jerry Sellwood and Kristine Spekkens
 c
 c make uncertainty estimates from bootstrap iterations
@@ -10,12 +10,13 @@ c  Made indata an allocatable array - JAS Aug 2015
 c  Fixed bug in error on angles     - JAS Mar 2017
 c  Fix-up for angles -> fix-angles  - JAS Jul 2017
 c  Use the bi-weight to compute uncertainties- JAS Aug 2017
+c  Reordered subscripts of calling args - JAS Dec 2017
 c
       include 'commons.h'
 c
 c calling arguments
-      integer m
-      real*8 afitval( m, mtot ), aparams( m, md ), eparams( md )
+      integer m, n
+      real*8 afitval( n, m ), aparams( n, m ), eparams( md )
       real*8 lfrac( 3, m )
 c
 c local array
@@ -30,7 +31,7 @@ c
 c compute mean and standard deviation of outputs
       do j = 1, nd
         do i = 1, nunc
-          indata( i ) = aparams( i, j )
+          indata( i ) = aparams( j, i )
         end do
         call biwght2( indata, nunc, ave, sdev )
         eparams( j ) = sdev
@@ -38,7 +39,7 @@ c compute mean and standard deviation of outputs
 c uncertainties in fitted values
       do j = 1, ntot
         do i = 1, nunc
-          indata( i ) = afitval( i, j )
+          indata( i ) = afitval( j, i )
         end do
         call biwght2( indata, nunc, ave, sdev )
         efitval( j ) = sdev

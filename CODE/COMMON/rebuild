@@ -1,0 +1,117 @@
+#!/bin/sh
+# remove old version
+rm -f ../lib2.0.a
+# get names of all fortran files in this directory
+ls *.f > aaa
+# remove suffix ".f" from all
+cut -d. -f1 aaa > aab
+rm -f aaa
+# work through list of files
+for i in `cat aab`
+do
+  gfortran -c -w -O ${i}.f
+  if [ "$?" != 0 ] ; then
+    echo ${i} "failed"
+  fi
+done
+# create library and clean up
+ar r ../lib2.0.a *.o
+rm -f *.o aab *.mod
+#
+# add other source files
+cd ../Burkardt
+# get names of all fortran files in this directory
+ls *.f > aaa
+# remove suffix ".f" from all
+cut -d. -f1 aaa > aab
+rm -f aaa
+# work through list of files
+for i in `cat aab`
+do
+  gfortran -c -w -O ${i}.f
+  if [ "$?" != 0 ] ; then
+    echo ${i} "failed"
+  fi
+done
+# add to library and clean up
+ar r ../lib2.0.a *.o
+rm -f *.o aab
+#
+# add other source files
+cd ../fftpak
+# get names of all fortran files in this directory
+ls *.f > aaa
+# remove suffix ".f" from all
+cut -d. -f1 aaa > aab
+rm -f aaa
+# work through list of files
+for i in `cat aab`
+do
+  gfortran -c -w -O ${i}.f
+  if [ "$?" != 0 ] ; then
+    echo ${i} "failed"
+  fi
+done
+# add to library and clean up
+ar r ../lib2.0.a *.o
+rm -f *.o aab
+#
+# add other source files
+cd ../LINPACK
+# get names of all fortran files in this directory
+ls *.f > aaa
+# remove suffix ".f" from all
+cut -d. -f1 aaa > aab
+rm -f aaa
+# work through list of files
+for i in `cat aab`
+do
+  gfortran -c -w -O ${i}.f
+  if [ "$?" != 0 ] ; then
+    echo ${i} "failed"
+  fi
+done
+# add to library and clean up
+ar r ../lib2.0.a *.o
+rm -f *.o aab
+#
+# add other source files
+cd ../FITS
+# get names of all fortran files in this directory
+ls *.f > aaa
+# remove suffix ".f" from all
+cut -d. -f1 aaa > aab
+rm -f aaa
+# work through list of files
+for i in `cat aab`
+do
+  gfortran -c -w -O ${i}.f
+  if [ "$?" != 0 ] ; then
+    echo ${i} "failed"
+  fi
+done
+# add to library and clean up
+ar r ../lib2.0.a *.o
+rm -f *.o aab
+#
+# add other source files
+cd ../numrec
+# get names of all fortran files in this directory
+ls *.f > aaa
+# remove suffix ".f" from all
+cut -d. -f1 aaa > aab
+rm -f aaa
+# work through list of files
+for i in `cat aab`
+do
+  gfortran -c -w -O ${i}.f
+  if [ "$?" != 0 ] ; then
+    echo ${i} "failed"
+  fi
+done
+# add to library and clean up
+ar r ../lib2.0.a *.o
+rm -f *.o aab
+#
+ranlib ../lib2.0.a
+chmod go+r ../lib2.0.a
