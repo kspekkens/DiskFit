@@ -8,6 +8,8 @@ c   check for the existence of an .out file that could be edited
 c   allow for different extensions in .inp file names
 c   use the data there are room for, even if more bootstraps exist
 c   call fix_angles and tabcov before calling geterrs
+c Reordered subscripts of arrays afitval and aparams - JAS Dec 2017
+c Include best fit params in error estimate and csv file - JAS Aug 2020
 c
       include 'commons.h'
 c
@@ -15,14 +17,15 @@ c external
       integer lnblnk
 c
 c local arrays
-      integer m
-      parameter ( m = 1000 )
-      real*8 afitval( m, mtot ), aparams( m, md ), lfrac( 3, m )
-      real*8 eparams( md ), params( md )
+      real*8, allocatable :: afitval( :, : )
+      real*8, allocatable :: aparams( :, : )
+      real*8, allocatable :: lfrac( :, : )
+      real*8 eparams( md ) !, params( md )
       real afit( mtot ), apar( md ), lf( 3 )
 c
 c local variables
-      integer i, ii, j, k, lroot
+      integer i, ii, j, k, lroot, m
+      parameter ( m = 1001 )
       real*8 a, adev, ave, b, curt, sdev, skew, var
       character*100 bootfile, line
 c
@@ -46,6 +49,10 @@ c
         call crash( 'bootlace' )
       end if
 c
+c the first dimension of aparams has to be the same as that of afitval
+      allocate ( afitval( ntot, m ) )
+      allocate ( aparams( ntot, m ) )
+      allocate ( lfrac( 3, m ) )
 c initialize error vectors
       do i = 1, nd
         eparams( i ) = 0
@@ -54,7 +61,7 @@ c initialize error vectors
         efitval( i ) = 0
       end do
 c
-      if( nunc .gt. m )then
+      if( nunc + 1 .gt. m )then
         print *, 'too many bootstrap iterations requested', nunc
         print *, 'decrease nunc or contact code administrator'
         call crash( 'bootlace' )
@@ -85,16 +92,16 @@ c skip remainder of header lines
         read( 4, * )
       end do
 c bootstrap loop
-      j = 0
+      j = 1
       read( 4, '( a )', iostat = k )line
 c read best-fit parameters only once
       read( line( 19:100 ), * )ii
       if( ii .eq. 0 )then
         print *, 'Reading best fit parameters'
-        read( 4, * )( params( i ), i = 1, nd )
-        read( 4, * )( fitval( i ), i = 1, ntot )
+        read( 4, * )( aparams( i, j ), i = 1, nd )
+        read( 4, * )( afitval( i, j ), i = 1, ntot )
         if( lphot .and. ldisk .and. ( lnax .or. lbulge ) )then
-          read( 4, * )dskfrac, barfrac, blgfrac
+          read( 4, * )lfrac( 1, j ), lfrac( 2, j ), lfrac( 3, j )
         end if
         read( 4, * )
         read( 4, '( a )', iostat = k )line
@@ -105,12 +112,15 @@ c read best-fit parameters only once
       do while ( k .eq. 0 )
         j = j + 1
 c read next fitted parameters from bootstrap file
-        read( line( 19:100 ), *, end = 1 )ii
+        read( line( 19:100 ), *, end = 2 )ii
         if( mod( ii, 10 ) .eq. 0 )
      +                       print *, 'Reading bootstrap number: ', ii
         if( j .gt. m )go to 1
-        read( 4, *, err = 2 )( aparams( j, i ), i = 1, nd )
-        read( 4, *, err = 2 )( afitval( j, i ), i = 1, ntot )
+        read( 4, *, err = 2 )( aparams( i, j ), i = 1, nd )
+        read( 4, *, err = 2 )( afitval( i, j ), i = 1, ntot )
+c        print '( i3, 6f10.2 )',
+c     +             j, ( aparams( i, j ), i = 1, nd ), afitval( ntot, j )
+
         if( lphot .and. ldisk .and. ( lnax .or. lbulge ) )then
           read( 4, *, err=2 )lfrac( 1, j ), lfrac( 2, j ), lfrac( 3, j )
         end if
@@ -133,10 +143,10 @@ c close input file
       print *, 'Actual number of bootstraps read', j
 c process data
       nunc = j
-      call fix_angles( aparams, m )
-      call tabcov( aparams, afitval, lfrac, m )
-      call geterrs( aparams, afitval, lfrac, eparams, m )
-      call bestfit( params, eparams )
+      call fix_angles( aparams, ntot, j )
+      call tabcov( aparams, afitval, ntot, lfrac, j )
+      call geterrs( aparams, afitval, ntot, lfrac, eparams, j )
+      call bestfit( aparams, eparams )
 c revise errors in optimal output file
       call revisout
       stop

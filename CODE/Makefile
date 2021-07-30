@@ -67,7 +67,7 @@ else
 endif
 
 # Target executables (must have <file>.f in the current directory)
-targets := DiskFit bootlace
+targets := DiskFit bootlace makemap set_mask
 obj_targets := $(patsubst %,%.o,$(targets))
 
 # We have to put the module files separately so that they are built first
@@ -77,7 +77,7 @@ src_common     := $(wildcard COMMON/*.f)
 obj_common     := $(patsubst %.f,%.o,$(src_common))
 src_common_c   := $(wildcard COMMON/*.c)
 obj_common_c   := $(patsubst %.c,%.o,$(src_common_c))
-src_3rdparty   := $(wildcard LINPACK/*.f NRCODE/*.f)
+src_3rdparty   := $(wildcard LINPACK/*.f NRCODE/*.f Burkardt/*.f fftpak/*.f)
 obj_3rdparty   := $(patsubst %.f,%.o,$(src_3rdparty))
 obj_nontargets := $(obj_modules) $(obj_common) $(obj_common_c) $(obj_3rdparty)
 

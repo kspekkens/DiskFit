@@ -4,9 +4,7 @@ c Main driving program for fitting data
 c
 c This software package was developed over a period of years from 2002 by
 c   Jerry Sellwood and Kristine Spekkens in collaboration with:
-c   Eric I Barnes,
-c   Adam Reese, and
-c   Ricardo Zanmar Sanchez
+c   Eric I Barnes, Adam Reese, and Ricardo Zanmar Sanchez
 c
 c Fits velocity fields of galaxies.   - KS June 2008
 c Add extra flag and allow initial biphib
@@ -17,8 +15,15 @@ c     seeing correction implemented   - JAS March 2011
 c Warp model added                    - JAS July 2011
 c Released as Diskfit 1.0             - Oct 2011
 c upgraded to f90                     - Jan 2015
+c Fixed bugs:
+c   in seeing corrections             - Jul 2015
+c   in rastering of text input        - Aug 2015
+c   output selected part of an image  - Sep 2015
+c Phot allow user input uncertainties - Sep 2015
+c Released as DiskFit 1.2             - Sep 2015
 c
       include 'commons.h'
+c
 c local variables
       integer i, j
       real*8 chi2, eparams( md ), params( md )
