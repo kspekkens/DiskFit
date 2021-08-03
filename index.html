@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<meta content="text/html; charset=iso-8859-1">
+<title>DiskFit</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"> 
+<link rel="stylesheet" href="diskfit.css" type="text/css">
+</head>
+<body>
+<div class="titlehead">
+<!--<h1>DiskFit</h1>-->
+<IMG SRC="DiskFitLogo.png" ALT="DiskFit" HEIGHT=200>
+<h1>A Code for Modeling Asymmetries in Disk Galaxies </h1>
+</div>
+
+<div class="menuclass">
+   <h3>
+       | &nbsp;<a href="index.html#Software">Software</a> &nbsp; |
+        &nbsp;<a href="index.html#Documentation">Documentation</a> &nbsp; |
+         &nbsp; <a href="index.html#Contact">Contact</a> &nbsp; |  
+   </h3>
+  <p> &nbsp; </p>
+</div>
+
+
+  <a name="Software"></a>
+ <h2> Software </h2>
+
+<p><i>DiskFit</i> is a code for modelling asymmetries in either
+photometry (fitting images)
+or kinematics (fitting velocity fields) of disk galaxies. For velocity field fits, DiskFit
+is an extension of  <a
+href="http://www.physics.queensu.ca/Astro/people/Kristine_Spekkens/velfit/">Velfit 2.0</a>, first
+presented in <a
+href="http://adsabs.harvard.edu/abs/2007ApJ...664..204S">Spekkens &
+Sellwood (2007)</a>, and improved in <a
+href="http://adsabs.harvard.edu/abs/2010MNRAS.404.1733S">Sellwood & Sanchez
+(2010)</a>. For images, DiskFit is an extension of the algorithm
+presented by <a
+href="http://adsabs.harvard.edu/abs/2007AJ....133.2846R">Reese et
+al. (2007)</a>. Both the photometric and kinematic branches of DiskFit employ the same basic
+minimization technique, originally described by <a
+href="http://adsabs.harvard.edu/abs/2003AJ....125.1164B">Barnes &
+Sellwood (2003)</a>. The application of DiskFit to the photometry and
+kinematics of a nearby galaxy is illustrated in <a
+href="http://adsabs.harvard.edu/abs/2012MNRAS.427.2523K">Kuzio de Naray et
+al. (2012)</a>.The most recent description of the code is in <a
+href="http://adsabs.harvard.edu/abs/2015arXiv150907120S">Sellwood &
+Spekkens (2015)</a>.</p>
+
+<p>To download the <i>DiskFit</i> executable, click on the link
+appropriate for your architecture from the table below (Mac users: you
+want "Darwin"). To download example files as well as the source code,
+click on the link in that same table. The examples and source code are
+bundled as a tarball. To extract them, type:</p>
+
+<p class="tclass"><i> &nbsp;&nbsp;&nbsp;&nbsp;gunzip DiskFit1.2.2.source.tar.gz</i></p>
+<p class="tclass"><i>&nbsp;&nbsp;&nbsp;&nbsp;tar xvf DiskFit1.2.2.source.tar</i></p>
+
+<p> The package contains directories
+containing example data, and a directory containing some source
+code. </p>
+
+<p> Finally, the <i>Bootlace</i> utility is useful for deriving
+uncertainties from bootstrap realizations done using several
+independent <i>DiskFit</i> runs: it is bundled with the source code,
+and can be dowloaded as an executable under the `Bootlace' column below.
+
+<p><i>Disclaimer:</i> <i>DiskFit</i> is free software and comes with
+ABSOLUTELY NO WARRANTY. It is distributed under the <a
+href="http://www.gnu.org/copyleft/">GNU General Public
+License</a>. This implies that the software may be freely copied and
+distributed. It may also be modified as desired, and the modified
+versions distributed as long as any changes made to the original code
+are indicated prominently and the original copyright and no-warranty
+notices are left intact. Please read the <a href="http://www.gnu.org/copyleft/gpl.html">General Public License</a> for
+more details. Note that the authors retain the copyright to the code
+and documentation. 
+
+
+<p>&nbsp;</p>
+
+<table align="center" border="1" cellpadding="10%" width="95%">
+<tr>
+<td class="thead" width="5%"> Version </td>
+<td class="thead" width="10%"> Date   </td>
+<td class="thead" width="15%"> DiskFit Executable </td>
+<td class="thead" width="10%"> Source + Examples</td>
+<td class="thead" width="15%"> Bootlace Executable</td>
+<td class="thead" width="10%"> Documentation </td>
+<td class="thead" width="40%"> Comments </td>
+</tr>
+<tr>
+<td class="tbody"> 1.2.3 </td>
+<td class="tbody"> August 2021 </td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2.3/DiskFit-darwin">Darwin</a><br><br><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2.3/DiskFit-linux">Linux (64-bit)</a>     </td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/archive/refs/tags/v1.2.3.tar.gz">Source</a></td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2.3/bootlace-darwin">Darwin</a><br><br><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2.3/bootlace-linux">Linux (64-bit)</a></td>
+<td class="tbody">User's manual (<a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2.2/diskfit122.pdf">DiskFit 1.2.2 pdf</a>)</td>
+<td>A build system has been added for easier recompiling of executables from source.
+    <br>Static linking is now used to build executables, leading to an easier end-user experience when downloading and running executables.
+    <br>A bug has been fixed in prepimg.f which could lead to crashes when compiled with certain compilers.
+    <br>The trigonometry function calls (cos, sin) have been modified to work around inaccuracies in the library functions with newer versions of gfortran.
+  </td>
+</tr>
+<tr>
+<td class="tbody"> 1.2.2 </td>
+<td class="tbody"> August 2017 </td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2.2/DiskFit-darwin">Darwin</a><br><br><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2.2/DiskFit-linux">Linux (64-bit)</a>     </td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/archive/refs/tags/v1.2.2.tar.gz">Source</a></td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2.2/bootlace-darwin">Darwin</a><br><br><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2.2/bootlace-linux">Linux (64-bit)</a></td>
+<td class="tbody">User's manual (<a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2.2/diskfit122.pdf">pdf</a>)</td>
+<td>Bug fixes for bar PA and bulge on photometric side. <br> Biweight used
+  to compute uncertainties instead of standard deviations. <br> *.csv
+  file output for covariance plots.
+  </td>
+</tr>
+<tr>
+<td class="tbody"> 1.2.1 </td>
+<td class="tbody"> May 2016 </td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2.1/DiskFit-darwin">Darwin</a><br><br><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2.1/DiskFit-linux">Linux (64-bit)</a>     </td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/archive/refs/tags/v1.2.1.tar.gz">Source</a></td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2.1/bootlace-darwin">Darwin</a><br><br><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2.1/bootlace-linux">Linux (64-bit)</a></td>
+<td class="tbody">User's manual (<a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2.1/diskfit121.pdf">pdf</a>)</td>
+<td>Bug fix for 64-bit FITS file input/output.
+  </td>
+</tr>
+<tr>
+<td class="tbody"> 1.2 </td>
+<td class="tbody"> September 2015 </td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2/DiskFit-darwin">Darwin</a><br><br><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2/DiskFit-linux">Linux (64-bit)</a>     </td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/archive/refs/tags/v1.2.tar.gz">Source</a></td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2/bootlace-darwin">Darwin</a><br><br><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2/bootlace-linux">Linux (64-bit)</a></td>
+<td class="tbody">User's manual (<a href="https://github.com/kspekkens/DiskFit/releases/download/v1.2/diskfit12.pdf">pdf</a>)</td>
+<td>What's new: Dynamically allocated arrays<br> Mask and uncertainty
+  file can be input in photometric branch<br> Seeing/beam smearing bug
+  corrected <br> Minor bug fixes and modifications. See documentation for details.
+  </td>
+</tr>
+<tr>
+<td class="tbody"> 1.1 </td>
+<td class="tbody"> May 2013 </td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.1/DiskFit-darwin">Darwin</a><br><br><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.1/DiskFit-linux">Linux (64-bit)</a>     </td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/archive/refs/tags/v1.1.tar.gz">Source</a></td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.1/bootlace-darwin">Darwin</a><br><br><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.1/bootlace-linux">Linux (64-bit)</a></td>
+<td class="tbody">User's manual (<a href="https://github.com/kspekkens/DiskFit/releases/download/v1.1/diskfit11.pdf">pdf</a>)</td>
+<td>Minor bug fixes and modifications. See documentation for details.<br>
+  What's new: DiskFit now handles FITS files with 64-bit reals.</td>
+</tr>
+<tr>
+<td class="tbody"> 1.0 </td>
+<td class="tbody"> September 2012 </td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.0/DiskFit-darwin">Darwin</a><br><br><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.0/DiskFit-linux">Linux (64-bit)</a>     </td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/archive/refs/tags/v1.0.tar.gz">Source</a></td>
+<td class="tbody"><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.0/bootlace-darwin">Darwin</a><br><br><a href="https://github.com/kspekkens/DiskFit/releases/download/v1.0/bootlace-linux">Linux (64-bit)</a></td>
+<td class="tbody">User's manual (<a href="https://github.com/kspekkens/DiskFit/releases/download/v1.0/diskfit10.pdf">pdf</a>)</td>
+<td>First release.</td>
+</tr>
+
+</table>
+
+<p>&nbsp;</p>
+
+<a name="Documentation"></a>
+ <h2> Documentation </h2>
+
+<p> The sources of documentation for <i>DiskFit</i> are related articles
+papers (<a
+href="http://adsabs.harvard.edu/abs/2007ApJ...664..204S">Spekkens &
+Sellwood 2007</a>, <a
+href="http://adsabs.harvard.edu/abs/2010MNRAS.404.1733S">Sellwood & Sanchez 2010</a>
+for kinematic fits, and <a
+href="http://adsabs.harvard.edu/abs/2007AJ....133.2846R">Reese et
+al. (2007)</a> for photometric fits, and <a
+href="http://adsabs.harvard.edu/abs/2015arXiv150907120S">Sellwood &
+Spekkens 2015</a>), and the user's manual. The manual instructions assume that you have read the papers and are familiar with their notation.
+<ul class="lclass">
+  <li> Download <a href="http://adsabs.harvard.edu/abs/2007ApJ...664..204S">Spekkens & Sellwood 2007</a> from ADS.</li>
+  <li> Download <a
+  href="http://adsabs.harvard.edu/abs/2010MNRAS.404.1733S">Sellwood &
+  Sanchez 2010</a> from ADS.</li>
+  <li> Download <a
+href="http://adsabs.harvard.edu/abs/2007AJ....133.2846R">Reese et
+al. (2007)</a> from ADS. </li>
+  <li> Download <a
+href="http://adsabs.harvard.edu/abs/2012MNRAS.427.2523K">Kuzio de
+Naray et al. (2012)</a> from ADS.</li>
+  <li> Download <a
+href="http://adsabs.harvard.edu/abs/2015arXiv150907120S">Sellwood &
+Spekkens (2015)</a> from ADS.
+  <li> Download the manual from the table above. </li>
+</ul>
+
+<p>&nbsp;</p>
+<p> Please cite the relevant papers if you use <i>DiskFit</i> in your research.</p>
+
+<a name="Contact"></a>
+ <h2> Contact </h2>
+
+<p> We are happy to answer questions about the code, and we welcome comments and suggestions. Please send an email to kristine.spekkens**at**gmail.com.</p>
+
+<p>&nbsp;</p>
+<hr>
+
+<p>This material is based upon work supported by the National Science
+Foundation, and by the National Sciences
+and Engineering Council of Canada.</p>
+
+<p>Any opinions, findings, and conclusions or recommendations
+expressed in this material are those of the authors and do not
+necessarily reflect the views of the National Science Foundation or
+the National Sciences and Engineering Research Council of Canada.</p>
+
+<hr>
+  <table align="left" width="100%">
+    <tbody>
+   <tr>
+  <td align="left">Maintained by KS
+  </td>
+  <td align="right" rowspan=2>
+  <a href="http://validator.w3.org/check?uri=referer"><img
+        src="http://www.w3.org/Icons/valid-html401"
+        alt="Valid HTML 4.01 Transitional" height="31" width="88"></a>
+   </td>
+  </tr>
+  <tr>
+  <td align="left">
+          <!-- hhmts start -->Last modified: Fri Aug 18 13:52:17 EDT 2017 <!-- hhmts end -->
+  </td>
+  </tr>
+  </tbody>
+  </table>
+  
+</body>
+</html>

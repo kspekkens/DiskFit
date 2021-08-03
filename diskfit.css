@@ -1,0 +1,62 @@
+  body {
+          text-align: center;
+          padding-left: 5em;
+          padding-right: 5em;
+          font-family: Georgia, "Times New Roman",
+          Times, serif;
+          color: #000000;
+          background-color: #D5ECFF
+}
+ 
+  a:link{color: #04700F}
+  a:visited{color: #0C528F} 
+
+  h1{
+          text-align: center;
+          color: #3A0095;
+}
+  h2{ 
+          text-align: left;
+          color: #7E2217;
+}
+div.menuclass a:link {color: #7E2217}
+div.menuclass a:visited {color: #7E2217}
+
+div.quoteclass h3 {
+          text-align: center;
+          padding-left: 8em;
+          padding-right: 8em;
+          color:#FFFFFF;
+          font-style: italic;
+}
+div.quoteclass h4 {
+          text-align: right;
+          padding-left: 8em;
+          padding-right: 8em;
+          color:#FFFFFF;
+          font-style: italic;
+}
+td.thead {
+          color:#7E2217;
+          font-style: bold;
+          font-size: 110%;
+          text-align: center
+}
+td.tbody {
+          text-align: center
+}
+address  {
+          border-top: solid
+          font-style: italic;
+          font-size: 90%;
+}
+p.tclass {
+          text-align:left
+}
+ul.lclass li {
+          text-align: left
+}
+
+
+           
+
