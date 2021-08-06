@@ -5,7 +5,8 @@
 # Variables for implicit Fortran rule
 # FC: Fortran Compiler
 # FFLAGS: Flags for compiling Fortran files
-FC     := gfortran
+FC := gfortran
+CC := gcc
 
 # The `-mfpmath=sse -msse2` flags cause the resulting executable
 # to have more consistent behaviour across machines and CPU architectures.
@@ -17,12 +18,19 @@ FFLAGS := -O1 -mfpmath=sse -msse2 -march=x86-64 -mtune=generic
 FFLAGS += -ICOMMON
 FFLAGS += -Wall -Wextra -Wno-unused-variable -Wno-unused-parameter
 
+CFLAGS := -O1 -mfpmath=sse -msse2 -march=x86-64 -mtune=generic
+CFLAGS += -ICOMMON
+CFLAGS += -Wall -Wextra -Wno-unused-variable -Wno-unused-parameter
+
 # Variables for final linking stage
+linker := $(FC)
 link_flags := 
 link_libs  := 
 # If not specified, do a static link
 static_link ?= 1
 ifeq ($(static_link),1)
+	linker := $(CC)
+	link_libs += -lgcc -lgfortran -lm
 	link_flags += -static
 endif
 
@@ -35,9 +43,11 @@ src_modules    := $(wildcard MODULES/*.f)
 obj_modules    := $(patsubst %.f,%.o,$(src_modules))
 src_common     := $(wildcard COMMON/*.f)
 obj_common     := $(patsubst %.f,%.o,$(src_common))
+src_common_c   := $(wildcard COMMON/*.c)
+obj_common_c   := $(patsubst %.c,%.o,$(src_common_c))
 src_3rdparty   := $(wildcard LINPACK/*.f NRCODE/*.f)
 obj_3rdparty   := $(patsubst %.f,%.o,$(src_3rdparty))
-obj_nontargets := $(obj_modules) $(obj_common) $(obj_3rdparty)
+obj_nontargets := $(obj_modules) $(obj_common) $(obj_common_c) $(obj_3rdparty)
 
 # We put libcfitsio here as a dependency so that it will be built first,
 # before all the normal object files. It's the most complicated step,
@@ -47,7 +57,7 @@ all: $(targets)
 # Pattern rule to build the targets by linking the .o file with all the
 # other object files, as well as libcfitsio.a
 $(targets): %: %.o $(obj_nontargets) CFITSIO/libcfitsio.a
-	$(FC) $(FFLAGS) $(link_flags) -o $@ $^ $(link_libs)
+	$(linker) $(link_flags) -o $@ $^ $(link_libs)
 
 # We use the implicit rule for compiling Fortran to object files.
 
@@ -80,8 +90,8 @@ clean-asm:
 # they are symbolic names.
 .PHONY: all all-asm clean clean-all clean-src clean-asm
 # Adjust suffixes to enable only the implicit rules for .f files.
-.SUFFIXES:       # Delete the default suffixes
-.SUFFIXES: .o .f # Define our suffix list (build .f into .o)
+.SUFFIXES:          # Delete the default suffixes
+.SUFFIXES: .o .f .c # Define our suffix list (build .f/.c into .o)
 # Prevent compilation of .f or .o into executables directly, forcing our
 # custom compilation rule to be used.
 %: %.f
