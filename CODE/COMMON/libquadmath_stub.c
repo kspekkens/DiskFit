@@ -22,5 +22,5 @@ void lqm_panic(void) {
     exit(127);
 }
 // Add all undefined libquadmath functions here:
-void quadmath_snprintf() __attribute__((weak, alias ("lqm_panic")));
-void strtoflt128()       __attribute__((weak, alias ("lqm_panic")));
+void quadmath_snprintf() {lqm_panic();}
+void strtoflt128()       {lqm_panic();}
