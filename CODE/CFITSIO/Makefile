@@ -5,7 +5,7 @@ target := libcfitsio.a
 
 # We copy the flags from the main Makefile, but we change O1 to O2 since that's what's used
 # already by cfitsio.
-cflags := -O2 -frounding-math -fsignaling-nans -mfpmath=sse -msse2 -march=x86-64 -mtune=generic
+cflags := -O2 -mfpmath=sse -msse2 -march=x86-64 -mtune=generic
 
 all: $(target)
 
