@@ -3,6 +3,8 @@ CODE/**/*.mod
 CODE/**/*.o
 CODE/DiskFit
 CODE/bootlace
+CODE/makemap
+CODE/set_mask
 # Ignore files copied during testing
 TESTS/EXAMPLE
 TESTS/DiskFit
