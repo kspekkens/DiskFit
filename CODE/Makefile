@@ -56,11 +56,12 @@ else
 		# against all other libraries that we need.
 		# We need to manually locate the libraries to link statically
 		# and specify the archive or object files on the command line,
-		# instead of the `-l` option.
+		# instead of the `-l` option, with the exception of -lSystem, which we
+		# dynamically link with.
 		ifeq ($(static_link),1)
 			linker := $(FC)
 			link_flags += -nodefaultlibs -static-libgcc
-			link_libs += $(shell sh TOOLS/DarwinFindLibraryArchive.sh)
+			link_libs += $(shell sh TOOLS/DarwinFindLibraryArchive.sh) -lSystem
 		endif
 	endif
 endif
