@@ -28,10 +28,41 @@ link_flags :=
 link_libs  := 
 # If not specified, do a static link
 static_link ?= 1
-ifeq ($(static_link),1)
-	linker := $(CC)
-	link_libs += -lgcc -lgfortran -lm
-	link_flags += -static
+
+platform := unknown
+ifeq ($(OS),Windows_NT)
+	# It's unknown how to treat this - let the user figure it out if they want
+	# to compile for Windows
+	platform := win
+else
+	# Run `uname` to check what OS this is
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S),Linux)
+		platform := linux
+		# We don't want to static link with libquadmath, so instead of
+		# using gfortran to link, we use gcc and explicitly link with
+		# libgcc, libfortran, and libm.
+		ifeq ($(static_link),1)
+			linker := $(FC)
+			link_flags += -nodefaultlibs -static
+			link_libs += -lgfortran -lm -lc -lgcc -lgcc_eh
+		endif
+	endif
+	ifeq ($(UNAME_S),Darwin)
+		platform := macos
+		# We can't static link on MacOS just by doing `-static` since
+		# Apple has made it impossible to statically link against their
+		# libSystem. We still do a dynamic link, but we statically link
+		# against all other libraries that we need.
+		# We need to manually locate the libraries to link statically
+		# and specify the archive or object files on the command line,
+		# instead of the `-l` option.
+		ifeq ($(static_link),1)
+			linker := $(FC)
+			link_flags += -nodefaultlibs -static-libgcc
+			link_libs += $(shell sh TOOLS/DarwinFindLibraryArchive.sh)
+		endif
+	endif
 endif
 
 # Target executables (must have <file>.f in the current directory)

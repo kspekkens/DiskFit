@@ -63,21 +63,23 @@ fi
 
 # Determine what DiskFit input and output files are being used
 echo "=== Reading testfile '$testfile'..."
-diskfit_input_file=$(sed -Ee "5{s/'([^']+)'/\\1/;q};d" < "$testfile")
+diskfit_input_file=$(sed -e "5{" -e "s/'\([^']*\)'/\1/" -e "q" -e "}" -e "d" < "$testfile")
 echo "=== Using DiskFit input  file '$diskfit_input_file'..."
 [ -f "$diskfit_input_file" ] || panic "DiskFit input file '$diskfit_input_file' doesn't exist!"
-diskfit_output_file=$(sed -Ee "8{s/'([^']+)'\s*#?.*/\\1/;q};d" < "$diskfit_input_file")
+diskfit_output_file=$(sed -e "8{" -e "s/'\([^']*\)'[[:space:]]*#*.*/\1/" -e "q" -e "}" -e "d" < "$diskfit_input_file")
+[ -z "$diskfit_output_file" ] && panic "Unable to read output file from input file!"
 echo "=== Using DiskFit output file '$diskfit_output_file'..."
 diskfit_output_file_no_ext="${diskfit_output_file%\.out}"
 
 # Clear output directory
 diskfit_output_directory=$(dirname "$diskfit_output_file")
+[ -z "$diskfit_output_directory" -o "$diskfit_output_directory" = "." ] && panic "Invalid output directory '$diskfit_output_directory'"
 echo "=== Cleaning up output directory '$diskfit_output_directory'..."
-mkdir -vp "$diskfit_output_directory"
-rm -vf "$diskfit_output_directory"/*
+mkdir -p "$diskfit_output_directory"
+rm -f "$diskfit_output_directory"/*
 
 # Double-check expected directory
-expected_directory=$(sed -Ee "3q;d" < "$testfile")
+expected_directory=$(sed -e "3q" -e "d" < "$testfile")
 echo "=== Using expected outputs directory '$expected_directory'..."
 [ -d "$expected_directory" ] || echo "WARNING: Expected outputs directory '$expected_directory' doesn't exist!"
 
