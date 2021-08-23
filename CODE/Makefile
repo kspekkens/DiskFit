@@ -28,8 +28,12 @@ link_flags :=
 link_libs  := 
 # If not specified, do a static link
 static_link ?= 1
+# Special flag for use with the Docker environment to build correctly-
+# licensed, fully portable executables on Linux
+docker_build ?= 0
 
 platform := unknown
+lqm_workaround := 0
 ifeq ($(OS),Windows_NT)
 	# It's unknown how to treat this - let the user figure it out if they want
 	# to compile for Windows
@@ -39,13 +43,22 @@ else
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S),Linux)
 		platform := linux
-		# We don't want to static link with libquadmath, so instead of
-		# using gfortran to link, we use gcc and explicitly link with
-		# libgcc, libfortran, and libm.
 		ifeq ($(static_link),1)
-			linker := $(FC)
-			link_flags += -nodefaultlibs -static
-			link_libs += -lgfortran -lm -lc -lgcc -lgcc_eh
+			lqm_workaround := 1
+			ifeq ($(docker_build),1)
+				# Linking with musl libc has some weird issues, which we
+				# can get around by using the FindLibraryArchive script
+				linker := $(FC)
+				link_flags += -nodefaultlibs -static
+				link_libs += $(shell sh TOOLS/DarwinFindLibraryArchive.sh)
+			else
+				# We don't want to static link with libquadmath, so instead of
+				# using gfortran to link, we use gcc and explicitly link with
+				# libgcc, libfortran, and libm.
+				linker := $(FC)
+				link_flags += -nodefaultlibs -static
+				link_libs += -lgfortran -lm -lc -lgcc -lgcc_eh
+			endif
 		endif
 	endif
 	ifeq ($(UNAME_S),Darwin)
@@ -56,9 +69,10 @@ else
 		# against all other libraries that we need.
 		# We need to manually locate the libraries to link statically
 		# and specify the archive or object files on the command line,
-		# instead of the `-l` option, with the exception of -lSystem, which we
-		# dynamically link with.
+		# instead of the `-l` option, with the exception of -lSystem,
+		# which we dynamically link with.
 		ifeq ($(static_link),1)
+			lqm_workaround := 1
 			linker := $(FC)
 			link_flags += -nodefaultlibs -static-libgcc
 			link_libs += $(shell sh TOOLS/DarwinFindLibraryArchive.sh) -lSystem
@@ -70,13 +84,21 @@ endif
 targets := DiskFit bootlace
 obj_targets := $(patsubst %,%.o,$(targets))
 
-# We have to put the module files separately so that they are built first
+
+# Put all common C files here:
+src_common_c   := 
+# If we're working around libquadmath, include the libquadmath_stub file
+ifeq ($(lqm_workaround),1)
+	src_common_c += COMMON/libquadmath_stub.c
+endif
+obj_common_c   := $(patsubst %.c,%.o,$(src_common_c))
+
+# We have to put the module files separate from the common files so that
+# they can be built first
 src_modules    := $(wildcard MODULES/*.f)
 obj_modules    := $(patsubst %.f,%.o,$(src_modules))
 src_common     := $(wildcard COMMON/*.f)
 obj_common     := $(patsubst %.f,%.o,$(src_common))
-src_common_c   := $(wildcard COMMON/*.c)
-obj_common_c   := $(patsubst %.c,%.o,$(src_common_c))
 src_3rdparty   := $(wildcard LINPACK/*.f NRCODE/*.f)
 obj_3rdparty   := $(patsubst %.f,%.o,$(src_3rdparty))
 obj_nontargets := $(obj_modules) $(obj_common) $(obj_common_c) $(obj_3rdparty)

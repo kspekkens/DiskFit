@@ -3,6 +3,8 @@ CODE/**/*.mod
 CODE/**/*.o
 CODE/DiskFit
 CODE/bootlace
+DOCKER/DiskFit
+DOCKER/bootlace
 # Ignore files copied during testing
 TESTS/EXAMPLE
 TESTS/DiskFit
