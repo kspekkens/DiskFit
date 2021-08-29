@@ -1,9 +1,9 @@
 #!/bin/sh
-function panic {
+panic () {
     echo "ERROR: $1" >&2
     exit 1
 }
-function resolve_lib {
+resolve_lib () {
     lib="${1#-l}"
     oldIFS="$IFS"
     IFS=":"
@@ -31,8 +31,8 @@ fortest_exe="./fortest"
 cat >"${fortest}" <<END
       end
 END
-gfort_library_path="`gfortran -### -o "${fortest_exe}" "${fortest}" 2>&1 | grep "LIBRARY_PATH" | sed -e s/LIBRARY_PATH=//`"
-gfort_libraries="`gfortran -### --static -o "${fortest_exe}" "${fortest}" 2>&1 | grep "collect" | fmt -1 | grep -e '^ *-l' -e '.a$' | grep -v -e "-lcrt0" -e "-lSystem" -e "-lm" -e "-lquadmath" | fmt -999`"
+gfort_library_path="$(gfortran -### -o "${fortest_exe}" "${fortest}" 2>&1 | grep "LIBRARY_PATH" | sed -e s/LIBRARY_PATH=//)"
+gfort_libraries="$(gfortran -### --static -o "${fortest_exe}" "${fortest}" 2>&1 | grep "collect" | fmt -1 | grep -e '^ *-l' -e '.a$' | grep -v -e "-lcrt0" -e "-lSystem" -e "-lm" -e "-lquadmath" | fmt -999)"
 
 lib_to_use=""
 for lib in ${gfort_libraries} ; do

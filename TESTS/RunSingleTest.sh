@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 
-function panic {
+panic () {
     echo "ERROR: $1" >&2
     exit 1
 }
 
 # Assert script was run from its directory (bash ./script)
 starting_dir=$(pwd)
-cd "$(dirname $0)"
+testdir=$(dirname "$0")
+cd "$testdir" || panic "Unable to open directory $testdir"
 script_dir=$(pwd)
-[ "$starting_dir" == "$script_dir" ] || panic "Please run '$0' from its directory: bash `basename $0`"
+[ "$starting_dir" == "$script_dir" ] || panic "Please run '$0' from its directory: bash $(basename "$0")"
 
 # Get first command-line argument as test file
 testfile="$1"
@@ -73,7 +74,7 @@ diskfit_output_file_no_ext="${diskfit_output_file%\.out}"
 
 # Clear output directory
 diskfit_output_directory=$(dirname "$diskfit_output_file")
-[ -z "$diskfit_output_directory" -o "$diskfit_output_directory" = "." ] && panic "Invalid output directory '$diskfit_output_directory'"
+[ -z "$diskfit_output_directory" ] || [ "$diskfit_output_directory" = "." ] && panic "Invalid output directory '$diskfit_output_directory'"
 echo "=== Cleaning up output directory '$diskfit_output_directory'..."
 mkdir -p "$diskfit_output_directory"
 rm -f "$diskfit_output_directory"/*
@@ -86,7 +87,7 @@ echo "=== Using expected outputs directory '$expected_directory'..."
 # Run DiskFit and save output to a temporary file in the output directory
 echo "=== Running DiskFit..."
 # sed -e '/^-- start input/,/^-- end input/{/^--/d; p};d' < "$testfile" | ./DiskFit 2>&1 | tee "$diskfit_output_file_no_ext".console_output
-tail -n +5 "$testfile" | "$diskfit" 2>&1 >"$diskfit_output_file_no_ext".console_output
+tail -n +5 "$testfile" | "$diskfit" >"$diskfit_output_file_no_ext".console_output 2>&1
 
 # Run diff to compare output to expected output
 echo "=== Comparing results..."

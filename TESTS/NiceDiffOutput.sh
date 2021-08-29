@@ -2,13 +2,13 @@
 function extract() {
 	file="$1"
 	prefix="$2"
-	cat "${file}" | sed -f NiceDiffOutput.sed | sed -e "s/^/${prefix} /"
+	sed -f NiceDiffOutput.sed < "${file}" | sed -e "s/^/${prefix} /"
 }
 function gen_equals() {
 	count="$1"
 	i=0
 	while [ "$i" -lt "$count" ]; do 
-		i=$(($i+1))
+		i=$((i+1))
 		echo "================================================================================"
 	done
 }

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-function panic {
+panic () {
     echo "ERROR: $1" >&2
     exit 1
 }
