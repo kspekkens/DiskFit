@@ -22,9 +22,11 @@ $(cfitsio_dir)/configure-patched: $(cfitsio_dir) clean configure.patch
 	cp $(cfitsio_dir)/configure $(cfitsio_dir)/configure-patched
 	patch $(cfitsio_dir)/configure-patched configure.patch
 
-$(cfitsio_dir): $(cfitsio_tarball)
+$(cfitsio_dir): $(cfitsio_tarball) unistd.patch
+	[ -d "$@" ] && rm -r "$@"
 	mkdir -p "$@"
-	tar -xz -C "$@" --strip-components=1 -f $^
+	tar -xz -C "$@" --strip-components=1 -f $<
+	patch -d "$@" -p1 < unistd.patch
 
 $(cfitsio_tarball):
 	wget -O "$@" "$(cfitsio_src)"

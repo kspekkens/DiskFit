@@ -1,0 +1,81 @@
+diff -cB cfitsio_clean/drvrfile.c cfitsio_src/drvrfile.c
+*** cfitsio_clean/drvrfile.c	2013-03-20 13:03:08.000000000 -0700
+--- cfitsio_src/drvrfile.c	2021-08-29 10:44:25.000000000 -0700
+***************
+*** 19,25 ****
+  #endif
+  
+  #ifdef HAVE_FTRUNCATE
+! #if defined(unix) || defined(__unix__)  || defined(__unix)
+  #include <unistd.h>  /* needed for getcwd prototype on unix machines */
+  #endif
+  #endif
+--- 19,25 ----
+  #endif
+  
+  #ifdef HAVE_FTRUNCATE
+! #if defined(unix) || defined(__unix__)  || defined(__unix) || defined(HAVE_UNISTD_H)
+  #include <unistd.h>  /* needed for getcwd prototype on unix machines */
+  #endif
+  #endif
+  
+diff -cB cfitsio_clean/drvrnet.c cfitsio_src/drvrnet.c
+*** cfitsio_clean/drvrnet.c	2013-03-20 12:53:20.000000000 -0700
+--- cfitsio_src/drvrnet.c	2021-08-29 10:44:30.000000000 -0700
+***************
+*** 162,168 ****
+  #include <string.h>
+  #include <stdlib.h>
+  
+! #if defined(unix) || defined(__unix__)  || defined(__unix)
+  #include <unistd.h>  
+  #endif
+  
+--- 162,168 ----
+  #include <string.h>
+  #include <stdlib.h>
+  
+! #if defined(unix) || defined(__unix__)  || defined(__unix) || defined(HAVE_UNISTD_H)
+  #include <unistd.h>  
+  #endif
+  
+diff -cB cfitsio_clean/drvrsmem.c cfitsio_src/drvrsmem.c
+*** cfitsio_clean/drvrsmem.c	2013-03-20 12:53:21.000000000 -0700
+--- cfitsio_src/drvrsmem.c	2021-08-29 10:44:19.000000000 -0700
+***************
+*** 23,29 ****
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  
+! #if defined(unix) || defined(__unix__)  || defined(__unix)
+  #include <unistd.h> 
+  #endif
+  
+--- 23,29 ----
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  
+! #if defined(unix) || defined(__unix__)  || defined(__unix) || defined(HAVE_UNISTD_H)
+  #include <unistd.h> 
+  #endif
+  
+diff -cB cfitsio_clean/group.c cfitsio_src/group.c
+*** cfitsio_clean/group.c	2013-03-20 12:53:21.000000000 -0700
+--- cfitsio_src/group.c	2021-08-29 10:44:42.000000000 -0700
+***************
+*** 24,30 ****
+  #include <direct.h>   /* defines the getcwd function on Windows PCs */
+  #endif
+  
+! #if defined(unix) || defined(__unix__)  || defined(__unix)
+  #include <unistd.h>  /* needed for getcwd prototype on unix machines */
+  #endif
+  
+--- 24,30 ----
+  #include <direct.h>   /* defines the getcwd function on Windows PCs */
+  #endif
+  
+! #if defined(unix) || defined(__unix__)  || defined(__unix) || defined(HAVE_UNISTD_H)
+  #include <unistd.h>  /* needed for getcwd prototype on unix machines */
+  #endif
+  
