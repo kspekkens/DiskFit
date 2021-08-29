@@ -23,13 +23,13 @@ $(cfitsio_dir)/configure-patched: $(cfitsio_dir) clean configure.patch
 	patch $(cfitsio_dir)/configure-patched configure.patch
 
 $(cfitsio_dir): $(cfitsio_tarball) unistd.patch
-	[ -d "$@" ] && rm -r "$@"
+	[ -d "$@" ] && rm -r "$@" ; true
 	mkdir -p "$@"
 	tar -xz -C "$@" --strip-components=1 -f $<
 	patch -d "$@" -p1 < unistd.patch
 
 $(cfitsio_tarball):
-	wget -O "$@" "$(cfitsio_src)"
+	../TOOLS/DownloadFile.sh "$(cfitsio_src)" "$@"
 
 .PHONY: $(cfitsio_dir) all clean clean-all
 clean:
