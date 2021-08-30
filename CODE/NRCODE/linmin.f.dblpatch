@@ -1,0 +1,22 @@
+1c1
+<       SUBROUTINE linmin(p,xi,n,fret)
+---
+>       SUBROUTINE linmin_dbl(p,xi,n,fret)
+3c3
+<       REAL fret,p(n),xi(n),TOL
+---
+>       REAL*8 fret,p(n),xi(n),TOL
+7c7
+<       REAL ax,bx,fa,fb,fx,xmin,xx,pcom(NMAX),xicom(NMAX),brent
+---
+>       REAL*8 ax,bx,fa,fb,fx,xmin,xx,pcom(NMAX),xicom(NMAX),brent_dbl
+9c9
+<       EXTERNAL f1dim
+---
+>       EXTERNAL f1dim_dbl
+17,18c17,18
+<       call mnbrak(ax,xx,bx,fa,fx,fb,f1dim)
+<       fret=brent(ax,xx,bx,f1dim,TOL,xmin)
+---
+>       call mnbrak_dbl(ax,xx,bx,fa,fx,fb,f1dim_dbl)
+>       fret=brent_dbl(ax,xx,bx,f1dim_dbl,TOL,xmin)

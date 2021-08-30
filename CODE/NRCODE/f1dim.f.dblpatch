@@ -1,0 +1,17 @@
+1c1,2
+<       FUNCTION f1dim(x)
+---
+>       FUNCTION f1dim_dbl(x)
+>       implicit none
+3c4
+<       REAL f1dim,func,x
+---
+>       REAL*8 f1dim_dbl,func,x
+7c8
+<       REAL pcom(NMAX),xicom(NMAX),xt(NMAX)
+---
+>       REAL*8 pcom(NMAX),xicom(NMAX),xt(NMAX)
+12c13
+<       f1dim=func(xt)
+---
+>       f1dim_dbl=func(xt)

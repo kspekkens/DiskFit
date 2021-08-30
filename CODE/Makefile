@@ -70,6 +70,23 @@ endif
 targets := DiskFit bootlace makemap set_mask
 obj_targets := $(patsubst %,%.o,$(targets))
 
+# List of required Numerical Recipes code files - for printing error msg
+nrcode_files_required_msg := brent.f f1dim.f hpsort.f linmin.f mnbrak.f
+nrcode_files_required_msg += moment.f powell.f ran1.f select.f 
+src_nrcode_required_msg := $(patsubst %,NRCODE/%,$(nrcode_files_required_msg))
+nrcode_patch_required_msg := brent.f f1dim.f linmin.f mnbrak.f
+nrcode_patch_required_msg += moment.f powell.f ran1.f
+nrcode_patch_required_msg_with_suffix := $(patsubst %,%.dblpatch,$(nrcode_patch_required_msg))
+src_nrcode_patch_required_msg := $(patsubst %,NRCODE/%,$(nrcode_patch_required_msg_with_suffix))
+
+# Numerical Recipes code files used for compiling
+nrcode_files_dbl    := brent_dbl.f f1dim_dbl.f linmin_dbl.f mnbrak_dbl.f
+nrcode_files_dbl    += moment_dbl.f powell_dbl.f ran1_dbl.f
+nrcode_files_no_dbl := hpsort.f select.f
+src_nrcode_dbl      := $(patsubst %,NRCODE/%,$(nrcode_files_dbl))
+src_nrcode_no_dbl   := $(patsubst %,NRCODE/%,$(nrcode_files_no_dbl))
+src_nrcode          := $(src_nrcode_dbl) $(src_nrcode_no_dbl)
+
 # We have to put the module files separately so that they are built first
 src_modules    := $(wildcard MODULES/*.f)
 obj_modules    := $(patsubst %.f,%.o,$(src_modules))
@@ -77,7 +94,8 @@ src_common     := $(wildcard COMMON/*.f)
 obj_common     := $(patsubst %.f,%.o,$(src_common))
 src_common_c   := $(wildcard COMMON/*.c)
 obj_common_c   := $(patsubst %.c,%.o,$(src_common_c))
-src_3rdparty   := $(wildcard LINPACK/*.f NRCODE/*.f Burkardt/*.f fftpak/*.f)
+src_3rdparty   := $(wildcard LINPACK/*.f Burkardt/*.f fftpak/*.f)
+src_3rdparty   += $(src_nrcode)
 obj_3rdparty   := $(patsubst %.f,%.o,$(src_3rdparty))
 obj_nontargets := $(obj_modules) $(obj_common) $(obj_common_c) $(obj_3rdparty)
 
@@ -97,6 +115,23 @@ $(targets): %: %.o $(obj_nontargets) CFITSIO/libcfitsio.a
 # This forces the modules to be built first.
 # Additionally, recompile all objects if the commons.h file changes
 $(obj_targets) $(obj_common): $(obj_modules) COMMON/commons.h
+
+# Indicate that NRCODE _dbl files can be built using a patch file.
+$(src_nrcode_dbl): %_dbl.f: %.f | %.f.dblpatch
+	patch -o "$@" "$<" "$<.dblpatch" || (rm "$@" && false)
+
+$(src_nrcode_required_msg):
+	@echo "ERROR: Please ensure the following Numerical Recipes code files"
+	@echo "       are provided in the CODE/NRCODE subdirectory:"
+	@for x in $(nrcode_files_required_msg) ; do echo "           $$x" ; done
+	@false
+
+$(src_nrcode_patch_required_msg):
+	@echo "ERROR: Please ensure the following Numerical Recipes code patches"
+	@echo "       are provided in the CODE/NRCODE subdirectory:"
+	@for x in $(nrcode_patch_required_msg_with_suffix) ; do echo "           $$x" ; done
+	@false
+
 
 # Build libcfitsio.a using the makefile in the subdirectory.
 CFITSIO/libcfitsio.a:

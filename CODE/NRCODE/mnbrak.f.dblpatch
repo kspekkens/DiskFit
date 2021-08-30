@@ -1,0 +1,12 @@
+1c1
+<       SUBROUTINE mnbrak(ax,bx,cx,fa,fb,fc,func)
+---
+>       SUBROUTINE mnbrak_dbl(ax,bx,cx,fa,fb,fc,func)
+2c2
+<       REAL ax,bx,cx,fa,fb,fc,func,GOLD,GLIMIT,TINY
+---
+>       REAL*8 ax,bx,cx,fa,fb,fc,func,GOLD,GLIMIT,TINY
+5c5
+<       REAL dum,fu,q,r,u,ulim
+---
+>       REAL*8 dum,fu,q,r,u,ulim

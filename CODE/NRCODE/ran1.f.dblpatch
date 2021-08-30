@@ -1,0 +1,12 @@
+1c1
+<       FUNCTION ran1(idum)
+---
+>       FUNCTION ran1_dbl(idum)
+3c3
+<       REAL ran1,AM,EPS,RNMX
+---
+>       REAL*8 ran1_dbl,AM,EPS,RNMX
+25c25
+<       ran1=min(AM*iy,RNMX)
+---
+>       ran1_dbl=min(AM*iy,RNMX)

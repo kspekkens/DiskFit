@@ -1,0 +1,20 @@
+1c1
+<       SUBROUTINE powell(p,xi,n,np,ftol,iter,fret)
+---
+>       SUBROUTINE powell_dbl(p,xi,n,np,ftol,iter,fret)
+3c3
+<       REAL fret,ftol,p(np),xi(np,np),func,TINY
+---
+>       REAL*8 fret,ftol,p(np),xi(np,np),func,TINY
+8c8
+<       REAL del,fp,fptt,t,pt(NMAX),ptt(NMAX),xit(NMAX)
+---
+>       REAL*8 del,fp,fptt,t,pt(NMAX),ptt(NMAX),xit(NMAX)
+23c23
+<         call linmin(p,xit,n,fret)
+---
+>         call linmin_dbl(p,xit,n,fret)
+40c40
+<       call linmin(p,xit,n,fret)
+---
+>       call linmin_dbl(p,xit,n,fret)

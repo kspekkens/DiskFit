@@ -1,0 +1,12 @@
+1c1
+<       SUBROUTINE moment(data,n,ave,adev,sdev,var,skew,curt)
+---
+>       SUBROUTINE moment_dbl(data,n,ave,adev,sdev,var,skew,curt)
+3c3
+<       REAL adev,ave,curt,sdev,skew,var,data(n)
+---
+>       REAL*8 adev,ave,curt,sdev,skew,var,data(n)
+5c5
+<       REAL p,s,ep
+---
+>       REAL*8 p,s,ep

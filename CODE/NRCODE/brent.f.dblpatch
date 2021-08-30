@@ -1,0 +1,16 @@
+1c1
+<       FUNCTION brent(ax,bx,cx,f,tol,xmin)
+---
+>       FUNCTION brent_dbl(ax,bx,cx,f,tol,xmin)
+3c3
+<       REAL brent,ax,bx,cx,tol,xmin,f,CGOLD,ZEPS
+---
+>       REAL*8 brent_dbl,ax,bx,cx,tol,xmin,f,CGOLD,ZEPS
+7c7
+<       REAL a,b,d,e,etemp,fu,fv,fw,fx,p,q,r,tol1,tol2,u,v,w,x,xm
+---
+>       REAL*8 a,b,d,e,etemp,fu,fv,fw,fx,p,q,r,tol1,tol2,u,v,w,x,xm
+81c81
+<       brent=fx
+---
+>       brent_dbl=fx
