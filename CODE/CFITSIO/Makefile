@@ -7,6 +7,10 @@ target := libcfitsio.a
 # already by cfitsio.
 cflags := -O2 -mfpmath=sse -msse2 -march=x86-64 -mtune=generic
 
+ifeq ($(platform),macos)
+	cflags += -Dunix=1
+endif
+
 all: $(target)
 
 $(target): $(cfitsio_dir)/libcfitsio.a
