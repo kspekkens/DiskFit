@@ -7,6 +7,12 @@ target := libcfitsio.a
 # already by cfitsio.
 cflags := -O2 -mfpmath=sse -msse2 -march=x86-64 -mtune=generic
 
+ifeq ($(platform),macos)
+	# This causes `unistd.h` to be included when compiling `group.c`, preventing the
+	# following error: "implicit declaration of function 'getcwd'"
+	cflags += -Dunix=1
+endif
+
 all: $(target)
 
 $(target): $(cfitsio_dir)/libcfitsio.a

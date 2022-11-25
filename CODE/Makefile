@@ -100,7 +100,7 @@ $(obj_targets) $(obj_common): $(obj_modules) COMMON/commons.h
 
 # Build libcfitsio.a using the makefile in the subdirectory.
 CFITSIO/libcfitsio.a:
-	$(MAKE) -C CFITSIO libcfitsio.a
+	$(MAKE) -C CFITSIO libcfitsio.a platform=$(platform)
 
 # New target for generating assembly source from all Fortran files.
 # Used only for debugging.
